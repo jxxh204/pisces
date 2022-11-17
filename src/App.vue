@@ -13,10 +13,9 @@ import { RouterLink, RouterView } from "vue-router";
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
-  </header>
+  </header> -->
 
-  <RouterView /> -->
-  <canvas id="canvas"></canvas>
+  <RouterView />
 </template>
 
 <style scoped>
