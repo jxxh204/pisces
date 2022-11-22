@@ -23,7 +23,13 @@ const pinkOption = ref({
     width: 800,
     height: 600,
     backgroundColor: '#304858',
-    scene: [ Sprites ]
+    scene: [ Sprites ],
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 }
+        }
+    },
 };
 
   
@@ -145,6 +151,6 @@ const game = new Phaser.Game(config);
       class="top-0 bottom-0 w-screen h-screen fixed z-10"
       ref="canvas"
     ></canvas> -->
-    <div id="sprite"></div>
+    <div id="sprite" class="w-screen h-screen top-0 bottom-0 fixed"></div>
   </div>
 </template>
