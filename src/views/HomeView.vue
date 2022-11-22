@@ -1,23 +1,34 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import pink1 from "../assets/num1.svg";
 // import { from, fromEvent, useObservable } from "@vueuse/rxjs";
 import { onKeyStroke } from "@vueuse/core";
-
-const pink = new Image();
-pink.src = pink1;
-const canvas = ref();
+import * as Phaser from 'phaser';
+import { Sprites } from '../module/phaser';
+// const pink = new Image();
+// pink.src = pink1;
+// const canvas = ref();
 
 const useKey = ["a", "A", "s", "S", "d", "D", "w", "W"];
-
 const pinkOption = ref({
-  x: 0,
-  y: 0,
-  width: 100,
-  height: 100,
-  speed: 2,
-  reversal: "left",
-});
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    speed: 2,
+    reversal: "left",
+  });
+  const config = {
+    type: Phaser.AUTO,
+    parent: "sprite",
+    width: 800,
+    height: 600,
+    backgroundColor: '#304858',
+    scene: [ Sprites ]
+};
+
+  
+
+
 // const key = useObservable(fromEvent(document, "keydown").pipe(
 // ))
 
@@ -95,42 +106,45 @@ const onKeyBoardEvent = (ctx: CanvasRenderingContext2D) => {
 };
 
 onMounted(() => {
-  const ctx = canvas.value.getContext("2d");
-  ctx.beginPath();
-  // ctx.drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
+const game = new Phaser.Game(config);
 
-  pink.addEventListener(
-    "load",
-    () => {
-      requestAnimationFrame(drawCanvas);
-    },
-    false
-  );
+  // const ctx = canvas.value.getContext("2d");
+  // ctx.beginPath();
+  // // ctx.drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
+  // ctx.fillStyle = "white";
+  // ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
 
-  const drawCanvas = () => {
-    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  // pink.addEventListener(
+  //   "load",
+  //   () => {
+  //     requestAnimationFrame(drawCanvas);
+  //   },
+  //   false
+  // );
 
-    ctx.beginPath();
-    ctx.drawImage(
-      pink,
-      pinkOption.value.x,
-      pinkOption.value.y,
-      pinkOption.value.width,
-      pinkOption.value.height
-    );
-    requestAnimationFrame(drawCanvas);
-  };
-  onKeyBoardEvent(ctx);
+  // const drawCanvas = () => {
+  //   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+
+  //   ctx.beginPath();
+  //   ctx.drawImage(
+  //     pink,
+  //     pinkOption.value.x,
+  //     pinkOption.value.y,
+  //     pinkOption.value.width,
+  //     pinkOption.value.height
+  //   );
+  //   requestAnimationFrame(drawCanvas);
+  // };
+  // onKeyBoardEvent(ctx);
 });
 </script>
 
 <template>
   <div class="w-screen h-screen top-0 bottom-0 fixed">
-    <canvas
+    <!-- <canvas
       class="top-0 bottom-0 w-screen h-screen fixed z-10"
       ref="canvas"
-    ></canvas>
+    ></canvas> -->
+    <div id="sprite"></div>
   </div>
 </template>

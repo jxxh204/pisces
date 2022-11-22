@@ -4,5 +4,11 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"]
-  }
+  },
+  "typeRoots": [
+    "./node_modules/phaser/types"
+],
+"types": [
+    "Phaser"
+]
 }
