@@ -19,9 +19,9 @@ const pinkOption = ref({
   });
   const config = {
     type: Phaser.AUTO,
-    parent: "sprite",
-    width: 800,
-    height: 600,
+    parent: "sprite", //canvas id
+    width: window.innerWidth,
+    height: window.innerHeight,
     backgroundColor: '#304858',
     scene: [ Sprites ],
     physics: {
@@ -146,7 +146,7 @@ const game = new Phaser.Game(config);
 </script>
 
 <template>
-  <div class="w-screen h-screen top-0 bottom-0 fixed">
+  <div class="">
     <!-- <canvas
       class="top-0 bottom-0 w-screen h-screen fixed z-10"
       ref="canvas"
@@ -154,3 +154,6 @@ const game = new Phaser.Game(config);
     <div id="sprite" class="w-screen h-screen top-0 bottom-0 fixed"></div>
   </div>
 </template>
+<style scoped >
+
+</style>
