@@ -13,7 +13,7 @@ const Mushrooms:Mushrooms = {
 
 export class Sprites extends Phaser.Scene
 {
-   bg:any
+   bg:object
    player:Sprites
    jump_player:Sprites
    platforms:any
@@ -40,8 +40,8 @@ export class Sprites extends Phaser.Scene
     {
       this.load.image('background', background);
       // this.load.image('player1', Mushrooms.idle1);
-      this.load.spritesheet('idle_player1', Mushrooms["idle"],{ frameWidth: 20, frameHeight: 28 })
-      this.load.spritesheet('jump_player1', Mushrooms["jump"],{ frameWidth: 20, frameHeight: 28 })
+      this.load.spritesheet('idle_player1', Mushrooms["idle"],{ frameWidth: 32, frameHeight: 28 })
+      this.load.spritesheet('jump_player1', Mushrooms["jump"],{ frameWidth: 32, frameHeight: 32 })
     }
 
     create ()
