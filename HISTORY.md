@@ -16,3 +16,5 @@
 - v0.0.0:7
 - CHAR : prettier 옵션 변경, jump, idle image 변경
 - v0.0.0:8
+- FEAT : walk 제작
+- v0.0.0:9

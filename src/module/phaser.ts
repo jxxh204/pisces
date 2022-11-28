@@ -2,11 +2,13 @@ import * as Phaser from 'phaser';
 import background from "../assets/images/background.jpg"
 import M_idle from "../assets/Mushroom-Forrest/idle.png"
 import M_jump from "../assets/Mushroom-Forrest/jump.png"
+import M_walk from "../assets/Mushroom-Forrest/walk.png"
 import M_run from "../assets/Mushroom-Forrest/run.png"
 
 const Mushrooms:Mushrooms = {
   idle:M_idle,
   jump:M_jump,
+  walk:M_walk,
   run:M_run
 }
 
@@ -16,6 +18,7 @@ export class Sprites extends Phaser.Scene
    bg:object
    player:Sprites
    jump_player:Sprites
+   walk_player:Sprites
    platforms:any
    cursors:any;
    playerLocation:object
@@ -27,6 +30,7 @@ export class Sprites extends Phaser.Scene
         this.bg = {}
         this.player = {} as Sprites
         this.jump_player = {} as Sprites
+        this.walk_player = {} as Sprites
         this.platforms = {}
         this.cursors = {}
         this.imageSet = ""
@@ -42,6 +46,7 @@ export class Sprites extends Phaser.Scene
       // this.load.image('player1', Mushrooms.idle1);
       this.load.spritesheet('idle_player1', Mushrooms["idle"],{ frameWidth: 32, frameHeight: 28 })
       this.load.spritesheet('jump_player1', Mushrooms["jump"],{ frameWidth: 32, frameHeight: 32 })
+      this.load.spritesheet('walk_player1', Mushrooms["walk"],{ frameWidth: 32, frameHeight: 28 })
     }
 
     create ()
@@ -51,12 +56,16 @@ export class Sprites extends Phaser.Scene
 
       this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, 'idle_player1');
       this.jump_player = this.physics.add.sprite(this.playerLocation.w+50, this.playerLocation.h,"jump_player1")
+      this.walk_player = this.physics.add.sprite(this.playerLocation.w-50, this.playerLocation.h,"walk_player1")
 
       this.player.setBounce(0.2);
       this.player.setCollideWorldBounds(true);
 
       this.jump_player.setBounce(0.2);
       this.jump_player.setCollideWorldBounds(true);
+
+      this.walk_player.setBounce(0.2);
+      this.walk_player.setCollideWorldBounds(true);
 
       // 
       this.anims.create( {
@@ -68,9 +77,21 @@ export class Sprites extends Phaser.Scene
       this.anims.create({
         key: 'jump',
         frames: this.anims.generateFrameNames('jump_player1',{start:0, end:7}),
-        frameRate: 6,
+        frameRate: 16,
         repeat: 0
     });
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNames('walk_player1',{start:0, end:3}),
+      frameRate: 8,
+      repeat: 0
+  });
+  this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNames('walk_player1',{start:0, end:3}),
+    frameRate: 8,
+    repeat: 0
+});
 
 
 
@@ -82,10 +103,25 @@ export class Sprites extends Phaser.Scene
 
     update ()
     {
-      if(this.cursors.space.isDown) {
-        this.jump_player.setVelocityY(800);
+
+      if (this.cursors.left.isDown) {
+        this.walk_player.setVelocityX(-40);
+        this.walk_player.anims.play('left', true);
+      } else if (this.cursors.right.isDown) {
+          this.walk_player.setVelocityX(40);
+          this.walk_player.anims.play('right', true);
+      } else if(this.cursors.space.isDown) {
+        this.jump_player.setVelocityY(300);
       this.jump_player.play("jump")
 
+      } else {
+        console.log("멈춤")
+        this.walk_player.setVelocityX(0);
+        // this.walk_player.anims.play('left', true);
+      }
+        if (this.cursors.left.isUp || this.cursors.right.isUp)
+      {
+          this.player.setVelocityX(0);
       }
 
       // if (this.cursors.left.isDown)
