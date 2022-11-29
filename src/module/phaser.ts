@@ -11,6 +11,7 @@ const Mushrooms:Mushrooms = {
   walk:M_walk,
   run:M_run
 }
+const motionStateArray = ["up" , "down" , "left" , "right" , "space" , "shift","idle"]
 
 
 export class Sprites extends Phaser.Scene
@@ -18,11 +19,12 @@ export class Sprites extends Phaser.Scene
    bg:object
    player:Sprites
    playerState:string
-   jump_player:Sprites
-   walk_player:Sprites
    platforms:any
    cursors:any;
    playerLocation:object
+   isBehavior: boolean
+   motionState:Motions
+   sameTimeMotionInterval:NodeJS.Timeout
 
     constructor ()
     {
@@ -30,14 +32,23 @@ export class Sprites extends Phaser.Scene
         this.bg = {}
         this.player = {} as Sprites
         this.playerState = "_idle"
-        this.jump_player = {} as Sprites
-        this.walk_player = {} as Sprites
+        this.isBehavior = false;
+        this.motionState = {
+          up:false,
+          down:false,
+          left:false,
+          right:false,
+          space:false,
+          shift:false,
+        }
         this.platforms = {}
         this.cursors = {}
         this.playerLocation = {
           w:window.innerWidth/2,
-          h:window.innerHeight
+          h:window.innerHeight,
+          currentY:0
         }
+        this.sameTimeMotionInterval = {} as NodeJS.Timeout
     }
 
     preload ()
@@ -69,80 +80,89 @@ export class Sprites extends Phaser.Scene
         frames: this.anims.generateFrameNames('player_jump',{start:0, end:7}),
         frameRate: 16,
         repeat: 0
-    });
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNames('player_walk',{start:0, end:3}),
-      frameRate: 8,
-      repeat: 0
-  });
-  this.anims.create({
-    key: 'right',
-    frames: this.anims.generateFrameNames('player_walk',{start:0, end:3}),
-    frameRate: 8,
-    repeat: 0
-});
+      });
+      this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNames('player_walk',{start:0, end:3}),
+        frameRate: 8,
+        repeat: 0
+      });
+      this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNames('player_walk',{start:0, end:3}),
+        frameRate: 8,
+        repeat: 0
+      });
 
 
 
       this.player.play("idle",true) // idle 모션 실행.
-
-        this.cursors = this.input.keyboard.createCursorKeys(); // 키보드 사용
+      // this.playerLocation.currentY = this.player.y
+      this.playerLocation.currentY = 424;
+      this.cursors = this.input.keyboard.createCursorKeys(); // 키보드 사용
 
     }
+    update () {
 
-    update ()
-    {
-
-      if (this.cursors.left.isDown) {
+      // console.log(this.player.y)
+       if (this.cursors.left.isDown) {//왼쪽
+        console.log("left")
+        this.playerState = "walk"
         this.player.setVelocityX(-40);
         this.player.anims.play('left',true);
-      } else if (this.cursors.right.isDown) {
-          this.player.setVelocityX(40);
-          this.player.anims.play('right', true);
-      } else if(this.cursors.space.isDown) {
-        console.log(this.playerState )
-        this.playerState = "_jump"
-        this.player.setVelocityY(300);
-        this.player.play("jump")
+        this.sameTimeMotionHandler("left");
+      } else if (this.cursors.right.isDown) { // 오른쪽
+        this.playerState = "walk"
+        this.player.setVelocityX(40);
+        this.player.anims.play('right', true);
+        this.sameTimeMotionHandler("right");
+      } else if(this.cursors.space.isDown) {// 점프
 
-      } else {
-        if(this.playerState === "_jump") { //점프를 누른 후
-          setTimeout(() => {
+          this.playerState = "_jump"
+          this.player.setVelocityY(300);
+          this.player.play("jump")
+        this.sameTimeMotionHandler("space");
+      } else { // 기본상태.
+        this.sameTimeMotionHandler("idle");
+
+        // if(this.playerLocation.currentY === this.player.y){
+        //   this.isBehavior = false;
+        // }
+
+        // console.log(this.motionState)
+        // if(this.playerMotion === "normal") {
+          // motionStateArray.map((motion:MotionStatus) => {
+          //   if(this.motionState[motion]){
+          //     this.isBehavior = true;
+          //   }
+          // });
+          if(!this.isBehavior) {
+            this.player.setVelocityX(0);
             this.playerState = "_idle"
             this.player.play("idle",true)
-          },500)
-        } else {
-          this.player.setVelocityX(0);
-          this.playerState = "_idle"
-          this.player.play("idle",true)
-        }
-
-        // this.walk_player.anims.play('left', true);
+            this.isBehavior = false;
+          }
+        // }
       }
-
-      // if (this.cursors.left.isDown)
-      // {
-      //     this.player.setVelocityX(-160);
-      
-      //     this.player.anims.play('left', true);
-      // }
-      // else if (this.cursors.right.isDown)
-      // {
-      //     this.player.setVelocityX(160);
-      
-      //     this.player.anims.play('right', true);
-      // }
-      // // else
-      // // {
-      // //     this.player.setVelocityX(0);
-      
-      // //     this.player.anims.play('turn');
-      // // }
-      
-      // if (this.cursors.up.isDown && this.player.body.touching.down)
-      // {
-      //     this.player.setVelocityY(-330);
-      // }
+    }
+    
+    sameTimeMotionHandler(motion:MotionStatus) { // jump
+      let isMotion = true;
+      if(motion === "idle") {
+          motionStateArray.map((motion:MotionStatus) => {
+            if(!this.motionState[motion]){
+              isMotion = false;
+            } else {
+              this.isBehavior = true;
+              return;
+            }
+          });
+          if(!isMotion) { //모션이 없다면
+            // conosle
+            this.isBehavior = false; // idle모드
+          }
+      } else if(!this.motionState[motion]) {
+        this.motionState[motion] = true;
+      }
     }
 }
