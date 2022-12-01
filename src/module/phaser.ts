@@ -103,46 +103,33 @@ export class Sprites extends Phaser.Scene
 
     }
     update () {
-
-      // console.log(this.player.y)
        if (this.cursors.left.isDown) {//왼쪽
-        console.log("left")
         this.playerState = "walk"
         this.player.setVelocityX(-40);
         this.player.anims.play('left',true);
         this.sameTimeMotionHandler("left");
+
       } else if (this.cursors.right.isDown) { // 오른쪽
         this.playerState = "walk"
         this.player.setVelocityX(40);
         this.player.anims.play('right', true);
         this.sameTimeMotionHandler("right");
-      } else if(this.cursors.space.isDown) {// 점프
 
-          this.playerState = "_jump"
-          this.player.setVelocityY(300);
-          this.player.play("jump")
-        this.sameTimeMotionHandler("space");
       } else { // 기본상태.
         this.sameTimeMotionHandler("idle");
-
-        // if(this.playerLocation.currentY === this.player.y){
-        //   this.isBehavior = false;
-        // }
-
-        // console.log(this.motionState)
-        // if(this.playerMotion === "normal") {
-          // motionStateArray.map((motion:MotionStatus) => {
-          //   if(this.motionState[motion]){
-          //     this.isBehavior = true;
-          //   }
-          // });
           if(!this.isBehavior) {
             this.player.setVelocityX(0);
             this.playerState = "_idle"
             this.player.play("idle",true)
             this.isBehavior = false;
           }
-        // }
+      }
+      if(this.cursors.space.isDown) {// 점프
+
+        this.playerState = "_jump"
+        this.player.setVelocityY(300);
+        this.player.play("jump")
+        this.sameTimeMotionHandler("space");
       }
     }
     
@@ -153,12 +140,11 @@ export class Sprites extends Phaser.Scene
             if(!this.motionState[motion]){
               isMotion = false;
             } else {
-              this.isBehavior = true;
+              isMotion = true;
               return;
             }
           });
           if(!isMotion) { //모션이 없다면
-            // conosle
             this.isBehavior = false; // idle모드
           }
       } else if(!this.motionState[motion]) {
