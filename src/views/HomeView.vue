@@ -23,6 +23,7 @@ const pinkOption = ref({
     width: window.innerWidth,
     height: window.innerHeight,
     backgroundColor: '#304858',
+    pixelArt: true, // 픽셀로 만들경우 선명하게나옴
     scene: [ Sprites ],
     physics: {
         default: 'arcade',
