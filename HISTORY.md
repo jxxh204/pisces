@@ -29,3 +29,5 @@
 - FEAT : JSON import용 ts.config 업데이트
 - FEAT : 카메라가 플레이어를 따라다니도록 조정
 - v0.0.0:14
+- ERROR : 보이는 오류는 전부 제거함. 문제는 tailset이미지가 사이즈가 크다고함
+- v0.0.0:15

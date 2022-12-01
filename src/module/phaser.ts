@@ -4,8 +4,7 @@ import M_idle from "../assets/Mushroom-Forrest/idle.png"
 import M_jump from "../assets/Mushroom-Forrest/jump.png"
 import M_walk from "../assets/Mushroom-Forrest/walk.png"
 import M_run from "../assets/Mushroom-Forrest/run.png"
-import tile from "../assets/template/tile2.png"
-import tileJSON from "../assets/template/tile1/tile1.json" 
+import tileset_full from "../assets/template/tile1/tileset_full.png"
 
 const Mushrooms:Mushrooms = {
   idle:M_idle,
@@ -55,28 +54,37 @@ export class Sprites extends Phaser.Scene
 
     preload ()
     {
-      this.load.image('background', background);
+      // this.load.image('background', background);
       // this.load.image('player1', Mushrooms.idle1);
       this.load.spritesheet('player_idle', Mushrooms["idle"],{ frameWidth: 32, frameHeight: 28 })
       this.load.spritesheet('player_jump', Mushrooms["jump"],{ frameWidth: 32, frameHeight: 32 })
       this.load.spritesheet('player_walk', Mushrooms["walk"],{ frameWidth: 32, frameHeight: 28 })
-      this.load.image('floor', tile);
-      this.load.tilemapTiledJSON('tilemap', tileJSON)
+
+      this.load.image('tileSetImage', tileset_full);
+      this.load.tilemapTiledJSON('tilemaps', "src/assets/template/tile1/tileset_full.json")//무조건 주소 자체를 넣어야함.
     }
 
     create ()
     {
 
-      this.bg = this.add.image(400, 300, 'background');
-      this.platforms = this.physics.add.staticGroup();
+      // this.bg = this.add.image(400, 300, 'background');
+      // this.platforms = this.physics.add.staticGroup();
 
       this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, `player${this.playerState}`);
       this.player.setBounce(0.2);
       this.player.setCollideWorldBounds(true);
+      
+      const map = this.make.tilemap({ key: 'tilemaps'});
+      // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
 
-      var map = this.make.tilemap({ key: 'tilemap' });
-      var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tile');
-      var layer = map.createLayer('World1', tileset, 0, 0);
+     const tileset = map.addTilesetImage('tileset_full', 'tileSetImage'); //tileset_full 사이즈가 큰듯?
+
+     const floorLayer = map.createStaticLayer('floor', tileset,300,400) //프로그램에서 설정한 레이어 불러옴.
+     console.log("tileset",floorLayer)
+
+      // map.createStaticLayer('Ground', tileset)
+	
+      // var layer = map.createLayer('World1', tileset, 0, 0);
 
 
       // this.platforms.create(400, window.innerHeight, 'floor').setScale(2).refreshBody();
