@@ -4,7 +4,7 @@ import M_idle from "../assets/Mushroom-Forrest/idle.png"
 import M_jump from "../assets/Mushroom-Forrest/jump.png"
 import M_walk from "../assets/Mushroom-Forrest/walk.png"
 import M_run from "../assets/Mushroom-Forrest/run.png"
-import tileset_full from "../assets/template/tile1/tileset_full.png"
+import tilesImg from "../assets/template/tileset_1/Tiles.png"
 
 const Mushrooms:Mushrooms = {
   idle:M_idle,
@@ -60,8 +60,8 @@ export class Sprites extends Phaser.Scene
       this.load.spritesheet('player_jump', Mushrooms["jump"],{ frameWidth: 32, frameHeight: 32 })
       this.load.spritesheet('player_walk', Mushrooms["walk"],{ frameWidth: 32, frameHeight: 28 })
 
-      this.load.image('tileSetImage', tileset_full);
-      this.load.tilemapTiledJSON('tilemaps', "src/assets/template/tile1/tileset_full.json")//무조건 주소 자체를 넣어야함.
+      this.load.image('tileSetImage', tilesImg);
+      this.load.tilemapTiledJSON('map', "src/assets/template/tileset_1/tileset1.json")//무조건 주소 자체를 넣어야함.
     }
 
     create ()
@@ -74,14 +74,17 @@ export class Sprites extends Phaser.Scene
       this.player.setBounce(0.2);
       this.player.setCollideWorldBounds(true);
       
-      const map = this.make.tilemap({ key: 'tilemaps'});
+      const map = this.make.tilemap({ key: 'map'});
       // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
 
-     const tileset = map.addTilesetImage('tileset_full', 'tileSetImage'); //tileset_full 사이즈가 큰듯?
+     const tileset = map.addTilesetImage('Tiles', 'tileSetImage', 16, 16); //tileset_full 사이즈가 큰듯?
 
-     const floorLayer = map.createStaticLayer('floor', tileset,300,400) //프로그램에서 설정한 레이어 불러옴.
-     console.log("tileset",floorLayer)
+     const objectH = -200
 
+     map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
+     map.createLayer('tree', tileset,0,objectH)
+     map.createLayer('background', tileset,0,objectH)
+     map.createLayer('jump', tileset,0,objectH)
       // map.createStaticLayer('Ground', tileset)
 	
       // var layer = map.createLayer('World1', tileset, 0, 0);
