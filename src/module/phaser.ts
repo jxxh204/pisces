@@ -73,36 +73,33 @@ export class Sprites extends Phaser.Scene
       this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, `player${this.playerState}`);
       this.player.setBounce(0.2);
       this.player.setCollideWorldBounds(true);
+      // this.player.setAngle(90) - 각도 바꿈.
       
       const map = this.make.tilemap({ key: 'map'});
       // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
 
      const tileset = map.addTilesetImage('Tiles', 'tileSetImage', 16, 16); //tileset_full 사이즈가 큰듯?
 
-     const objectH = -200
 
-     map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
-     map.createLayer('tree', tileset,0,objectH)
-     map.createLayer('background', tileset,0,objectH)
-     map.createLayer('jump', tileset,0,objectH)
-      // map.createStaticLayer('Ground', tileset)
-	
-      // var layer = map.createLayer('World1', tileset, 0, 0);
-
-
-      // this.platforms.create(400, window.innerHeight, 'floor').setScale(2).refreshBody();
-
-      this.physics.add.collider(this.player, this.platforms); // player와 platforms이 닿을 수 있도록
       // startFollow(this.player); //카메라 센터
 
       // 카메라
-      this.cameras.main.setBounds(0, 0, 3392, 100);
-      this.physics.world.setBounds(0, 0, 3392, this.playerLocation.h);
+      this.cameras.main.setBounds(0, 0, 3392, -200);
+      this.physics.world.setBounds(0, 0, 3392,300); // 캐릭터 위치 조정
       this.cameras.main.startFollow(this.player, true, 0.08, 0.08); // 카메라를 플레이어에 맞춤
-      // this.cameras.main.centerOn(0, 0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
-  
+      this.cameras.main.centerOn(0,0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
+      // this.cameras.main.pan(0, 0, 0);
+
       // this.cameras.main.setZoom(2);
-      
+      console.log("height : ",window.innerHeight)
+      const objectH = 0;
+
+      const tree = map.createLayer('tree', tileset,0,objectH)
+      map.createLayer('background', tileset,0,objectH)
+      map.createLayer('jump', tileset,0,objectH)
+      map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
+ 
+      //  this.physics.add.collider(this.player, tree); // player와 platforms이 닿을 수 있도록
 
       this.anims.create( {
           key: 'idle',
@@ -133,7 +130,7 @@ export class Sprites extends Phaser.Scene
 
       this.player.play("idle",true) // idle 모션 실행.
       // this.playerLocation.currentY = this.player.y
-      this.playerLocation.currentY = 424;
+      // this.playerLocation.currentY = 424;
       this.cursors = this.input.keyboard.createCursorKeys(); // 키보드 사용
 
     }
