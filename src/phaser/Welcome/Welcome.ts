@@ -10,9 +10,9 @@ export default class Welcome extends Phaser.Scene
     {
       this.add.text(20, 20, 'Loading..')
 
-      setTimeout(() => {
+      // setTimeout(() => {
         this.scene.start('Level1')
-      }, 2000)
+      // }, 2000)
     }
 
 }

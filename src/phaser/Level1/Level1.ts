@@ -6,6 +6,12 @@ import M_run from "@/assets/Mushroom-Forrest/run.png"
 // map
 import tilesImg from "./Tiles.png"
 
+type SpriteType = {
+  floor:any
+  tree:any
+  jump:any
+}
+
 const Mushrooms:Mushrooms = {
   idle:M_idle,
   jump:M_jump,
@@ -19,7 +25,8 @@ const motionStateArray = ["up" , "down" , "left" , "right" , "space" , "shift","
 export default class Level1 extends Phaser.Scene
 {
    bg:object
-   player:Sprites
+   player:any
+   sprite:SpriteType
    playerState:string
    platforms:any
    cursors:any;
@@ -35,7 +42,13 @@ export default class Level1 extends Phaser.Scene
         active:false
     });
         this.bg = {}
-        this.player = {} as Sprites
+        this.player = {} as any
+        this.sprite = {
+          floor:{},
+          tree:{},
+          jump:{}
+        }
+
         this.playerState = "_idle"
         this.isBehavior = false;
         this.motionState = {
@@ -63,13 +76,14 @@ export default class Level1 extends Phaser.Scene
       const map = this.make.tilemap({ key: 'Level1'});
       // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
       const tileset = map.addTilesetImage('Tiles', 'tileSetImage');
-    
+      
       const objectH = -this.game.scale.baseSize.height // zoom에 따라 맵이 맞게 배치되도록
-      console.log("🚀 ~ file: Level1.ts:68 ~ createMap ~ this.game.scale", this.game.scale)
-      const tree = map.createLayer('tree', tileset,0,objectH)
+      // const platforms = this.physics.add.staticGroup();
+
+      this.sprite.tree = map.createLayer('tree', tileset,0,objectH)
       // map.createStaticLayer('background', tileset,0,objectH)
-      map.createLayer('jump', tileset,0,objectH)
-      map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
+      this.sprite.jump = map.createLayer('jump', tileset,0,objectH)
+      this.sprite.floor = map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
     }
     loadPlayer() {
       this.load.spritesheet('player_idle', Mushrooms["idle"],{ frameWidth: 32, frameHeight: 28 })
@@ -77,16 +91,25 @@ export default class Level1 extends Phaser.Scene
       this.load.spritesheet('player_walk', Mushrooms["walk"],{ frameWidth: 32, frameHeight: 28 })
     }
     createPlayer() {
-      this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, `player${this.playerState}`);
+      this.player = this.physics.add.sprite(this.playerLocation.w, 0, `player${this.playerState}`);
       this.player.setBounce(0.2);
-      this.player.setCollideWorldBounds(true);
+      this.player.setCollideWorldBounds(true); // 바닥과 충돌
     }
     createCamera() {
-      this.cameras.main.setBounds(0, 0, 3392, -200);
-      this.physics.world.setBounds(0, 0, 3392,300); // 캐릭터 위치 조정
+      this.cameras.main.setBounds(0, 0, 3392, 0);
+      // const playerLocation_H = (this.playerLocation.h/2)-60 
+      // this.physics.world.setBounds(0, 0, 3392,playerLocation_H); // 캐릭터 위치 조정
       this.cameras.main.startFollow(this.player, true, 0.08, 0.08); // 카메라를 플레이어에 맞춤
       this.cameras.main.centerOn(0,0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
       this.cameras.main.pan(0, 0, 0);
+    }
+    setCollider() { //충돌감지
+      // this.game.arcade.collider(this.player, this.floor);
+      this.physics.add.collider(this.player, this.sprite.floor);
+      this.physics.add.collider(this.player, this.sprite.tree,()=>console.log('collide tree'));
+
+      this.sprite.floor.setCollisionByExclusion([-1]);
+      this.sprite.tree.setCollisionByExclusion([-1]);
     }
     preload ()
     {
@@ -105,6 +128,11 @@ export default class Level1 extends Phaser.Scene
 
       // this.player.setAngle(90) - 각도 바꿈.
       
+      // this.physics.add.collider(stars, platforms); // 충돌감지
+
+      // this.physics.add.overlap(player, stars, this.collectStar, null, this); // 닿으면 사라지게? this.aaa.disableBody
+
+
       // 애니메이션
       this.anims.create( {
           key: 'idle',
@@ -138,6 +166,8 @@ export default class Level1 extends Phaser.Scene
 
     }
     update () {
+      this.setCollider();
+
        if (this.cursors.left.isDown) {//왼쪽
         this.playerState = "walk"
         this.player.setVelocityX(-40);
