@@ -49,8 +49,8 @@ export default class Level1 extends Phaser.Scene
         this.platforms = {}
         this.cursors = {}
         this.playerLocation = {
-          w:0,
-          h:0,
+          w:100,
+          h:window.innerHeight,
           currentY:0
         }
         this.sameTimeMotionInterval = {} as NodeJS.Timeout
@@ -62,48 +62,50 @@ export default class Level1 extends Phaser.Scene
     createMap(){
       const map = this.make.tilemap({ key: 'Level1'});
       // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
-     const tileset = map.addTilesetImage('Tiles', 'tileSetImage');
+      const tileset = map.addTilesetImage('Tiles', 'tileSetImage');
     
-      const objectH = 0
-
+      const objectH = -this.game.scale.baseSize.height // zoom에 따라 맵이 맞게 배치되도록
+      console.log("🚀 ~ file: Level1.ts:68 ~ createMap ~ this.game.scale", this.game.scale)
       const tree = map.createLayer('tree', tileset,0,objectH)
       // map.createStaticLayer('background', tileset,0,objectH)
       map.createLayer('jump', tileset,0,objectH)
       map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
     }
-    preload ()
-    {
-      // this.load.image('background', background);
-      // this.load.image('player1', Mushrooms.idle1);
+    loadPlayer() {
       this.load.spritesheet('player_idle', Mushrooms["idle"],{ frameWidth: 32, frameHeight: 28 })
       this.load.spritesheet('player_jump', Mushrooms["jump"],{ frameWidth: 32, frameHeight: 32 })
       this.load.spritesheet('player_walk', Mushrooms["walk"],{ frameWidth: 32, frameHeight: 28 })
-
+    }
+    createPlayer() {
+      this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, `player${this.playerState}`);
+      this.player.setBounce(0.2);
+      this.player.setCollideWorldBounds(true);
+    }
+    createCamera() {
+      this.cameras.main.setBounds(0, 0, 3392, -200);
+      this.physics.world.setBounds(0, 0, 3392,300); // 캐릭터 위치 조정
+      this.cameras.main.startFollow(this.player, true, 0.08, 0.08); // 카메라를 플레이어에 맞춤
+      this.cameras.main.centerOn(0,0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
+      this.cameras.main.pan(0, 0, 0);
+    }
+    preload ()
+    {
+      this.loadPlayer();
       this.loadMap();
     }
 
     create ()
     {
       this.createMap();
+      this.createPlayer();
+      this.createCamera();
 
       // this.bg = this.add.image(400, 300, 'background');
       // this.platforms = this.physics.add.staticGroup();
 
-      this.player = this.physics.add.sprite(this.playerLocation.w, this.playerLocation.h, `player${this.playerState}`);
-      this.player.setBounce(0.2);
-      this.player.setCollideWorldBounds(true);
       // this.player.setAngle(90) - 각도 바꿈.
       
-
-      // 카메라
-      this.cameras.main.setBounds(0, 0, 3392, -200);
-      this.physics.world.setBounds(0, 0, 3392,300); // 캐릭터 위치 조정
-      this.cameras.main.startFollow(this.player, true, 0.08, 0.08); // 카메라를 플레이어에 맞춤
-      this.cameras.main.centerOn(0,0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
-      // this.cameras.main.pan(0, 0, 0);
-
-      // this.cameras.main.setZoom(2);
-
+      // 애니메이션
       this.anims.create( {
           key: 'idle',
           frames: this.anims.generateFrameNames('player_idle',{start:0, end:1}),
@@ -128,8 +130,6 @@ export default class Level1 extends Phaser.Scene
         frameRate: 8,
         repeat: 0
       });
-
-
 
       this.player.play("idle",true) // idle 모션 실행.
       // this.playerLocation.currentY = this.player.y
