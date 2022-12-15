@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-// import { from, fromEvent, useObservable } from "@vueuse/rxjs";
+import { onMounted } from "vue";
 import * as Phaser from 'phaser';
-import { Sprites } from '../module/phaser';
-// const pink = new Image();
-// pink.src = pink1;
-// const canvas = ref();
+import Level1 from '../phaser/Level1/Level1'
+import Welcome from '../phaser/Welcome/Welcome'
+
+
+
 const ZOOM_LEVEL = 2;
   const config = {
     type: Phaser.AUTO,
@@ -16,7 +16,8 @@ const ZOOM_LEVEL = 2;
     zoom: ZOOM_LEVEL,
     backgroundColor: '#304858',
     pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-    scene: [ Sprites ],
+    scene: [ Welcome,Level1 ],
+    // 
     physics: {
         default: 'arcade',
         arcade: {
@@ -28,7 +29,7 @@ const ZOOM_LEVEL = 2;
 
 onMounted(() => {
   const game = new Phaser.Game(config);
-  const phaserCanvas:HTMLCanvasElement = game.canvas
+  // const phaserCanvas:HTMLCanvasElement = game.canvas
 
   window.addEventListener("resize", () => {
           game.scale.resize(window.innerWidth/ZOOM_LEVEL, window.innerHeight/ZOOM_LEVEL);
