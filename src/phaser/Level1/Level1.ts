@@ -10,6 +10,12 @@ type SpriteType = {
   floor:any
   tree:any
   jump:any
+  background:any
+}
+type ColliderType = {
+  floor:boolean
+  tree:boolean
+  jump:boolean
 }
 
 const Mushrooms:Mushrooms = {
@@ -27,7 +33,8 @@ export default class Level1 extends Phaser.Scene
    bg:object
    player:any
    sprite:SpriteType
-   playerState:string
+   colliders:ColliderType
+   playerState:'jump'|'idle'|'walk'
    platforms:any
    cursors:any;
    playerLocation:object
@@ -46,10 +53,16 @@ export default class Level1 extends Phaser.Scene
         this.sprite = {
           floor:{},
           tree:{},
-          jump:{}
+          jump:{},
+          background:{}
+        }
+        this.colliders = {
+          floor:false,
+          tree:false,
+          jump:false
         }
 
-        this.playerState = "_idle"
+        this.playerState = "idle"
         this.isBehavior = false;
         this.motionState = {
           up:false,
@@ -81,7 +94,7 @@ export default class Level1 extends Phaser.Scene
       // const platforms = this.physics.add.staticGroup();
 
       this.sprite.tree = map.createLayer('tree', tileset,0,objectH)
-      // map.createStaticLayer('background', tileset,0,objectH)
+      this.sprite.background = map.createLayer('background', tileset,0,objectH)
       this.sprite.jump = map.createLayer('jump', tileset,0,objectH)
       this.sprite.floor = map.createLayer('floor', tileset,0,objectH) //프로그램에서 설정한 레이어 불러옴.
     }
@@ -103,13 +116,18 @@ export default class Level1 extends Phaser.Scene
       this.cameras.main.centerOn(0,0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
       this.cameras.main.pan(0, 0, 0);
     }
-    setCollider() { //충돌감지
-      // this.game.arcade.collider(this.player, this.floor);
-      this.physics.add.collider(this.player, this.sprite.floor);
-      this.physics.add.collider(this.player, this.sprite.tree,()=>console.log('collide tree'));
+    setCollider() { //충돌감지 // update에 적용
 
-      this.sprite.floor.setCollisionByExclusion([-1]);
-      this.sprite.tree.setCollisionByExclusion([-1]);
+      this.physics.add.collider(this.player, this.sprite.floor);
+      // this.physics.add.collider(this.player, this.sprite.floor,callback);
+      this.physics.add.collider(this.player, this.sprite.jump);
+      // this.physics.add.overlap(this.player, this.sprite.floor, testFunc, null, this);
+
+      this.sprite.floor.setCollisionByProperty({ collides: true });
+
+      this.sprite.jump.setCollisionByProperty({ collides: true });
+
+      var M = Phaser.Physics.Matter.MatterPhysics
     }
     preload ()
     {
@@ -143,7 +161,8 @@ export default class Level1 extends Phaser.Scene
       this.anims.create({
         key: 'jump',
         frames: this.anims.generateFrameNames('player_jump',{start:0, end:7}),
-        frameRate: 16,
+        // frameRate: 16,
+        frameRate: 5,
         repeat: 0
       });
       this.anims.create({
@@ -168,15 +187,25 @@ export default class Level1 extends Phaser.Scene
     update () {
       this.setCollider();
 
+        // console.log("점프 끝")
+
        if (this.cursors.left.isDown) {//왼쪽
-        this.playerState = "walk"
         this.player.setVelocityX(-40);
+
+        if(this.playerState === 'jump') {//점프 임시 대책
+          return; //점프중엔 다른 동작 x
+        }
+        this.playerState = "walk"
         this.player.anims.play('left',true);
         this.sameTimeMotionHandler("left");
 
       } else if (this.cursors.right.isDown) { // 오른쪽
-        this.playerState = "walk"
         this.player.setVelocityX(40);
+        if(this.playerState === 'jump') {//점프 임시 대책
+          return; //점프중엔 다른 동작 x
+        }
+        this.playerState = "walk"
+
         this.player.anims.play('right', true);
         this.sameTimeMotionHandler("right");
 
@@ -184,17 +213,20 @@ export default class Level1 extends Phaser.Scene
         this.sameTimeMotionHandler("idle");
           if(!this.isBehavior) {
             this.player.setVelocityX(0);
-            this.playerState = "_idle"
+            this.playerState = "idle"
             this.player.play("idle",true)
             this.isBehavior = false;
           }
       }
-      if(this.cursors.space.isDown) {// 점프
+      if(this.cursors.space.isDown) {//스페이스바를 눌렀을 때 점프
 
-        this.playerState = "_jump"
-        this.player.setVelocityY(300);
+        this.playerState = "jump"
+        this.player.setVelocityY(900);
         this.player.play("jump")
         this.sameTimeMotionHandler("space");
+        setTimeout(() => { //점프 임시 대책
+          this.playerState = 'idle'
+        },1100)
       }
     }
     
@@ -210,7 +242,7 @@ export default class Level1 extends Phaser.Scene
             }
           });
           if(!isMotion) { //모션이 없다면
-            this.isBehavior = false; // idle모드
+            this.isBehavior = false; // idle모드 // true이면 idle로 안바뀜.
           }
       } else if(!this.motionState[motion]) {
         this.motionState[motion] = true;
