@@ -57,3 +57,5 @@
 - v0.0.0:22
 - FEAT : left, right, jump, idle 키이벤트 버그 제거
 - v0.0.0:23
+- FEAT : walk -> left,right 모션 나눔
+- v0.0.0:24

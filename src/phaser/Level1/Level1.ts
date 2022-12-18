@@ -1,7 +1,8 @@
 import * as Phaser from "phaser";
-import M_idle from "@/assets/Mushroom-Forrest/idle.png";
-import M_jump from "@/assets/Mushroom-Forrest/jump.png";
-import M_walk from "@/assets/Mushroom-Forrest/walk.png";
+import M_idle from "@/assets/Mushroom-Forrest/Idle.png";
+import M_jump from "@/assets/Mushroom-Forrest/Jump.png";
+import M_right from "@/assets/Mushroom-Forrest/Right.png";
+import M_left from "@/assets/Mushroom-Forrest/Left.png";
 import M_run from "@/assets/Mushroom-Forrest/run.png";
 // map
 import tilesImg from "./Tiles.png";
@@ -22,7 +23,8 @@ type ColliderType = {
 const Mushrooms: Mushrooms = {
   idle: M_idle,
   jump: M_jump,
-  walk: M_walk,
+  right: M_right,
+  left: M_left,
   run: M_run,
 };
 const motionStateArray = [
@@ -114,7 +116,11 @@ export default class Level1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.spritesheet("player_walk", Mushrooms["walk"], {
+    this.load.spritesheet("player_left", Mushrooms["left"], {
+      frameWidth: 32,
+      frameHeight: 28,
+    });
+    this.load.spritesheet("player_right", Mushrooms["right"], {
       frameWidth: 32,
       frameHeight: 28,
     });
@@ -182,7 +188,7 @@ export default class Level1 extends Phaser.Scene {
     });
     this.anims.create({
       key: "left",
-      frames: this.anims.generateFrameNames("player_walk", {
+      frames: this.anims.generateFrameNames("player_left", {
         start: 0,
         end: 3,
       }),
@@ -191,7 +197,7 @@ export default class Level1 extends Phaser.Scene {
     });
     this.anims.create({
       key: "right",
-      frames: this.anims.generateFrameNames("player_walk", {
+      frames: this.anims.generateFrameNames("player_right", {
         start: 0,
         end: 3,
       }),
