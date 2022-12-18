@@ -1,17 +1,28 @@
-
 interface Mushrooms {
-    [key: string]: string;
-    idle:string
-    jump:string
-    run:string
+  [key: string]: string;
+  idle: string;
+  jump: string;
+  run: string;
 }
-type MotionStatus = "up" | "down" | "left" | "right" | "space" | "shift" | "idle"
+type MotionStatus =
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "space"
+  | "shift"
+  | "idle";
 interface Motions {
-    idle:boolean
-    up:boolean;
-    down:boolean;
-    left:boolean;
-    right:boolean;
-    space:boolean;
-    shift:boolean;
+  idle: boolean;
+  up: boolean;
+  down: boolean;
+  left: boolean;
+  right: boolean;
+  space: boolean;
+  shift: boolean;
+}
+interface MotionSpeedTypes {
+  walk: number;
+  run: number;
+  jump: number;
 }

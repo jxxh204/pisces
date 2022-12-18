@@ -3,7 +3,8 @@ import M_idle from "@/assets/Mushroom-Forrest/Idle.png";
 import M_jump from "@/assets/Mushroom-Forrest/Jump.png";
 import M_right from "@/assets/Mushroom-Forrest/Right.png";
 import M_left from "@/assets/Mushroom-Forrest/Left.png";
-import M_run from "@/assets/Mushroom-Forrest/run.png";
+import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
+import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
 // map
 import tilesImg from "./Tiles.png";
 
@@ -25,7 +26,8 @@ const Mushrooms: Mushrooms = {
   jump: M_jump,
   right: M_right,
   left: M_left,
-  run: M_run,
+  run_left: M_run_left,
+  run_right: M_run_right,
 };
 const motionStateArray = [
   "up",
@@ -42,12 +44,13 @@ export default class Level1 extends Phaser.Scene {
   player: any;
   sprite: SpriteType;
   colliders: ColliderType;
-  playerState: "jump" | "idle" | "walk";
+  playerState: "jump" | "idle" | "walk" | "run" | "running";
   platforms: any;
   cursors: any;
   playerLocation: object;
   isBehavior: boolean;
-  motionState: Motions;
+  // motionState: Motions;
+  motionSpeed: MotionSpeedTypes;
   sameTimeMotionInterval: NodeJS.Timeout;
 
   constructor() {
@@ -72,14 +75,19 @@ export default class Level1 extends Phaser.Scene {
 
     this.playerState = "idle";
     this.isBehavior = false;
-    this.motionState = {
-      idle: false,
-      up: false,
-      down: false,
-      left: false,
-      right: false,
-      space: false,
-      shift: false,
+    // this.motionState = {
+    //   idle: false,
+    //   up: false,
+    //   down: false,
+    //   left: false,
+    //   right: false,
+    //   space: false,
+    //   shift: false,
+    // };
+    this.motionSpeed = {
+      walk: 40,
+      run: 100,
+      jump: 900,
     };
     this.platforms = {};
     this.cursors = {};
@@ -121,6 +129,14 @@ export default class Level1 extends Phaser.Scene {
       frameHeight: 28,
     });
     this.load.spritesheet("player_right", Mushrooms["right"], {
+      frameWidth: 32,
+      frameHeight: 28,
+    });
+    this.load.spritesheet("player_run_left", Mushrooms["run_left"], {
+      frameWidth: 32,
+      frameHeight: 28,
+    });
+    this.load.spritesheet("player_run_right", Mushrooms["run_right"], {
       frameWidth: 32,
       frameHeight: 28,
     });
@@ -204,6 +220,25 @@ export default class Level1 extends Phaser.Scene {
       frameRate: 8,
       repeat: 0,
     });
+    //run
+    this.anims.create({
+      key: "run_left",
+      frames: this.anims.generateFrameNames("player_run_left", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "run_right",
+      frames: this.anims.generateFrameNames("player_run_right", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
     this.player.play("idle", true); // idle 모션 실행.
   }
   preload() {
@@ -235,6 +270,22 @@ export default class Level1 extends Phaser.Scene {
   }
   update() {
     this.setCollider();
+    const onRunPlayer = (direction: "left" | "right") => {
+      console.log("달리기", this.playerState);
+      this.playerState = "run";
+      if (this.playerState === "run") {
+        this.player.anims.play(`run_${direction}`, true); //처음 한번만 모션 발동.
+        this.playerState = "running";
+      }
+      if (this.playerState === "running") {
+        // 모션과 별개로 계속 움직여야 하기에 따로 적용.
+        if (direction === "left") {
+          this.player.setVelocityX(-this.motionSpeed.run);
+        } else {
+          this.player.setVelocityX(this.motionSpeed.run);
+        }
+      }
+    };
 
     if (this.playerState === "jump") {
       if (this.colliders.floor) {
@@ -254,7 +305,7 @@ export default class Level1 extends Phaser.Scene {
       if (this.cursors.space.isDown) {
         //스페이스바를 눌렀을 때 점프
         this.playerState = "jump";
-        this.player.setVelocityY(900);
+        this.player.setVelocityY(this.motionSpeed.jump);
         this.player.play("jump");
         this.isBehavior = true;
       }
@@ -262,23 +313,33 @@ export default class Level1 extends Phaser.Scene {
 
     if (this.cursors.left.isDown) {
       //왼쪽
-      this.player.setVelocityX(-40);
-
-      if (this.playerState !== "jump") {
-        if (this.colliders.floor) {
-          //점프가 아니면서 땅에 닿았을 경우에만 작동
-          this.playerState = "walk";
-          this.player.anims.play("left", true);
+      if (this.cursors.shift.isDown) {
+        // 달리기. this.cursors.shift.isUp
+        onRunPlayer("left");
+      } else {
+        //쉬프트 안누를 경우 걷기.
+        this.player.setVelocityX(-this.motionSpeed.walk);
+        if (this.playerState !== "jump") {
+          if (this.colliders.floor) {
+            //점프가 아니면서 땅에 닿았을 경우에만 작동
+            this.playerState = "walk";
+            this.player.anims.play("left", true);
+          }
         }
       }
     } else if (this.cursors.right.isDown) {
       // 오른쪽
-      this.player.setVelocityX(40);
-      if (this.playerState !== "jump") {
-        if (this.colliders.floor) {
-          //점프가 아니면서 땅에 닿았을 경우에만 작동
-          this.playerState = "walk";
-          this.player.anims.play("right", true);
+      if (this.cursors.shift.isDown) {
+        // 달리기. this.cursors.shift.isUp
+        onRunPlayer("right");
+      } else {
+        this.player.setVelocityX(this.motionSpeed.walk);
+        if (this.playerState !== "jump") {
+          if (this.colliders.floor) {
+            //점프가 아니면서 땅에 닿았을 경우에만 작동
+            this.playerState = "walk";
+            this.player.anims.play("right", true);
+          }
         }
       }
     } else {
@@ -291,27 +352,6 @@ export default class Level1 extends Phaser.Scene {
           this.isBehavior = false;
         }
       }
-    }
-  }
-
-  sameTimeMotionHandler(motion: MotionStatus) {
-    // jump
-    let isMotion = true;
-    if (motion === "idle") {
-      motionStateArray.map((motion: MotionStatus) => {
-        if (!this.motionState[motion]) {
-          isMotion = false;
-        } else {
-          isMotion = true;
-          return;
-        }
-      });
-      if (!isMotion) {
-        //모션이 없다면
-        this.isBehavior = false; // idle모드 // true이면 idle로 안바뀜.
-      }
-    } else if (!this.motionState[motion]) {
-      this.motionState[motion] = true;
     }
   }
 }
