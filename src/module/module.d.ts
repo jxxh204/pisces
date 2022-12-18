@@ -7,6 +7,7 @@ interface Mushrooms {
 }
 type MotionStatus = "up" | "down" | "left" | "right" | "space" | "shift" | "idle"
 interface Motions {
+    idle:boolean
     up:boolean;
     down:boolean;
     left:boolean;
