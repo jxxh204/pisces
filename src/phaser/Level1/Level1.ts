@@ -9,20 +9,21 @@ import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
 import skyImg from "./sky/skyNew.png";
+import { media } from "../../media/userMedia";
 
 type SpriteType = {
   floor: any;
-  tree: any;
-  jump: any;
   background: any;
   mac: any;
   sky: any;
 };
 type ColliderType = {
   floor: boolean;
-  tree: boolean;
   activeCount: boolean[];
   timer: NodeJS.Timeout;
+};
+type OverlapType = {
+  mac: boolean;
 };
 
 const Mushrooms: Mushrooms = {
@@ -48,6 +49,7 @@ export default class Level1 extends Phaser.Scene {
   player: any;
   sprite: SpriteType;
   colliders: ColliderType;
+  overLap: OverlapType;
   playerState: "jump" | "idle" | "walk" | "run" | "running";
   platforms: any;
   cursors: any;
@@ -56,6 +58,7 @@ export default class Level1 extends Phaser.Scene {
   // motionState: Motions;
   motionSpeed: MotionSpeedTypes;
   sameTimeMotionInterval: NodeJS.Timeout;
+  video: any;
 
   constructor() {
     super({
@@ -66,15 +69,15 @@ export default class Level1 extends Phaser.Scene {
     this.player = {} as any;
     this.sprite = {
       floor: {},
-      tree: {},
-      jump: {},
       background: {},
     };
     this.colliders = {
       floor: false,
-      tree: false,
       activeCount: [],
       timer: {} as NodeJS.Timer,
+    };
+    this.overLap = {
+      mac: false,
     };
 
     this.playerState = "idle";
@@ -89,7 +92,7 @@ export default class Level1 extends Phaser.Scene {
     //   shift: false,
     // };
     this.motionSpeed = {
-      walk: 40,
+      walk: 200,
       run: 100,
       jump: 900,
     };
@@ -100,6 +103,8 @@ export default class Level1 extends Phaser.Scene {
       h: window.innerHeight,
       currentY: 0,
     };
+    this.video = {};
+
     this.sameTimeMotionInterval = {} as NodeJS.Timeout;
   }
 
@@ -124,9 +129,7 @@ export default class Level1 extends Phaser.Scene {
     const objectH = -this.game.scale.baseSize.height; // zoom에 따라 맵이 맞게 배치되도록
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.tree = map.createLayer("tree", tileset, 0, objectH);
     this.sprite.background = map.createLayer("background", tileset, 0, objectH);
-    this.sprite.jump = map.createLayer("jump", tileset, 0, objectH);
     this.sprite.floor = map.createLayer("floor", tileset, 0, objectH); //프로그램에서 설정한 레이어 불러옴.
     this.sprite.mac = map.createLayer("mac", macTileSet, 0, objectH);
     this.sprite.sky = map.createLayer("sky", skyTileSet, 0, objectH);
@@ -176,29 +179,71 @@ export default class Level1 extends Phaser.Scene {
     this.cameras.main.pan(0, 0, 0);
   }
   setCollider() {
-    const setOncollideFloor = (
+    const setOnCollideFloor = (
       c: Phaser.Types.Physics.Arcade.GameObjectWithBody
     ) => {
+      // console.log("🚀 ~ file: Level1.ts:174 ~ Level1 ~ setCollider ~ c", c);
       this.colliders.floor = c.active;
       if (this.colliders.timer) clearTimeout(this.colliders.timer);
       this.colliders.timer = setTimeout(() => {
         this.colliders.floor = false;
       }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
     };
+    // const setColliderMac = (
+    //   _player: Phaser.Types.Physics.Arcade.GameObjectWithBody
+    // ) => {
+    //   console.log(
+    //     "🚀 ~ file: Level1.ts:197 ~ Level1 ~ this.physics.add.collider ~ _player",
+    //     _player.body.touching
+    //   );
+    // };
     //충돌감지 // update에 적용
     this.physics.add.collider(this.player, this.sprite.floor, (c) =>
-      setOncollideFloor(c)
-    );
-
-    this.physics.add.collider(this.player, this.sprite.jump, (c) =>
-      setOncollideFloor(c)
+      setOnCollideFloor(c)
     );
 
     this.sprite.floor.setCollisionByProperty({ collides: true });
-
-    this.sprite.jump.setCollisionByProperty({ collides: true });
-
     // var M = Phaser.Physics.Matter.MatterPhysics
+  }
+  async getCameraStream() {
+    const mediaInstance = media.GetStream.getInstance();
+    console.log("getCameraStream");
+    const permission = await mediaInstance.permission("camera");
+    if (permission?.camera !== "denied") {
+      //권한 허용
+      const video = document.createElement("video");
+      video.playsInline = true;
+      video.width = 100;
+      video.height = 100;
+      video.autoplay = true;
+      const streamSetting = {
+        video: true,
+        audio: false,
+        elementKind: "video",
+        outputElement: video,
+      };
+      mediaInstance.settings(streamSetting);
+      mediaInstance.getVideoStream();
+
+      const element = this.add.dom(250, this.player.y - 100, video);
+      // var domElement = scene.add.dom(x, y, el, style, innerText);
+      // element.setDepth();
+      video.addEventListener("ended", (event) => {
+        element.setVisible(false);
+        console.log("비디오 끝");
+        this.overLap.mac = false;
+      });
+    }
+  }
+  setOverLap() {
+    this.physics.add.overlap(this.player, this.sprite.mac, (a, mac) => {
+      if (Math.sign(mac.index) === 1) {
+        //컴퓨터 닿음.
+        if (!this.overLap.mac) this.getCameraStream();
+
+        this.overLap.mac = true;
+      }
+    });
   }
   playerAnimations() {
     this.anims.create({
@@ -268,6 +313,7 @@ export default class Level1 extends Phaser.Scene {
     this.setZindex();
     this.createPlayer();
     this.createCamera();
+    this.setOverLap();
 
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
