@@ -7,12 +7,16 @@ import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
 import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
 // map
 import tilesImg from "./Tiles.png";
+import macTileSetImg from "../Sprites/mac.png";
+import skyImg from "./sky/skyNew.png";
 
 type SpriteType = {
   floor: any;
   tree: any;
   jump: any;
   background: any;
+  mac: any;
+  sky: any;
 };
 type ColliderType = {
   floor: boolean;
@@ -98,14 +102,24 @@ export default class Level1 extends Phaser.Scene {
     };
     this.sameTimeMotionInterval = {} as NodeJS.Timeout;
   }
+
   loadMap() {
+    //tileSet
     this.load.image("tileSetImage", tilesImg);
+    this.load.image("macTileSetImage", macTileSetImg);
+    this.load.image("skyTileSetImage", skyImg);
+    //tileMap JSON
     this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
+  }
+  setZindex() {
+    this.sprite.sky.setDepth(-1);
   }
   createMap() {
     const map = this.make.tilemap({ key: "Level1" });
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
     const tileset = map.addTilesetImage("Tiles", "tileSetImage");
+    const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
+    const skyTileSet = map.addTilesetImage("skyNew", "skyTileSetImage");
 
     const objectH = -this.game.scale.baseSize.height; // zoom에 따라 맵이 맞게 배치되도록
     // const platforms = this.physics.add.staticGroup();
@@ -114,7 +128,10 @@ export default class Level1 extends Phaser.Scene {
     this.sprite.background = map.createLayer("background", tileset, 0, objectH);
     this.sprite.jump = map.createLayer("jump", tileset, 0, objectH);
     this.sprite.floor = map.createLayer("floor", tileset, 0, objectH); //프로그램에서 설정한 레이어 불러옴.
+    this.sprite.mac = map.createLayer("mac", macTileSet, 0, objectH);
+    this.sprite.sky = map.createLayer("sky", skyTileSet, 0, objectH);
   }
+
   loadPlayer() {
     this.load.spritesheet("player_idle", Mushrooms["idle"], {
       frameWidth: 32,
@@ -248,6 +265,7 @@ export default class Level1 extends Phaser.Scene {
 
   create() {
     this.createMap();
+    this.setZindex();
     this.createPlayer();
     this.createCamera();
 
@@ -263,7 +281,6 @@ export default class Level1 extends Phaser.Scene {
     // 애니메이션
 
     this.playerAnimations();
-    console.log(this.player.anims.currentAnim);
     // this.playerLocation.currentY = this.player.y
     // this.playerLocation.currentY = 424;
     this.cursors = this.input.keyboard.createCursorKeys(); // 키보드 사용
@@ -271,7 +288,6 @@ export default class Level1 extends Phaser.Scene {
   update() {
     this.setCollider();
     const onRunPlayer = (direction: "left" | "right") => {
-      console.log("달리기", this.playerState);
       this.playerState = "run";
       if (this.playerState === "run") {
         this.player.anims.play(`run_${direction}`, true); //처음 한번만 모션 발동.
@@ -296,7 +312,7 @@ export default class Level1 extends Phaser.Scene {
           this.colliders.activeCount = [];
           this.isBehavior = false; // idle로 변함
           this.playerState = "idle";
-          console.log("바닥에 닿음", this.colliders.activeCount);
+          // console.log("바닥에 닿음");
         }
       }
     }

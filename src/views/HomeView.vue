@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import * as Phaser from "phaser";
 import Level1 from "../phaser/Level1/Level1";
 import Welcome from "../phaser/Welcome/Welcome";
+import MacSprite from "../phaser/Sprites/MacSprite";
 
 const ZOOM_LEVEL = 2;
 const config = {
@@ -14,7 +15,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#304858",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, Level1],
+  scene: [Welcome, Level1, MacSprite],
   //
   physics: {
     default: "arcade",
