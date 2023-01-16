@@ -19,7 +19,7 @@ const config = {
   dom: {
     createContainer: true,
   },
-  zoom: ZOOM_LEVEL,
+  // zoom: ZOOM_LEVEL,
   backgroundColor: "#304858",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
   scene: [Welcome, Level1, MacSprite],
@@ -42,8 +42,8 @@ onMounted(() => {
     ZOOM_LEVEL = 1.6;
   }
 
-  console.log(ZOOM_LEVEL);
   const game = new Phaser.Game(config);
+
   game.canvas.style.zIndex = "-1";
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
   const resize = () => {
@@ -72,7 +72,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div id="sprite" class="w-screen h-screen top-0 bottom-0 fixed"></div>
+    <div id="sprite" class="w-full h-full top-0 bottom-0 fixed"></div>
   </div>
 </template>
 <style scoped>
