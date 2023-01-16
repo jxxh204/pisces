@@ -303,11 +303,18 @@ export default class Level1 extends Phaser.Scene {
     });
     this.player.play("idle", true); // idle 모션 실행.
   }
+  responsive() {
+    // // 반응형으로 화면을 꽉 채워서 보여준다
+    // this.scale.scaleMode = this.physics.``;
+    // Phaser.ScaleManager.SHOW_ALL
+    // // 반응형으로 수직, 수평 정렬이 되도록 한다
+    // this.scale.pageAlignHrizontally = true;
+    // this.scale.pageAlignVertically = true; }
+  }
   preload() {
     this.loadPlayer();
     this.loadMap();
   }
-
   create() {
     this.createMap();
     this.setZindex();

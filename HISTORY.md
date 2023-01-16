@@ -71,3 +71,8 @@
 
 - FEAT : permission && getUserMedia 적용.
 - v0.0.0:27
+
+## 2023 1/17
+
+- FEAT : 반응형 임시 적용.
+- v0.0.0:28
