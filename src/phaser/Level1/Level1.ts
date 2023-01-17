@@ -170,7 +170,7 @@ export default class Level1 extends Phaser.Scene {
     //위치 바꾸기
     this.load.spritesheet("inGameLoading", inGameLoading, {
       frameWidth: 32,
-      frameHeight: 28,
+      frameHeight: 32,
     });
   }
   createPlayer() {
@@ -183,14 +183,19 @@ export default class Level1 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true); // 바닥과 충돌
   }
   createInGameLoading() {
-    this.inGameLoading = this.physics.add.sprite(250, 0, `inGameLoading`);
+    this.inGameLoading = this.physics.add.staticSprite(
+      250,
+      240,
+      `inGameLoading`
+    );
+    console.log(this.sprite.mac, this.game.scale.baseSize.height);
     this.anims.create({
       key: "loading",
       frames: this.anims.generateFrameNames("inGameLoading", {
         start: 0,
-        end: 7,
+        end: 20,
       }),
-      frameRate: 4,
+      frameRate: 5,
       repeat: -1,
     });
     this.inGameLoading.play("loading", true);
