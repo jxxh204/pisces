@@ -4,6 +4,7 @@ import * as Phaser from "phaser";
 import Level1 from "../phaser/Level1/Level1";
 import Welcome from "../phaser/Welcome/Welcome";
 import MacSprite from "../phaser/Sprites/MacSprite";
+// import Buttons from "../phaser/Buttons";
 
 const SIZE_WIDTH_SCREEN = window.innerWidth;
 const SIZE_HEIGHT_SCREEN = window.innerHeight;
@@ -22,7 +23,7 @@ const config = {
   // zoom: ZOOM_LEVEL,
   backgroundColor: "#304858",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, Level1, MacSprite],
+  scene: [Level1, MacSprite], //Welcome
   physics: {
     default: "arcade",
     arcade: {

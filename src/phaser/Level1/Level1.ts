@@ -5,6 +5,9 @@ import M_right from "@/assets/Mushroom-Forrest/Right.png";
 import M_left from "@/assets/Mushroom-Forrest/Left.png";
 import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
 import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
+
+// inGameLoading
+import inGameLoading from "./inGameLoading.png";
 // map
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
@@ -47,6 +50,7 @@ const motionStateArray = [
 export default class Level1 extends Phaser.Scene {
   bg: object;
   player: any;
+  inGameLoading: any;
   sprite: SpriteType;
   colliders: ColliderType;
   overLap: OverlapType;
@@ -67,6 +71,7 @@ export default class Level1 extends Phaser.Scene {
     });
     this.bg = {};
     this.player = {} as any;
+    this.inGameLoading = {} as any;
     this.sprite = {
       floor: {},
       background: {},
@@ -161,6 +166,13 @@ export default class Level1 extends Phaser.Scene {
       frameHeight: 28,
     });
   }
+  loadInGameLoading() {
+    //위치 바꾸기
+    this.load.spritesheet("inGameLoading", inGameLoading, {
+      frameWidth: 32,
+      frameHeight: 28,
+    });
+  }
   createPlayer() {
     this.player = this.physics.add.sprite(
       this.playerLocation.w,
@@ -169,6 +181,19 @@ export default class Level1 extends Phaser.Scene {
     );
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true); // 바닥과 충돌
+  }
+  createInGameLoading() {
+    this.inGameLoading = this.physics.add.sprite(250, 0, `inGameLoading`);
+    this.anims.create({
+      key: "loading",
+      frames: this.anims.generateFrameNames("inGameLoading", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 4,
+      repeat: -1,
+    });
+    this.inGameLoading.play("loading", true);
   }
   createCamera() {
     this.cameras.main.setBounds(0, 0, 3392, 0);
@@ -313,12 +338,14 @@ export default class Level1 extends Phaser.Scene {
   }
   preload() {
     this.loadPlayer();
+    this.loadInGameLoading();
     this.loadMap();
   }
   create() {
     this.createMap();
     this.setZindex();
     this.createPlayer();
+    this.createInGameLoading();
     this.createCamera();
     this.setOverLap();
 
