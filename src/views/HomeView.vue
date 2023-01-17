@@ -16,11 +16,11 @@ const config = {
   mode: Phaser.Scale.NONE,
   parent: "sprite", //canvas id
   width: SIZE_WIDTH_SCREEN / ZOOM_LEVEL,
-  height: SIZE_HEIGHT_SCREEN / ZOOM_LEVEL,
+  height: 600,
   dom: {
     createContainer: true,
   },
-  // zoom: ZOOM_LEVEL,
+  zoom: ZOOM_LEVEL,
   backgroundColor: "#304858",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
   scene: [Level1, MacSprite], //Welcome
@@ -34,40 +34,42 @@ const config = {
 
 onMounted(() => {
   //반응형
-  if (window.innerHeight < 750) {
-    // FHD 2
-    ZOOM_LEVEL = 2;
-  }
-  if (window.innerHeight < 650) {
-    // 맥북 1.6
-    ZOOM_LEVEL = 1.6;
-  }
+  // if (window.innerHeight < 750) {
+  //   // FHD 2
+  //   ZOOM_LEVEL = 2;
+  // }
+  // if (window.innerHeight < 650) {
+  //   // 맥북 1.6
+  //   ZOOM_LEVEL = 1.6;
+  // }
 
   const game = new Phaser.Game(config);
 
   game.canvas.style.zIndex = "-1";
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
-  const resize = () => {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const windowRatio = windowWidth / windowHeight;
-    const gameRatio = game.config.width / game.config.height;
+  canvas.height = 600;
+  canvas.style.height = 600;
+  // const resize = () => {
+  //   const windowWidth = window.innerWidth;
+  //   const windowHeight = window.innerHeight;
+  //   const windowRatio = windowWidth / windowHeight;
+  //   const gameRatio = game.config.width / game.config.height;
 
-    if (windowRatio < gameRatio) {
-      canvas.style.width = windowWidth + "px";
-      canvas.style.height = windowWidth / gameRatio + "px";
-    } else {
-      canvas.style.width = windowHeight * gameRatio + "px";
-      canvas.style.height = windowHeight + "px";
-    }
-    game.scale.resize(
-      window.innerWidth / ZOOM_LEVEL,
-      window.innerHeight / ZOOM_LEVEL
-    );
-  };
-  resize();
+  //   if (windowRatio < gameRatio) {
+  //     canvas.style.width = windowWidth + "px";
+  //     canvas.style.height = windowWidth / gameRatio + "px";
+  //   } else {
+  //     canvas.style.width = windowHeight * gameRatio + "px";
+  //     canvas.style.height = windowHeight + "px";
+  //   }
+  //   game.scale.resize(
+  //     window.innerWidth / ZOOM_LEVEL,
+  //     window.innerHeight / ZOOM_LEVEL
+  //   );
+  // };
+  // resize();
 
-  window.addEventListener("resize", resize, false);
+  // window.addEventListener("resize", resize, false);
 });
 </script>
 

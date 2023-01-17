@@ -134,10 +134,10 @@ export default class Level1 extends Phaser.Scene {
     const objectH = -this.game.scale.baseSize.height; // zoom에 따라 맵이 맞게 배치되도록
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.background = map.createLayer("background", tileset, 0, objectH);
-    this.sprite.floor = map.createLayer("floor", tileset, 0, objectH); //프로그램에서 설정한 레이어 불러옴.
-    this.sprite.mac = map.createLayer("mac", macTileSet, 0, objectH);
-    this.sprite.sky = map.createLayer("sky", skyTileSet, 0, objectH);
+    this.sprite.background = map.createLayer("background", tileset, 0, 0);
+    this.sprite.floor = map.createLayer("floor", tileset, 0, 0); //프로그램에서 설정한 레이어 불러옴.
+    this.sprite.mac = map.createLayer("mac", macTileSet, 0, 0);
+    this.sprite.sky = map.createLayer("sky", skyTileSet, 0, 0);
   }
 
   loadPlayer() {
@@ -201,10 +201,12 @@ export default class Level1 extends Phaser.Scene {
     this.inGameLoading.play("loading", true);
   }
   createCamera() {
-    this.cameras.main.setBounds(0, 0, 3392, 0);
+    this.cameras.main.setBounds(0, 0, 3392, 100);
+    this.physics.world.setBounds(0, 0, 3392, 240);
+
     // const playerLocation_H = (this.playerLocation.h/2)-60
     // this.physics.world.setBounds(0, 0, 3392,playerLocation_H); // 캐릭터 위치 조정
-    this.cameras.main.startFollow(this.player, true, 0.08, 0.08); // 카메라를 플레이어에 맞춤
+    this.cameras.main.startFollow(this.player, true); // 카메라를 플레이어에 맞춤
     this.cameras.main.centerOn(0, 0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
     this.cameras.main.pan(0, 0, 0);
   }
@@ -345,6 +347,11 @@ export default class Level1 extends Phaser.Scene {
     this.loadPlayer();
     this.loadInGameLoading();
     this.loadMap();
+    // this.physics.world
+    console.log(
+      "🚀 ~ file: Level1.ts:352 ~ preload ~ this.physics.world",
+      this.scale.canvas
+    );
   }
   create() {
     this.createMap();
