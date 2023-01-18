@@ -93,3 +93,5 @@
 - v0.0.0:34
 - FEAT : world, cam 위치조정.
 - v0.0.0:35
+- FEAT : loading 위치 조정
+- v0.0.0:36

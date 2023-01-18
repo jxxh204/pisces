@@ -196,7 +196,7 @@ export default class Level1 extends Phaser.Scene {
   createInGameLoading() {
     this.inGameLoading = this.physics.add.staticSprite(
       250,
-      240,
+      this.bg.height + 60,
       `inGameLoading`
     );
     console.log(this.sprite.mac, this.game.scale.baseSize.height);
@@ -221,11 +221,6 @@ export default class Level1 extends Phaser.Scene {
       this.bg.height
     );
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
-    console.log(
-      "🚀 ~ file: Level1.ts:237 ~ Level1 ~ createCamera ~ this.bg.width",
-      this.bg.width,
-      this.physics.world
-    );
 
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
