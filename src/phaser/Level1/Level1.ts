@@ -133,7 +133,6 @@ export default class Level1 extends Phaser.Scene {
   createMap() {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
-    this.physics.world;
     const map = this.make.tilemap({
       key: "Level1",
     });
@@ -191,7 +190,7 @@ export default class Level1 extends Phaser.Scene {
       600,
       `player${this.playerState}`
     );
-    this.player.setBounce(0.2);
+    // this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true); // 바닥과 충돌
   }
   createInGameLoading() {
@@ -213,23 +212,40 @@ export default class Level1 extends Phaser.Scene {
     this.inGameLoading.play("loading", true);
   }
   createCamera() {
+    //내부 코드 정리하기.
+    this.player.setBounce(0.2); //충돌 반동.
     this.physics.world.setBounds(
-      0,
+      0, // 타일의 처음 지점.
       this.bg.height - 100,
-      this.bg.width,
+      1000, //타일의 끝지점으로.
       this.bg.height
     );
+    // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
+    console.log(
+      "🚀 ~ file: Level1.ts:237 ~ Level1 ~ createCamera ~ this.bg.width",
+      this.bg.width,
+      this.physics.world
+    );
+
     const cam = this.cameras.main;
-    // cam.setZoom(2);
-    this.game.canvas.style.cursor = "none";
+    const canvas = this.game.canvas;
+    cam.setZoom(2);
+    canvas.style.cursor = "none";
     // this.add.existing();
 
     // cam.pan(400, this.bg.height - 200, 1000);
     //w:400, h:??, 2000초동안 이동.
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
+    cam.setBounds(
+      0, // 타일의 처음 지점.
+      this.bg.height - 200,
+      1000, //타일의 끝지점으로.
+      this.bg.height
+    );
+    // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    cam.startFollow(this.player, true, 0.8, 0.8, -300, this.bg.height / 2 - 80); //카메라 따라다님
+    cam.startFollow(this.player, true, 0.8, 0.8, 0, this.bg.height / 2 - 200); //카메라 따라다님
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
