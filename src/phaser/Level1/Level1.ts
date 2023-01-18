@@ -48,7 +48,10 @@ const motionStateArray = [
 ];
 
 export default class Level1 extends Phaser.Scene {
-  bg: object;
+  bg: {
+    width: number;
+    height: number;
+  };
   player: any;
   inGameLoading: any;
   sprite: SpriteType;
@@ -69,7 +72,10 @@ export default class Level1 extends Phaser.Scene {
       key: "Level1", // 여러 scene을 사용할려면 키입력해야함.
       active: false,
     });
-    this.bg = {};
+    this.bg = {
+      width: 0,
+      height: 0,
+    };
     this.player = {} as any;
     this.inGameLoading = {} as any;
     this.sprite = {
@@ -125,7 +131,13 @@ export default class Level1 extends Phaser.Scene {
     this.sprite.sky.setDepth(-1);
   }
   createMap() {
-    const map = this.make.tilemap({ key: "Level1" });
+    this.bg.width = this.scale.width;
+    this.bg.height = this.scale.height;
+    this.physics.world;
+    const map = this.make.tilemap({
+      key: "Level1",
+    });
+
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
     const tileset = map.addTilesetImage("Tiles", "tileSetImage");
     const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
@@ -176,7 +188,7 @@ export default class Level1 extends Phaser.Scene {
   createPlayer() {
     this.player = this.physics.add.sprite(
       this.playerLocation.w,
-      0,
+      600,
       `player${this.playerState}`
     );
     this.player.setBounce(0.2);
@@ -201,14 +213,22 @@ export default class Level1 extends Phaser.Scene {
     this.inGameLoading.play("loading", true);
   }
   createCamera() {
-    this.cameras.main.setBounds(0, 0, 3392, 100);
-    this.physics.world.setBounds(0, 0, 3392, 240);
+    this.physics.world.setBounds(
+      0,
+      this.bg.height - 100,
+      this.bg.width,
+      this.bg.height
+    );
+    const cam = this.cameras.main;
+    cam.setZoom(1);
 
-    // const playerLocation_H = (this.playerLocation.h/2)-60
-    // this.physics.world.setBounds(0, 0, 3392,playerLocation_H); // 캐릭터 위치 조정
-    this.cameras.main.startFollow(this.player, true); // 카메라를 플레이어에 맞춤
-    this.cameras.main.centerOn(0, 0); // 카메라가 따라다님.- 배경 끝에 가까워지면 자동으로 벽으로감.
-    this.cameras.main.pan(0, 0, 0);
+    // cam.pan(400, this.bg.height - 200, 1000);
+    //w:400, h:??, 2000초동안 이동.
+    // cam.zoomTo(2, 1000);
+    //1초동안 줌2로 변경
+    cam.centerOn(this.bg.width / 2, this.bg.height - 150);
+    // this.cameras.main.startFollow(this.player); //카메라 따라다님
+    // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
     const setOnCollideFloor = (

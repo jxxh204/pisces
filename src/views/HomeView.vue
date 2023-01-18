@@ -6,70 +6,59 @@ import Welcome from "../phaser/Welcome/Welcome";
 import MacSprite from "../phaser/Sprites/MacSprite";
 // import Buttons from "../phaser/Buttons";
 
-const SIZE_WIDTH_SCREEN = window.innerWidth;
-const SIZE_HEIGHT_SCREEN = window.innerHeight;
+const ZOOM_LEVEL = 2;
 
-let ZOOM_LEVEL = 2;
+const SIZE_WIDTH_SCREEN = 800;
+const SIZE_HEIGHT_SCREEN = 600;
 
 const config = {
   type: Phaser.AUTO,
-  mode: Phaser.Scale.NONE,
+  mode: Phaser.Scale.FIT, // 자동으로 화면을 꽉채워줌
   parent: "sprite", //canvas id
-  width: SIZE_WIDTH_SCREEN / ZOOM_LEVEL,
-  height: 600,
+  width: SIZE_WIDTH_SCREEN,
+  height: SIZE_HEIGHT_SCREEN,
+  autoCenter: Phaser.Scale.CENTER_BOTH, // 화면을 자동으로 센터에 맞추어줌.
   dom: {
     createContainer: true,
   },
-  zoom: ZOOM_LEVEL,
-  backgroundColor: "#304858",
+  // zoom: ZOOM_LEVEL,
+  backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
   scene: [Level1, MacSprite], //Welcome
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 300 },
+      debug: true,
     },
   },
 };
 
 onMounted(() => {
-  //반응형
-  // if (window.innerHeight < 750) {
-  //   // FHD 2
-  //   ZOOM_LEVEL = 2;
-  // }
-  // if (window.innerHeight < 650) {
-  //   // 맥북 1.6
-  //   ZOOM_LEVEL = 1.6;
-  // }
-
   const game = new Phaser.Game(config);
 
   game.canvas.style.zIndex = "-1";
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
-  canvas.height = 600;
-  canvas.style.height = 600;
-  // const resize = () => {
-  //   const windowWidth = window.innerWidth;
-  //   const windowHeight = window.innerHeight;
-  //   const windowRatio = windowWidth / windowHeight;
-  //   const gameRatio = game.config.width / game.config.height;
+  // canvas.height = 600;
+  const resize = () => {
+    const windowRatio = SIZE_WIDTH_SCREEN / SIZE_HEIGHT_SCREEN;
+    const gameRatio = game.config.width / game.config.height;
 
-  //   if (windowRatio < gameRatio) {
-  //     canvas.style.width = windowWidth + "px";
-  //     canvas.style.height = windowWidth / gameRatio + "px";
-  //   } else {
-  //     canvas.style.width = windowHeight * gameRatio + "px";
-  //     canvas.style.height = windowHeight + "px";
-  //   }
-  //   game.scale.resize(
-  //     window.innerWidth / ZOOM_LEVEL,
-  //     window.innerHeight / ZOOM_LEVEL
-  //   );
-  // };
-  // resize();
+    if (windowRatio < gameRatio) {
+      canvas.style.width = SIZE_WIDTH_SCREEN + "px";
+      canvas.style.height = SIZE_WIDTH_SCREEN / gameRatio + "px";
+    } else {
+      canvas.style.width = SIZE_HEIGHT_SCREEN * gameRatio + "px";
+      canvas.style.height = SIZE_HEIGHT_SCREEN + "px";
+    }
+    // game.scale.resize(
+    //   window.innerWidth / ZOOM_LEVEL,
+    //   window.innerHeight / ZOOM_LEVEL
+    // );
+  };
+  resize();
 
-  // window.addEventListener("resize", resize, false);
+  window.addEventListener("resize", resize, false);
 });
 </script>
 
@@ -79,12 +68,12 @@ onMounted(() => {
   </div>
 </template>
 <style scoped>
-canvas {
+/* canvas {
   display: block;
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
+} */
 </style>
