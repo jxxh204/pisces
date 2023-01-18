@@ -220,14 +220,16 @@ export default class Level1 extends Phaser.Scene {
       this.bg.height
     );
     const cam = this.cameras.main;
-    cam.setZoom(1);
+    // cam.setZoom(2);
+    this.game.canvas.style.cursor = "none";
+    // this.add.existing();
 
     // cam.pan(400, this.bg.height - 200, 1000);
     //w:400, h:??, 2000초동안 이동.
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    // this.cameras.main.startFollow(this.player); //카메라 따라다님
+    cam.startFollow(this.player, true, 0.8, 0.8, -300, this.bg.height / 2 - 80); //카메라 따라다님
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {

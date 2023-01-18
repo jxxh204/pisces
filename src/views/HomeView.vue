@@ -67,13 +67,4 @@ onMounted(() => {
     <div id="sprite" class="w-full h-full top-0 bottom-0 fixed"></div>
   </div>
 </template>
-<style scoped>
-/* canvas {
-  display: block;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
-</style>
+<style scoped></style>
