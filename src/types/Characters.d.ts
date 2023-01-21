@@ -30,6 +30,7 @@ type AnimationsType = {
   key: ActionKeyType;
   start: number;
   end: number;
+  zeroPad?: number;
   frames?: number[];
   frameRate: number;
   repeat: number;

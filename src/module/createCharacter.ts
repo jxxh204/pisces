@@ -97,6 +97,7 @@ export default class CreateCharacter {
           start: animation.start,
           end: animation.end,
           frames: animation.frames,
+          // zeroPad: animation.zeroPad,
         }),
         frameRate: animation.frameRate,
         repeat: animation.repeat,
@@ -170,6 +171,11 @@ export default class CreateCharacter {
         //스페이스바를 눌렀을 때 점프
         this.currentAction = "jump";
         this.character.setVelocityY(this.motionSpeed.jump);
+        this.character.anims.duration = 1000;
+        console.log(
+          "🚀 ~ file: createCharacter.ts:175 ~ CreateCharacter ~ updateAnimations ~ this.character.anims.duration",
+          this.character.anims.duration
+        );
         this.character.anims.play("jump");
         this.isBehavior = true;
       }

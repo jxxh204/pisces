@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
-
+import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 // inGameLoading
 import inGameLoading from "./inGameLoading.png";
 // map
@@ -46,7 +46,7 @@ export default class Test extends Phaser.Scene {
   motionSpeed: MotionSpeedTypes;
   sameTimeMotionInterval: NodeJS.Timeout;
   video: any;
-  m_ins: any;
+  main_char: any;
 
   constructor() {
     super({
@@ -93,7 +93,7 @@ export default class Test extends Phaser.Scene {
 
     this.sameTimeMotionInterval = {} as NodeJS.Timeout;
 
-    this.m_ins = null;
+    this.main_char = null;
   }
 
   loadMap() {
@@ -180,7 +180,7 @@ export default class Test extends Phaser.Scene {
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
     cam.startFollow(
-      this.m_ins.character,
+      this.main_char.character,
       true,
       0.8,
       0.8,
@@ -193,7 +193,6 @@ export default class Test extends Phaser.Scene {
     const setOnCollideFloor = (
       c: Phaser.Types.Physics.Arcade.GameObjectWithBody
     ) => {
-      // console.log("🚀 ~ file: Level1.ts:174 ~ Level1 ~ setCollider ~ c", c);
       this.colliders.floor = c.active;
       if (this.colliders.timer) clearTimeout(this.colliders.timer);
       this.colliders.timer = setTimeout(() => {
@@ -201,8 +200,10 @@ export default class Test extends Phaser.Scene {
       }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
     };
     //충돌감지 // update에 적용
-    this.physics.add.collider(this.m_ins.character, this.sprite.floor, (c) =>
-      setOnCollideFloor(c)
+    this.physics.add.collider(
+      this.main_char.character,
+      this.sprite.floor,
+      (c) => setOnCollideFloor(c)
     );
 
     this.sprite.floor.setCollisionByProperty({ collides: true });
@@ -228,7 +229,11 @@ export default class Test extends Phaser.Scene {
       mediaInstance.settings(streamSetting);
       mediaInstance.getVideoStream();
 
-      const element = this.add.dom(250, this.m_ins.character.y - 100, video);
+      const element = this.add.dom(
+        250,
+        this.main_char.character.y - 100,
+        video
+      );
       // var domElement = scene.add.dom(x, y, el, style, innerText);
       // element.setDepth();
       video.addEventListener("ended", (event) => {
@@ -240,7 +245,7 @@ export default class Test extends Phaser.Scene {
   }
   setOverLap() {
     this.physics.add.overlap(
-      this.m_ins.character,
+      this.main_char.character,
       this.sprite.mac,
       (a, mac) => {
         if (Math.sign(mac.index) === 1) {
@@ -252,13 +257,13 @@ export default class Test extends Phaser.Scene {
       }
     );
   }
-  preload() {
+  loadC1() {
     const location = {
       w: 100,
       h: window.innerHeight / 2,
       currentY: 0,
     };
-    this.m_ins = new CreateCharacter(
+    this.main_char = new CreateCharacter(
       this,
       "Mushroom",
       Mushroom,
@@ -269,14 +274,11 @@ export default class Test extends Phaser.Scene {
       location,
       2
     );
-    this.m_ins.loadImage();
-    // this.m_ins.character.setDepth(1);
-    this.loadInGameLoading();
-    this.loadMap();
+    this.main_char.loadImage();
   }
-  create() {
-    this.m_ins.create();
-    this.m_ins.setMotionSpeed(100, 200);
+  createC1() {
+    this.main_char.create();
+    this.main_char.setMotionSpeed(100, 200);
     const options = [
       {
         key: "right_idle",
@@ -320,8 +322,79 @@ export default class Test extends Phaser.Scene {
         repeat: 0,
       },
     ] as AnimationsType[];
-    this.m_ins.setAnimations(options);
-    this.m_ins.getAnimations();
+    this.main_char.setAnimations(options);
+    this.main_char.getAnimations();
+  }
+  loadC2() {
+    const location = {
+      w: 100,
+      h: window.innerHeight / 2,
+      currentY: 0,
+    };
+    this.main_char = new CreateCharacter(
+      this,
+      "Swordsman",
+      Swordsman,
+      {
+        frameWidth: 176,
+        frameHeight: 128,
+      },
+      location,
+      2
+    );
+    this.main_char.loadImage();
+  }
+  createC2() {
+    this.main_char.create();
+    this.main_char.setMotionSpeed(300, 0, 900);
+    const options = [
+      {
+        key: "left_idle",
+        start: 0,
+        end: 7,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "right_idle",
+        start: 10,
+        end: 17,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "left_walk",
+        start: 60,
+        end: 67,
+        frameRate: 16,
+        repeat: 0,
+      },
+      {
+        key: "right_walk",
+        start: 70,
+        end: 77,
+        frameRate: 16,
+        repeat: 0,
+      },
+      {
+        key: "jump",
+        frames: [50, 53, 54, 55, 56, 59],
+        zeroPad: 2,
+        frameRate: 4,
+        repeat: 0,
+      },
+    ] as AnimationsType[];
+    this.main_char.setAnimations(options);
+    this.main_char.getAnimations();
+  }
+  preload() {
+    this.loadC2();
+    this.loadInGameLoading();
+    this.loadMap();
+  }
+  create() {
+    this.createC2();
+
     this.createMap();
     this.setZindex();
     this.createInGameLoading();
@@ -344,6 +417,6 @@ export default class Test extends Phaser.Scene {
   }
   update() {
     this.setCollider();
-    this.m_ins.updateAnimations();
+    this.main_char.updateAnimations();
   }
 }
