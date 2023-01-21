@@ -13,6 +13,8 @@ export default class CreateCharacter {
   imageOption: ImageOptionType;
   characterLocation: CharacterLocationType;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  depth: number;
+
   animations: AnimationsType[];
   currentAction: ActionKeyType;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -25,7 +27,8 @@ export default class CreateCharacter {
     name: string,
     image: string,
     imageOption: ImageOptionType,
-    characterLocation: CharacterLocationType
+    characterLocation: CharacterLocationType,
+    depth?: number
   ) {
     //idle 상태만 해보자
     this.phaser = phaser;
@@ -34,6 +37,7 @@ export default class CreateCharacter {
     this.imageOption = imageOption;
     this.characterLocation = characterLocation;
     this.character = {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    this.depth = depth as number;
 
     this.animations = [];
     this.direction = "right";
@@ -62,7 +66,7 @@ export default class CreateCharacter {
       this.characterLocation.h,
       this.name
     );
-
+    if (this.depth) this.character.setDepth(this.depth);
     this.character.setBounce(0.2); // 바닥에서 튕기는 힘
     this.character.setCollideWorldBounds(true); // 바닥과 충돌
   }

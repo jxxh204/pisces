@@ -26,7 +26,7 @@ const config = {
   // zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, Test], //Level1
+  scene: [Welcome, Level1], //Level1
   physics: {
     default: "arcade",
     arcade: {

@@ -106,3 +106,5 @@
 - v0.0.0:39
 - FEAT : idle,walk에 left,right 모션 적용
 - v0.0.0:40
+- FEAT : 테스트 적용
+- v0.0.0:41

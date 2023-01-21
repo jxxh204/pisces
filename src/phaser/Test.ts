@@ -2,13 +2,6 @@ import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
 
-import M_idle from "@/assets/Mushroom-Forrest/Idle.png";
-import M_jump from "@/assets/Mushroom-Forrest/Jump.png";
-import M_right from "@/assets/Mushroom-Forrest/Right.png";
-import M_left from "@/assets/Mushroom-Forrest/Left.png";
-import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
-import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
-
 // inGameLoading
 import inGameLoading from "./Level1/inGameLoading.png";
 // map
@@ -277,12 +270,13 @@ export default class Test extends Phaser.Scene {
         frameWidth: 32,
         frameHeight: 32,
       },
-      location
+      location,
+      2
     );
-
+    this.m_ins.loadImage();
+    // this.m_ins.character.setDepth(1);
     this.loadInGameLoading();
     this.loadMap();
-    this.m_ins.loadImage();
   }
   create() {
     this.m_ins.create();
