@@ -266,7 +266,7 @@ export default class Test extends Phaser.Scene {
   preload() {
     const location = {
       w: 100,
-      h: window.innerHeight - 100,
+      h: window.innerHeight / 2,
       currentY: 0,
     };
     this.m_ins = new CreateCharacter(
@@ -286,17 +286,32 @@ export default class Test extends Phaser.Scene {
   }
   create() {
     this.m_ins.create();
+    this.m_ins.setMotionSpeed(100, 200);
     const options = [
       {
-        key: "idle",
+        key: "right_idle",
         start: 0,
         end: 1,
         frameRate: 4,
         repeat: -1,
       },
       {
-        key: "walk",
-        frames: [17, 18, 19, 20, 19, 18],
+        key: "left_idle",
+        start: 2,
+        end: 3,
+        frameRate: 4,
+        repeat: -1,
+      },
+      {
+        key: "right_walk",
+        frames: [16, 17, 18, 19],
+        frameRate: 8,
+        repeat: 0,
+      },
+      {
+        key: "left_walk",
+        start: 20,
+        end: 23,
         frameRate: 8,
         repeat: 0,
       },

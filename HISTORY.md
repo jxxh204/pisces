@@ -104,3 +104,5 @@
 - v0.0.0:38
 - FEAT : 모든 animation 적용 완료
 - v0.0.0:39
+- FEAT : idle,walk에 left,right 모션 적용
+- v0.0.0:40

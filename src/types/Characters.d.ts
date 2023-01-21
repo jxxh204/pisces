@@ -18,7 +18,14 @@ type CharacterLocationType = {
   h: number;
   currentY: number;
 };
-type ActionKeyType = "idle" | "walk" | "run" | "jump" | "running";
+type ActionKeyType =
+  | "left_idle"
+  | "right_idle"
+  | "left_walk"
+  | "right_walk"
+  | "run"
+  | "jump"
+  | "running";
 type AnimationsType = {
   key: ActionKeyType;
   start: number;

@@ -19,6 +19,7 @@ export default class CreateCharacter {
   isBehavior: boolean;
 
   motionSpeed: MotionSpeedTypes;
+  direction: "left" | "right";
   constructor(
     phaser: Phaser.Scene,
     name: string,
@@ -35,7 +36,8 @@ export default class CreateCharacter {
     this.character = {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     this.animations = [];
-    this.currentAction = "idle";
+    this.direction = "right";
+    this.currentAction = `${this.direction}_idle`;
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
     this.isBehavior = false;
@@ -71,7 +73,7 @@ export default class CreateCharacter {
    * @frameRate : 애니메이션 속도
    * @repeat : 애니메이션 반복 횟수 -1은 무한반복
    * @frames : 애니메이션 프레임 배열 (start, end와 같이 사용할 수 없음)
-   * 필수요소 : key에 idle은 필수입니다.
+   * 필수요소 : key에 right_idle은 필수입니다.
    */
   setAnimations(options: AnimationsType[]) {
     this.animations = options;
@@ -96,7 +98,7 @@ export default class CreateCharacter {
         repeat: animation.repeat,
       });
     });
-    this.character.play("idle", true); // idle 모션 실행.
+    this.character.play(`${this.direction}_idle`, true); // idle 모션 실행.
     //키보드
 
     // this.phaser.anims.create({
@@ -128,7 +130,8 @@ export default class CreateCharacter {
     // });
   }
   updateAnimations() {
-    const onRunPlayer = (direction: "left" | "right") => {
+    //리팩터링하기.
+    const onRunPlayer = () => {
       this.currentAction = "run";
       if (this.currentAction === "run") {
         this.character.anims.play("run", true); //처음 한번만 모션 발동.
@@ -136,7 +139,7 @@ export default class CreateCharacter {
       }
       if (this.currentAction === "running") {
         // 모션과 별개로 계속 움직여야 하기에 따로 적용.
-        if (direction === "left") {
+        if (this.direction === "left") {
           this.character.setVelocityX(-this.motionSpeed.run);
         } else {
           this.character.setVelocityX(this.motionSpeed.run);
@@ -152,7 +155,7 @@ export default class CreateCharacter {
           //점프하고 this.phaser.colliders.floor가 10번정도 들어와서 그것을 방지하고 점프했다는 것을 알기위해.
           this.phaser.colliders.activeCount = [];
           this.isBehavior = false; // idle로 변함
-          this.currentAction = "idle";
+          this.currentAction = `${this.direction}_idle`;
           // console.log("바닥에 닿음");
         }
       }
@@ -169,32 +172,34 @@ export default class CreateCharacter {
     }
 
     if (this.cursors.left.isDown) {
+      this.direction = "left";
       //왼쪽
       if (this.cursors.shift.isDown) {
         // 달리기. this.cursors.shift.isUp
-        onRunPlayer("left");
+        onRunPlayer();
       } else {
         //쉬프트 안누를 경우 걷기.
         this.character.setVelocityX(-this.motionSpeed.walk);
         if (this.currentAction !== "jump") {
           if (this.phaser.colliders.floor) {
             //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = "walk";
+            this.currentAction = `${this.direction}_walk`;
             this.character.anims.play(this.currentAction, true);
           }
         }
       }
     } else if (this.cursors.right.isDown) {
+      this.direction = "right";
       // 오른쪽
       if (this.cursors.shift.isDown) {
         // 달리기. this.cursors.shift.isUp
-        onRunPlayer("right");
+        onRunPlayer();
       } else {
         this.character.setVelocityX(this.motionSpeed.walk);
         if (this.currentAction !== "jump") {
           if (this.phaser.colliders.floor) {
             //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = "walk";
+            this.currentAction = `${this.direction}_walk`;
             this.character.anims.play(this.currentAction, true);
           }
         }
@@ -204,8 +209,8 @@ export default class CreateCharacter {
       if (this.currentAction !== "jump") {
         if (this.phaser.colliders.floor) {
           this.character.setVelocityX(0);
-          this.currentAction = "idle";
-          this.character.anims.play("idle", true);
+          this.currentAction = `${this.direction}_idle`;
+          this.character.anims.play(this.currentAction, true);
           this.isBehavior = false;
         }
       }
