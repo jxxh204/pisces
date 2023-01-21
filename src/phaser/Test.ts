@@ -1,4 +1,7 @@
 import * as Phaser from "phaser";
+import CreateCharacter from "@/module/createCharacter";
+import Mushroom from "@/assets/characters/Mushroom.png";
+
 import M_idle from "@/assets/Mushroom-Forrest/Idle.png";
 import M_jump from "@/assets/Mushroom-Forrest/Jump.png";
 import M_right from "@/assets/Mushroom-Forrest/Right.png";
@@ -7,19 +10,13 @@ import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
 import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
 
 // inGameLoading
-import inGameLoading from "./inGameLoading.png";
+import inGameLoading from "./Level1/inGameLoading.png";
 // map
-import tilesImg from "./Tiles.png";
-import macTileSetImg from "../Sprites/mac.png";
-import skyImg from "./sky/skyNew.png";
-import { media } from "../../media/userMedia";
+import tilesImg from "./Level1/Tiles.png";
+import macTileSetImg from "./Sprites/mac.png";
+import skyImg from "./Level1/sky/skyNew.png";
+import { media } from "../media/userMedia";
 
-type SpriteType = {
-  floor: any;
-  background: any;
-  mac: any;
-  sky: any;
-};
 type ColliderType = {
   floor: boolean;
   activeCount: boolean[];
@@ -28,14 +25,7 @@ type ColliderType = {
 type OverlapType = {
   mac: boolean;
 };
-const Mushrooms: Mushrooms = {
-  idle: M_idle,
-  jump: M_jump,
-  right: M_right,
-  left: M_left,
-  run_left: M_run_left,
-  run_right: M_run_right,
-};
+
 const motionStateArray = [
   "up",
   "down",
@@ -46,7 +36,7 @@ const motionStateArray = [
   "idle",
 ];
 
-export default class Level1 extends Phaser.Scene {
+export default class Test extends Phaser.Scene {
   bg: {
     width: number;
     height: number;
@@ -66,6 +56,7 @@ export default class Level1 extends Phaser.Scene {
   motionSpeed: MotionSpeedTypes;
   sameTimeMotionInterval: NodeJS.Timeout;
   video: any;
+  m_ins: any;
 
   constructor() {
     super({
@@ -119,6 +110,8 @@ export default class Level1 extends Phaser.Scene {
     this.video = {};
 
     this.sameTimeMotionInterval = {} as NodeJS.Timeout;
+
+    this.m_ins = null;
   }
 
   loadMap() {
@@ -151,48 +144,12 @@ export default class Level1 extends Phaser.Scene {
     this.sprite.mac = map.createLayer("mac", macTileSet, 0, 0);
     this.sprite.sky = map.createLayer("sky", skyTileSet, 0, 0);
   }
-
-  loadPlayer() {
-    this.load.spritesheet("player_idle", Mushrooms["idle"], {
-      frameWidth: 32,
-      frameHeight: 28,
-    });
-    this.load.spritesheet("player_jump", Mushrooms["jump"], {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("player_left", Mushrooms["left"], {
-      frameWidth: 32,
-      frameHeight: 28,
-    });
-    this.load.spritesheet("player_right", Mushrooms["right"], {
-      frameWidth: 32,
-      frameHeight: 28,
-    });
-    this.load.spritesheet("player_run_left", Mushrooms["run_left"], {
-      frameWidth: 32,
-      frameHeight: 28,
-    });
-    this.load.spritesheet("player_run_right", Mushrooms["run_right"], {
-      frameWidth: 32,
-      frameHeight: 28,
-    });
-  }
   loadInGameLoading() {
     //위치 바꾸기
     this.load.spritesheet("inGameLoading", inGameLoading, {
       frameWidth: 32,
       frameHeight: 32,
     });
-  }
-  createPlayer() {
-    this.player = this.physics.add.sprite(
-      this.playerLocation.w,
-      600,
-      `player_idle`
-    );
-    // this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true); // 바닥과 충돌
   }
   createInGameLoading() {
     this.inGameLoading = this.physics.add.staticSprite(
@@ -214,7 +171,7 @@ export default class Level1 extends Phaser.Scene {
   }
   createCamera() {
     //내부 코드 정리하기.
-    this.player.setBounce(0.2); //충돌 반동.
+    // this.player.setBounce(0.2); //충돌 반동.
     this.physics.world.setBounds(
       0, // 타일의 처음 지점.
       this.bg.height - 100,
@@ -311,89 +268,35 @@ export default class Level1 extends Phaser.Scene {
       }
     });
   }
-  playerAnimations() {
-    this.anims.create({
-      key: "idle",
-      frames: this.anims.generateFrameNames("player_idle", {
-        start: 0,
-        end: 1,
-      }),
-      frameRate: 4,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "jump",
-      frames: this.anims.generateFrameNames("player_jump", {
-        start: 0,
-        end: 7,
-      }),
-      // frameRate: 16,
-      frameRate: 5,
-    });
-    this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNames("player_left", {
-        start: 0,
-        end: 3,
-      }),
-      frameRate: 8,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNames("player_right", {
-        start: 0,
-        end: 3,
-      }),
-      frameRate: 8,
-      repeat: 0,
-    });
-    //run
-    this.anims.create({
-      key: "run_left",
-      frames: this.anims.generateFrameNames("player_run_left", {
-        start: 0,
-        end: 7,
-      }),
-      frameRate: 12,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "run_right",
-      frames: this.anims.generateFrameNames("player_run_right", {
-        start: 0,
-        end: 7,
-      }),
-      frameRate: 12,
-      repeat: -1,
-    });
-    this.player.play("idle", true); // idle 모션 실행.
-  }
-  responsive() {
-    // // 반응형으로 화면을 꽉 채워서 보여준다
-    // this.scale.scaleMode = this.physics.``;
-    // Phaser.ScaleManager.SHOW_ALL
-    // // 반응형으로 수직, 수평 정렬이 되도록 한다
-    // this.scale.pageAlignHrizontally = true;
-    // this.scale.pageAlignVertically = true; }
-  }
   preload() {
-    this.loadPlayer();
+    const location = {
+      w: 100,
+      h: window.innerHeight,
+      currentY: 0,
+    };
+    this.m_ins = CreateCharacter.getInstance(
+      this,
+      "player1",
+      Mushroom,
+      {
+        frameWidth: 32,
+        frameHeight: 28,
+      },
+      ["idle", "walk"],
+      location
+    );
+
     this.loadInGameLoading();
     this.loadMap();
-    // this.physics.world
-    console.log(
-      "🚀 ~ file: Level1.ts:352 ~ preload ~ this.physics.world",
-      this.scale.canvas
-    );
+    this.m_ins.loadImage();
   }
   create() {
+    this.m_ins.create();
     this.createMap();
     this.setZindex();
-    this.createPlayer();
-    this.createInGameLoading();
-    this.createCamera();
-    this.setOverLap();
+    // this.createInGameLoading();
+    // this.createCamera();
+    // this.setOverLap();
 
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
@@ -406,94 +309,8 @@ export default class Level1 extends Phaser.Scene {
 
     // 애니메이션
 
-    this.playerAnimations();
     // this.playerLocation.currentY = this.player.y
     // this.playerLocation.currentY = 424;
-    this.cursors = this.input.keyboard.createCursorKeys(); // 키보드 사용
   }
-  update() {
-    this.setCollider();
-    const onRunPlayer = (direction: "left" | "right") => {
-      this.playerState = "run";
-      if (this.playerState === "run") {
-        this.player.anims.play(`run_${direction}`, true); //처음 한번만 모션 발동.
-        this.playerState = "running";
-      }
-      if (this.playerState === "running") {
-        // 모션과 별개로 계속 움직여야 하기에 따로 적용.
-        if (direction === "left") {
-          this.player.setVelocityX(-this.motionSpeed.run);
-        } else {
-          this.player.setVelocityX(this.motionSpeed.run);
-        }
-      }
-    };
-
-    if (this.playerState === "jump") {
-      if (this.colliders.floor) {
-        this.colliders.activeCount.push(true);
-        if (this.colliders.activeCount.length > 15) {
-          //점프가 끝났음.
-          //점프하고 this.colliders.floor가 10번정도 들어와서 그것을 방지하고 점프했다는 것을 알기위해.
-          this.colliders.activeCount = [];
-          this.isBehavior = false; // idle로 변함
-          this.playerState = "idle";
-          // console.log("바닥에 닿음");
-        }
-      }
-    }
-    if (this.colliders.floor) {
-      // 땅에 닿았을 경우에만 점프 가능.
-      if (this.cursors.space.isDown) {
-        //스페이스바를 눌렀을 때 점프
-        this.playerState = "jump";
-        this.player.setVelocityY(this.motionSpeed.jump);
-        this.player.play("jump");
-        this.isBehavior = true;
-      }
-    }
-
-    if (this.cursors.left.isDown) {
-      //왼쪽
-      if (this.cursors.shift.isDown) {
-        // 달리기. this.cursors.shift.isUp
-        onRunPlayer("left");
-      } else {
-        //쉬프트 안누를 경우 걷기.
-        this.player.setVelocityX(-this.motionSpeed.walk);
-        if (this.playerState !== "jump") {
-          if (this.colliders.floor) {
-            //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.playerState = "walk";
-            this.player.anims.play("left", true);
-          }
-        }
-      }
-    } else if (this.cursors.right.isDown) {
-      // 오른쪽
-      if (this.cursors.shift.isDown) {
-        // 달리기. this.cursors.shift.isUp
-        onRunPlayer("right");
-      } else {
-        this.player.setVelocityX(this.motionSpeed.walk);
-        if (this.playerState !== "jump") {
-          if (this.colliders.floor) {
-            //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.playerState = "walk";
-            this.player.anims.play("right", true);
-          }
-        }
-      }
-    } else {
-      // 기본상태.
-      if (this.playerState !== "jump") {
-        if (this.colliders.floor) {
-          this.player.setVelocityX(0);
-          this.playerState = "idle";
-          this.player.play("idle", true);
-          this.isBehavior = false;
-        }
-      }
-    }
-  }
+  update() {}
 }

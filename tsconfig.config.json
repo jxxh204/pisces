@@ -4,14 +4,16 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"],
+    "typeRoots": ["./src/types"],
+    "baseUrl": "types",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
   "typeRoots": [
     "./node_modules/phaser/types"
-],
-"types": [
-    "Phaser"
-]
+  ],
+  "types": [
+      "Phaser"
+  ]
 }
