@@ -100,3 +100,5 @@
 
 - FEAT : Characters.ts class 제작 중. - 여러 캐릭터들을 양산하기위한 과정
 - v0.0.0:37
+- FEAT : animation 추상화 성공.
+- v0.0.0:38

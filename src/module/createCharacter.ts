@@ -1,7 +1,8 @@
 import type {
   ActionsType,
   ImageOptionType,
-  characterLocationType,
+  CharacterLocationType,
+  AnimationsType,
 } from "@/types/Characters";
 
 export default class CreateCharacter {
@@ -11,46 +12,32 @@ export default class CreateCharacter {
   image: string;
   imageOption: ImageOptionType;
   actions: ActionsType;
-  characterLocation: characterLocationType;
+  characterLocation: CharacterLocationType;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+
+  animations: AnimationsType[];
   constructor(
     phaser: Phaser.Scene,
     name: string,
     image: string,
     imageOption: ImageOptionType,
     actions: ActionsType,
-    characterLocation: characterLocationType
+    characterLocation: CharacterLocationType
   ) {
     //idle 상태만 해보자
     this.phaser = phaser;
-    this.name = "";
+    this.name = name;
     this.image = image; //action과 같은 순서대로 넣어야한다.
     this.imageOption = imageOption;
     this.actions = actions; // ex
     this.characterLocation = characterLocation;
     this.character = {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  }
-  public static getInstance(
-    phaser: Phaser.Scene,
-    name: string,
-    image: string,
-    imageOption: ImageOptionType,
-    actions: ActionsType,
-    characterLocation: characterLocationType
-  ) {
-    CreateCharacter.instance = new CreateCharacter(
-      phaser,
-      name,
-      image,
-      imageOption,
-      actions,
-      characterLocation
-    );
-    return CreateCharacter.instance;
+    this.animations = [];
   }
   loadImage() {
-    console.log(this.image, this.phaser);
-    this.phaser.load.spritesheet("character_idle", this.image, {
+    console.log(this.name);
+    //spritesheet_name : character
+    this.phaser.load.spritesheet(this.name, this.image, {
       frameWidth: this.imageOption.frameWidth,
       frameHeight: this.imageOption.frameHeight,
     });
@@ -58,23 +45,38 @@ export default class CreateCharacter {
   create() {
     this.character = this.phaser.physics.add.sprite(
       this.characterLocation.w,
-      600,
-      `character_idle`
+      this.characterLocation.h,
+      this.name
     );
 
     this.character.setBounce(0.2); // 바닥에서 튕기는 힘
     this.character.setCollideWorldBounds(true); // 바닥과 충돌
   }
-  animations() {
-    this.phaser.anims.create({
-      key: "idle",
-      frames: this.phaser.anims.generateFrameNames("player_idle", {
-        start: 0,
-        end: 1,
-      }),
-      frameRate: 4,
-      repeat: -1,
+  /**
+   * @key : 애니메이션 이름
+   * @start : 애니메이션 시작 프레임
+   * @end : 애니메이션 끝 프레임
+   * @frameRate : 애니메이션 속도
+   * @repeat : 애니메이션 반복 횟수 -1은 무한반복
+   * 필수요소 : key에 idle은 필수입니다.
+   */
+  setAnimations(options: AnimationsType[]) {
+    this.animations = options;
+  }
+  getAnimations() {
+    this.animations.forEach((animation) => {
+      this.phaser.anims.create({
+        key: animation.key,
+        frames: this.phaser.anims.generateFrameNames(this.name, {
+          start: animation.start,
+          end: animation.end,
+        }),
+        frameRate: animation.frameRate,
+        repeat: animation.repeat,
+      });
     });
+    this.character.play("idle", true); // idle 모션 실행.
+
     // this.phaser.anims.create({
     //   key: "jump",
     //   frames: this.phaser.anims.generateFrameNames("player_jump", {
@@ -102,6 +104,5 @@ export default class CreateCharacter {
     //   frameRate: 8,
     //   repeat: 0,
     // });
-    this.character.play("idle", true); // idle 모션 실행.
   }
 }

@@ -16,6 +16,7 @@ import tilesImg from "./Level1/Tiles.png";
 import macTileSetImg from "./Sprites/mac.png";
 import skyImg from "./Level1/sky/skyNew.png";
 import { media } from "../media/userMedia";
+import type { AnimationsType } from "@/types/Characters";
 
 type ColliderType = {
   floor: boolean;
@@ -274,13 +275,13 @@ export default class Test extends Phaser.Scene {
       h: window.innerHeight,
       currentY: 0,
     };
-    this.m_ins = CreateCharacter.getInstance(
+    this.m_ins = new CreateCharacter(
       this,
-      "player1",
+      "Mushroom",
       Mushroom,
       {
         frameWidth: 32,
-        frameHeight: 28,
+        frameHeight: 32,
       },
       ["idle", "walk"],
       location
@@ -292,6 +293,17 @@ export default class Test extends Phaser.Scene {
   }
   create() {
     this.m_ins.create();
+    const options = [
+      {
+        key: "idle",
+        start: 0,
+        end: 1,
+        frameRate: 4,
+        repeat: -1,
+      },
+    ] as AnimationsType[];
+    this.m_ins.setAnimations(options);
+    this.m_ins.getAnimations();
     this.createMap();
     this.setZindex();
     // this.createInGameLoading();

@@ -14,8 +14,15 @@ type ImageOptionType = {
   frameHeight: number;
 };
 
-type characterLocationType = {
+type CharacterLocationType = {
   w: number;
   h: number;
   currentY: number;
+};
+type AnimationsType = {
+  key: string;
+  start: number;
+  end: number;
+  frameRate: number;
+  repeat: number;
 };
