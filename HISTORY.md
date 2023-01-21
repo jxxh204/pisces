@@ -102,3 +102,5 @@
 - v0.0.0:37
 - FEAT : animation 추상화 성공.
 - v0.0.0:38
+- FEAT : 모든 animation 적용 완료
+- v0.0.0:39

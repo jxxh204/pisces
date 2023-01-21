@@ -1,8 +1,8 @@
 import type {
-  ActionsType,
   ImageOptionType,
   CharacterLocationType,
   AnimationsType,
+  ActionKeyType,
 } from "@/types/Characters";
 
 export default class CreateCharacter {
@@ -11,17 +11,19 @@ export default class CreateCharacter {
   name: string;
   image: string;
   imageOption: ImageOptionType;
-  actions: ActionsType;
   characterLocation: CharacterLocationType;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-
   animations: AnimationsType[];
+  currentAction: ActionKeyType;
+  cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  isBehavior: boolean;
+
+  motionSpeed: MotionSpeedTypes;
   constructor(
     phaser: Phaser.Scene,
     name: string,
     image: string,
     imageOption: ImageOptionType,
-    actions: ActionsType,
     characterLocation: CharacterLocationType
   ) {
     //idle 상태만 해보자
@@ -29,10 +31,20 @@ export default class CreateCharacter {
     this.name = name;
     this.image = image; //action과 같은 순서대로 넣어야한다.
     this.imageOption = imageOption;
-    this.actions = actions; // ex
     this.characterLocation = characterLocation;
     this.character = {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+
     this.animations = [];
+    this.currentAction = "idle";
+
+    this.cursors = this.phaser.input.keyboard.createCursorKeys();
+    this.isBehavior = false;
+
+    this.motionSpeed = {
+      walk: 200,
+      run: 100,
+      jump: 900,
+    };
   }
   loadImage() {
     console.log(this.name);
@@ -58,24 +70,34 @@ export default class CreateCharacter {
    * @end : 애니메이션 끝 프레임
    * @frameRate : 애니메이션 속도
    * @repeat : 애니메이션 반복 횟수 -1은 무한반복
+   * @frames : 애니메이션 프레임 배열 (start, end와 같이 사용할 수 없음)
    * 필수요소 : key에 idle은 필수입니다.
    */
   setAnimations(options: AnimationsType[]) {
     this.animations = options;
   }
+  setMotionSpeed(walk: number, run: number, jump: number) {
+    this.motionSpeed.walk = walk;
+    this.motionSpeed.run = run;
+    this.motionSpeed.jump = jump;
+  }
+
   getAnimations() {
     this.animations.forEach((animation) => {
+      //https://photonstorm.github.io/phaser3-docs/Phaser.Types.Animations.html
       this.phaser.anims.create({
         key: animation.key,
         frames: this.phaser.anims.generateFrameNames(this.name, {
           start: animation.start,
           end: animation.end,
+          frames: animation.frames,
         }),
         frameRate: animation.frameRate,
         repeat: animation.repeat,
       });
     });
     this.character.play("idle", true); // idle 모션 실행.
+    //키보드
 
     // this.phaser.anims.create({
     //   key: "jump",
@@ -104,5 +126,89 @@ export default class CreateCharacter {
     //   frameRate: 8,
     //   repeat: 0,
     // });
+  }
+  updateAnimations() {
+    const onRunPlayer = (direction: "left" | "right") => {
+      this.currentAction = "run";
+      if (this.currentAction === "run") {
+        this.character.anims.play("run", true); //처음 한번만 모션 발동.
+        this.currentAction = "running";
+      }
+      if (this.currentAction === "running") {
+        // 모션과 별개로 계속 움직여야 하기에 따로 적용.
+        if (direction === "left") {
+          this.character.setVelocityX(-this.motionSpeed.run);
+        } else {
+          this.character.setVelocityX(this.motionSpeed.run);
+        }
+      }
+    };
+
+    if (this.currentAction === "jump") {
+      if (this.phaser.colliders.floor) {
+        this.phaser.colliders.activeCount.push(true);
+        if (this.phaser.colliders.activeCount.length > 15) {
+          //점프가 끝났음.
+          //점프하고 this.phaser.colliders.floor가 10번정도 들어와서 그것을 방지하고 점프했다는 것을 알기위해.
+          this.phaser.colliders.activeCount = [];
+          this.isBehavior = false; // idle로 변함
+          this.currentAction = "idle";
+          // console.log("바닥에 닿음");
+        }
+      }
+    }
+    if (this.phaser.colliders.floor) {
+      // 땅에 닿았을 경우에만 점프 가능.
+      if (this.cursors.space.isDown) {
+        //스페이스바를 눌렀을 때 점프
+        this.currentAction = "jump";
+        this.character.setVelocityY(this.motionSpeed.jump);
+        this.character.anims.play("jump");
+        this.isBehavior = true;
+      }
+    }
+
+    if (this.cursors.left.isDown) {
+      //왼쪽
+      if (this.cursors.shift.isDown) {
+        // 달리기. this.cursors.shift.isUp
+        onRunPlayer("left");
+      } else {
+        //쉬프트 안누를 경우 걷기.
+        this.character.setVelocityX(-this.motionSpeed.walk);
+        if (this.currentAction !== "jump") {
+          if (this.phaser.colliders.floor) {
+            //점프가 아니면서 땅에 닿았을 경우에만 작동
+            this.currentAction = "walk";
+            this.character.anims.play(this.currentAction, true);
+          }
+        }
+      }
+    } else if (this.cursors.right.isDown) {
+      // 오른쪽
+      if (this.cursors.shift.isDown) {
+        // 달리기. this.cursors.shift.isUp
+        onRunPlayer("right");
+      } else {
+        this.character.setVelocityX(this.motionSpeed.walk);
+        if (this.currentAction !== "jump") {
+          if (this.phaser.colliders.floor) {
+            //점프가 아니면서 땅에 닿았을 경우에만 작동
+            this.currentAction = "walk";
+            this.character.anims.play(this.currentAction, true);
+          }
+        }
+      }
+    } else {
+      // 기본상태.
+      if (this.currentAction !== "jump") {
+        if (this.phaser.colliders.floor) {
+          this.character.setVelocityX(0);
+          this.currentAction = "idle";
+          this.character.anims.play("idle", true);
+          this.isBehavior = false;
+        }
+      }
+    }
   }
 }

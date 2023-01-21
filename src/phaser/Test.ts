@@ -68,14 +68,6 @@ export default class Test extends Phaser.Scene {
       width: 0,
       height: 0,
     };
-    this.player = {} as any;
-    this.playerState = "idle";
-    this.playerLocation = {
-      w: 100,
-      h: window.innerHeight,
-      currentY: 0,
-    };
-
     this.inGameLoading = {} as any;
     this.sprite = {
       floor: {},
@@ -172,7 +164,6 @@ export default class Test extends Phaser.Scene {
   }
   createCamera() {
     //내부 코드 정리하기.
-    // this.player.setBounce(0.2); //충돌 반동.
     this.physics.world.setBounds(
       0, // 타일의 처음 지점.
       this.bg.height - 100,
@@ -199,7 +190,14 @@ export default class Test extends Phaser.Scene {
     );
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    cam.startFollow(this.player, true, 0.8, 0.8, 0, this.bg.height / 2 - 200); //카메라 따라다님
+    cam.startFollow(
+      this.m_ins.character,
+      true,
+      0.8,
+      0.8,
+      0,
+      this.bg.height / 2 - 200
+    ); //카메라 따라다님
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
@@ -213,16 +211,8 @@ export default class Test extends Phaser.Scene {
         this.colliders.floor = false;
       }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
     };
-    // const setColliderMac = (
-    //   _player: Phaser.Types.Physics.Arcade.GameObjectWithBody
-    // ) => {
-    //   console.log(
-    //     "🚀 ~ file: Level1.ts:197 ~ Level1 ~ this.physics.add.collider ~ _player",
-    //     _player.body.touching
-    //   );
-    // };
     //충돌감지 // update에 적용
-    this.physics.add.collider(this.player, this.sprite.floor, (c) =>
+    this.physics.add.collider(this.m_ins.character, this.sprite.floor, (c) =>
       setOnCollideFloor(c)
     );
 
@@ -249,7 +239,7 @@ export default class Test extends Phaser.Scene {
       mediaInstance.settings(streamSetting);
       mediaInstance.getVideoStream();
 
-      const element = this.add.dom(250, this.player.y - 100, video);
+      const element = this.add.dom(250, this.m_ins.character.y - 100, video);
       // var domElement = scene.add.dom(x, y, el, style, innerText);
       // element.setDepth();
       video.addEventListener("ended", (event) => {
@@ -260,19 +250,23 @@ export default class Test extends Phaser.Scene {
     }
   }
   setOverLap() {
-    this.physics.add.overlap(this.player, this.sprite.mac, (a, mac) => {
-      if (Math.sign(mac.index) === 1) {
-        //컴퓨터 닿음.
-        if (!this.overLap.mac) this.getCameraStream();
+    this.physics.add.overlap(
+      this.m_ins.character,
+      this.sprite.mac,
+      (a, mac) => {
+        if (Math.sign(mac.index) === 1) {
+          //컴퓨터 닿음.
+          if (!this.overLap.mac) this.getCameraStream();
 
-        this.overLap.mac = true;
+          this.overLap.mac = true;
+        }
       }
-    });
+    );
   }
   preload() {
     const location = {
       w: 100,
-      h: window.innerHeight,
+      h: window.innerHeight - 100,
       currentY: 0,
     };
     this.m_ins = new CreateCharacter(
@@ -283,7 +277,6 @@ export default class Test extends Phaser.Scene {
         frameWidth: 32,
         frameHeight: 32,
       },
-      ["idle", "walk"],
       location
     );
 
@@ -301,14 +294,34 @@ export default class Test extends Phaser.Scene {
         frameRate: 4,
         repeat: -1,
       },
+      {
+        key: "walk",
+        frames: [17, 18, 19, 20, 19, 18],
+        frameRate: 8,
+        repeat: 0,
+      },
+      {
+        key: "jump",
+        start: 41,
+        end: 48,
+        frameRate: 4,
+        repeat: 0,
+      },
+      {
+        key: "run",
+        start: 25,
+        end: 32,
+        frameRate: 8,
+        repeat: 0,
+      },
     ] as AnimationsType[];
     this.m_ins.setAnimations(options);
     this.m_ins.getAnimations();
     this.createMap();
     this.setZindex();
-    // this.createInGameLoading();
-    // this.createCamera();
-    // this.setOverLap();
+    this.createInGameLoading();
+    this.createCamera();
+    this.setOverLap();
 
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
@@ -324,5 +337,8 @@ export default class Test extends Phaser.Scene {
     // this.playerLocation.currentY = this.player.y
     // this.playerLocation.currentY = 424;
   }
-  update() {}
+  update() {
+    this.setCollider();
+    this.m_ins.updateAnimations();
+  }
 }

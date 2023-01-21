@@ -7,7 +7,6 @@ type ColliderType = {
 type ScenesType = {
   level1: Phaser.Scene | Level1 | null;
 };
-type ActionsType = Array<"idle" | "walk">;
 
 type ImageOptionType = {
   frameWidth: number;
@@ -19,10 +18,18 @@ type CharacterLocationType = {
   h: number;
   currentY: number;
 };
+type ActionKeyType = "idle" | "walk" | "run" | "jump" | "running";
 type AnimationsType = {
-  key: string;
+  key: ActionKeyType;
   start: number;
   end: number;
+  frames?: number[];
   frameRate: number;
   repeat: number;
+};
+
+type MotionSpeedTypes = {
+  walk: number;
+  run: number;
+  jump: number;
 };
