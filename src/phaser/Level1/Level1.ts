@@ -172,7 +172,7 @@ export default class Test extends Phaser.Scene {
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
     cam.setZoom(1.5);
-    canvas.style.cursor = "none";
+    // canvas.style.cursor = "none";
     // this.add.existing();
 
     // cam.pan(400, this.bg.height - 200, 1000);
