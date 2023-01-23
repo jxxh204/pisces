@@ -7,7 +7,7 @@ import inGameLoading from "./inGameLoading.png";
 // map
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
-import skyImg from "./sky/skyNew.png";
+import city_backgroundImg from "./background/city_background.jpeg";
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 
@@ -98,14 +98,15 @@ export default class Test extends Phaser.Scene {
 
   loadMap() {
     //tileSet
+    //tileName, tileImage,
     this.load.image("tileSetImage", tilesImg);
     this.load.image("macTileSetImage", macTileSetImg);
-    this.load.image("skyTileSetImage", skyImg);
+    this.load.image("cityTileSetImage", city_backgroundImg);
     //tileMap JSON
     this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
   }
   setZindex() {
-    this.sprite.sky.setDepth(-1);
+    this.sprite.background.setDepth(-1);
   }
   createMap() {
     this.bg.width = this.scale.width;
@@ -117,14 +118,21 @@ export default class Test extends Phaser.Scene {
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
     const tileset = map.addTilesetImage("Tiles", "tileSetImage");
     const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
-    const skyTileSet = map.addTilesetImage("skyNew", "skyTileSetImage");
+    const cityTileSet = map.addTilesetImage(
+      "city_background",
+      "cityTileSetImage"
+    );
 
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.background = map.createLayer("background", tileset, 0, 0);
     this.sprite.floor = map.createLayer("floor", tileset, 0, 0); //프로그램에서 설정한 레이어 불러옴.
     this.sprite.mac = map.createLayer("mac", macTileSet, 0, 0);
-    this.sprite.sky = map.createLayer("sky", skyTileSet, 0, 0);
+    this.sprite.background = map.createLayer(
+      "city_background",
+      cityTileSet,
+      0,
+      0
+    );
   }
   loadInGameLoading() {
     //위치 바꾸기
@@ -163,7 +171,7 @@ export default class Test extends Phaser.Scene {
 
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
-    cam.setZoom(2);
+    cam.setZoom(1.5);
     canvas.style.cursor = "none";
     // this.add.existing();
 
@@ -388,6 +396,9 @@ export default class Test extends Phaser.Scene {
     this.main_char.getAnimations();
   }
   preload() {
+    this.game.canvas.classList.add(
+      `cursor-[../../assets/images/cat_cursor.gif(hand.cur),_pointer]`
+    );
     this.loadC2();
     this.loadInGameLoading();
     this.loadMap();
