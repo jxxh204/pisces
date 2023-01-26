@@ -8,6 +8,8 @@ import inGameLoading from "./inGameLoading.png";
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
 import city_backgroundImg from "./background/city_background.jpeg";
+import keyboardImg from "./keyboard.jpeg";
+
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 
@@ -102,6 +104,7 @@ export default class Test extends Phaser.Scene {
     this.load.image("tileSetImage", tilesImg);
     this.load.image("macTileSetImage", macTileSetImg);
     this.load.image("cityTileSetImage", city_backgroundImg);
+    this.load.image("keyboardImage", keyboardImg);
     //tileMap JSON
     this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
   }
@@ -122,6 +125,7 @@ export default class Test extends Phaser.Scene {
       "city_background",
       "cityTileSetImage"
     );
+    const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
 
     // const platforms = this.physics.add.staticGroup();
 
@@ -133,6 +137,7 @@ export default class Test extends Phaser.Scene {
       0,
       0
     );
+    this.sprite.keyboard = map.createLayer("keyboard", keyboardTileSet, 0, 0);
   }
   loadInGameLoading() {
     //위치 바꾸기
@@ -143,7 +148,7 @@ export default class Test extends Phaser.Scene {
   }
   createInGameLoading() {
     this.inGameLoading = this.physics.add.staticSprite(
-      250,
+      345,
       this.bg.height + 60,
       `inGameLoading`
     );
@@ -400,6 +405,7 @@ export default class Test extends Phaser.Scene {
       `cursor-[../../assets/images/cat_cursor.gif(hand.cur),_pointer]`
     );
     this.loadC2();
+
     this.loadInGameLoading();
     this.loadMap();
   }
