@@ -11,15 +11,8 @@ import (
 )
 
 type Message struct {
-	Greeting string `json:"greeting"`
-	Offer string `json:"offer"`
-	Answer string `json:"answer"`
-}
-type Answer struct {
-	Answer string `json:"answer"`
-}
-type Offer struct {
-	Offer string `json:"offer"`
+	Type string `json:"type"`
+	Data string `json:"data"`
 }
 
 var (
@@ -57,13 +50,10 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		fmt.Printf("Message Received: %s\n", msg.Offer)
+		fmt.Printf("Message Received: %s\n", msg.Type)
 		//offer 확인.
-		
-		answer := Answer {
-			Answer: msg.Offer,
-		}
-		answerJson,err := json.Marshal(&answer)
+	
+		answerJson,err := json.Marshal(&msg)
 		answerMsg := string(answerJson)
 		// fmt.Printf(answerMsg)
 

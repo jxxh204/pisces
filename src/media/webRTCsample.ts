@@ -32,71 +32,98 @@ export default class webRTC {
     this.localStream = localStream;
     this.socket = null;
   }
-  // onMessege() {
+  async handleOffer(offer: RTCOfferOptions) {
+    if (this.pc) {
+      console.error("existing peerconnection");
+      return;
+    }
+    await this.pc?.setRemoteDescription(
+      new RTCSessionDescription({
+        type: "offer",
+        sdp: offer,
+      })
+    );
 
-  //     switch (type) {
-  //       case "answer":
-  //         this.pc
-  //           .setRemoteDescription(
-  //             new RTCSessionDescription({
-  //               type: "answer",
-  //               sdp: data,
-  //             })
-  //           )
-  //           .then(() => {
-  //             console.log(type);
-  //           })
-  //           .catch((e) => {
-  //             console.err(e);
-  //           });
-  //         break;
-  //       case "candidate2":
-  //         candidate = JSON.parse(data);
-  //         this.pc
-  //           .addIceCandidate(candidate)
-  //           .then(() => {
-  //             console.log(type);
-  //           })
-  //           .catch((e) => {
-  //             console.err(e);
-  //           });
-  //         break;
-  //       case "ping":
-  //         // just ignore, for healthcheck
-  //         break;
-  //       case "joins": //채널에 입장한 인원
-  //         console.log("join", data);
-  //         break;
-  //       case "event":
-  //         // server sent event
-  //         break;
-  //       default:
-  //         // just ignore if you don't know this type message
-  //         console.warn("unexpected message", type, data);
-  //     }
-  //   };
-  // }
-  openPub() {
+    const answer = await this.pc?.createAnswer();
+    this.sendMessage("answer", answer.sdp);
+    await this.pc.setLocalDescription(answer);
+  }
+
+  async handleAnswer(answer: string) {
+    if (!this.pc) {
+      console.error("no peerconnection");
+      return;
+    }
+    await this.pc.setRemoteDescription(
+      new RTCSessionDescription({
+        type: "answer",
+        sdp: answer,
+      })
+    );
+  }
+
+  async handleCandidate(candidate: RTCIceCandidate) {
+    if (!this.pc) {
+      console.error("no peerconnection");
+      return;
+    }
+    if (!candidate.candidate) {
+      await this.pc.addIceCandidate(null);
+    } else {
+      await this.pc.addIceCandidate(candidate);
+    }
+  }
+
+  openWebSocket(kind: string) {
     this.socket = new WebSocket("ws://localhost:9100/socket");
     this.socket.onopen = (evt) => {
       console.log("socket open");
-      sendMessage("hello server");
     };
-    this.socket.onmessage = (msg) => {
-      console.log("onmessage", msg.data);
+    this.socket.onmessage = (e) => {
+      if (!this.localStream) {
+        console.log("not ready yet");
+        return;
+      }
+      const { type, data } = JSON.parse(e.data);
+      console.log(type);
+      switch (type) {
+        case "offer":
+          //sub
+          if (kind === "sub") this.handleOffer(data);
+          break;
+        case "answer":
+          //pub
+          if (kind === "pub") this.handleAnswer(data);
+          break;
+        case "candidate":
+          this.handleCandidate(data);
+          break;
+        case "ready":
+          // A second tab joined. This tab will initiate a call unless in a call already.
+          if (this.pc) {
+            console.log("already in call, ignoring");
+            return;
+          }
+          // makeCall();
+          break;
+        case "bye":
+          if (this.pc) {
+            // hangup();
+          }
+          break;
+        default:
+          console.log("unhandled", e);
+          break;
+      }
     };
     this.socket.onclose = (evt) => {
       console.log("socket close");
     };
-    const sendMessage = (message: string) => {
-      let msg = {
-        greeting: message,
-      };
-      this.socket.send(JSON.stringify(msg));
-    };
+  }
+  async openPub() {
+    this.openWebSocket("pub");
 
     this.pc = new RTCPeerConnection(this.config);
-    console.log("🚀 ~ file: webRTCsample.ts:79 ~ openRTC ~ this.pc", this.pc);
 
     //sub addTransceiver
     // this.pc.addTransceiver("video", { direction: "recvonly" });
@@ -119,28 +146,15 @@ export default class webRTC {
     this.localStream?.getTracks().forEach((track) => {
       if (this.localStream) this.pc?.addTrack(track, this.localStream);
     });
-
-    this.pc
-      .createOffer()
-      .then((offer) => {
-        console.log("offer", offer);
-
-        return this.pc?.setLocalDescription(offer); // 완료.
-      })
-      .then(() => {
-        //offer를 websocket으로 보내서 입장한 sub이 offer를 확인.
-        // this.conn.send(
-        //   JSON.stringify({
-        //     type: "offer",
-        //     data: this.pc.localDescription.sdp,
-        //   })
-        // );
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    setTimeout(async () => {
+      const offer = await this.pc.createOffer();
+      await this.sendMessage("offer", offer.sdp);
+      await this.pc?.setLocalDescription(offer);
+      await this.openSub();
+    }, 1000);
   }
   openSub() {
+    this.openWebSocket("sub");
     this.pc = new RTCPeerConnection(this.config);
     console.log("🚀 ~ file: webRTCsample.ts:79 ~ openRTC ~ this.pc", this.pc);
 
@@ -148,6 +162,7 @@ export default class webRTC {
     this.pc.addTransceiver("video", { direction: "recvonly" });
     this.pc.ontrack = (evt) => {
       //sub
+
       console.log("ontrack", evt);
     };
 
@@ -165,12 +180,13 @@ export default class webRTC {
     // this.localStream?.getTracks().forEach((track) => {
     //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
     // });
-    //ws.onmessage
-    // this.pc.setRemoteDescription(
-    //             new RTCSessionDescription({
-    //               type: "answer",
-    //               sdp: data,
-    //             })
-    //           )
+  }
+  sendMessage(key: string, value: string) {
+    console.log("sendMessage : ", key);
+    const msg = {
+      type: key,
+      data: value,
+    };
+    this.socket?.send(JSON.stringify(msg));
   }
 }
