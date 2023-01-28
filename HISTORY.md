@@ -126,3 +126,5 @@
 - v0.0.0:46
 - signalServer golang으로 시작
 - v0.0.0:47
+- main.go에서 answer를 보내도록 개선
+- v0.0.0:48

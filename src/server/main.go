@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"encoding/json"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -11,6 +12,14 @@ import (
 
 type Message struct {
 	Greeting string `json:"greeting"`
+	Offer string `json:"offer"`
+	Answer string `json:"answer"`
+}
+type Answer struct {
+	Answer string `json:"answer"`
+}
+type Offer struct {
+	Offer string `json:"offer"`
 }
 
 var (
@@ -41,15 +50,24 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	// event loop
 	for {
 		var msg Message
-
+		
 		err := wsConn.ReadJSON(&msg)
 		if err != nil {
 			fmt.Printf("error reading JSON: %s\n", err.Error())
 			break
 		}
 
-		fmt.Printf("Message Received: %s\n", msg.Greeting)
-		SendMessage("Hello, Client!")
+		fmt.Printf("Message Received: %s\n", msg.Offer)
+		//offer 확인.
+		
+		answer := Answer {
+			Answer: msg.Offer,
+		}
+		answerJson,err := json.Marshal(&answer)
+		answerMsg := string(answerJson)
+		// fmt.Printf(answerMsg)
+
+		SendMessage(answerMsg)
 	}
 }
 
