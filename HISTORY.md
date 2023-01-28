@@ -124,3 +124,5 @@
 
 - offer 생성
 - v0.0.0:46
+- signalServer golang으로 시작
+- v0.0.0:47
