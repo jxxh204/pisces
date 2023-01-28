@@ -8,6 +8,7 @@ export default class webRTC {
   pc: RTCPeerConnection | null;
   config: RTCConfiguration;
   localStream: MediaStream | null;
+  socket: WebSocket | null;
   constructor(localStream: MediaStream) {
     this.pc = null;
     // this.localStream;
@@ -29,6 +30,7 @@ export default class webRTC {
       // iceTransportPolicy: 'relay', // 서버 안죽게.
     };
     this.localStream = localStream;
+    this.socket = null;
   }
   // onMessege() {
 
@@ -75,15 +77,33 @@ export default class webRTC {
   //   };
   // }
   openPub() {
+    this.socket = new WebSocket("ws://localhost:9100/socket");
+    this.socket.onopen = (evt) => {
+      console.log("socket open");
+      sendMessage("hello server");
+    };
+    this.socket.onmessage = (msg) => {
+      console.log("onmessage", msg.data);
+    };
+    this.socket.onclose = (evt) => {
+      console.log("socket close");
+    };
+    const sendMessage = (message: string) => {
+      let msg = {
+        greeting: message,
+      };
+      this.socket.send(JSON.stringify(msg));
+    };
+
     this.pc = new RTCPeerConnection(this.config);
     console.log("🚀 ~ file: webRTCsample.ts:79 ~ openRTC ~ this.pc", this.pc);
 
     //sub addTransceiver
-
-    this.pc.ontrack = (evt) => {
-      //sub
-      console.log("ontrack", evt);
-    };
+    // this.pc.addTransceiver("video", { direction: "recvonly" });
+    // this.pc.ontrack = (evt) => {
+    //   //sub
+    //   console.log("ontrack", evt);
+    // };
 
     this.pc.oniceconnectionstatechange = () => {
       console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
@@ -105,9 +125,10 @@ export default class webRTC {
       .then((offer) => {
         console.log("offer", offer);
 
-        return this.pc?.setLocalDescription(offer);
+        return this.pc?.setLocalDescription(offer); // 완료.
       })
       .then(() => {
+        //offer를 websocket으로 보내서 입장한 sub이 offer를 확인.
         // this.conn.send(
         //   JSON.stringify({
         //     type: "offer",
@@ -119,5 +140,37 @@ export default class webRTC {
         console.error(e);
       });
   }
-  openSub() {}
+  openSub() {
+    this.pc = new RTCPeerConnection(this.config);
+    console.log("🚀 ~ file: webRTCsample.ts:79 ~ openRTC ~ this.pc", this.pc);
+
+    //sub addTransceiver
+    this.pc.addTransceiver("video", { direction: "recvonly" });
+    this.pc.ontrack = (evt) => {
+      //sub
+      console.log("ontrack", evt);
+    };
+
+    this.pc.oniceconnectionstatechange = () => {
+      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+    };
+
+    this.pc.onicecandidate = (evt) => {
+      console.log("onicecandidate", evt);
+      // if (evt.candidate === null) {
+      // 	console.log('lsd', lsd);
+      // 	lsd = btoa(JSON.stringify(this.pc.localDescription));
+      // }
+    };
+    // this.localStream?.getTracks().forEach((track) => {
+    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    // });
+    //ws.onmessage
+    // this.pc.setRemoteDescription(
+    //             new RTCSessionDescription({
+    //               type: "answer",
+    //               sdp: data,
+    //             })
+    //           )
+  }
 }

@@ -84,6 +84,8 @@ onMounted(async () => {
   localStream.value = await instance.getVideoStream(videoId, 1280, 800);
   const rtcInstance = new webRTC(localStream.value);
   rtcInstance.openPub();
+
+  // rtcInstance.openSub();
 });
 </script>
 
