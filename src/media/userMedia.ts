@@ -256,7 +256,6 @@ class GetStream {
         this.constraints
       );
       // deviceId를 직접 받을 경우 stream 리턴 후 종료
-      if (deviceId) return stream;
 
       if (this.outputElement instanceof HTMLVideoElement) {
         this.outputElement.srcObject = stream;
@@ -269,6 +268,8 @@ class GetStream {
         this.canvasInputVideo.play();
         // requestAnimationFrame(() => this.draw());
       }
+      // if (deviceId) return stream;
+
       return stream;
     } catch (err) {
       console.log("GetStream.getUserMedia error", err);

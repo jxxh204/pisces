@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
 import Welcome from "./phaser/Welcome/Welcome";
+import { media } from "./media/userMedia";
+import webRTC from "./media/webRTCsample";
+import type { GetStreamSettings } from "./media/media";
+
+const localStream = ref<MediaStream>();
+const pubVideoEl = ref<HTMLVideoElement>();
 
 const ZOOM_LEVEL = 2;
 
@@ -33,7 +39,7 @@ const config = {
   },
 };
 
-onMounted(() => {
+onMounted(async () => {
   const game = new Phaser.Game(config);
   const canvas = game.canvas;
   // canvas.style.zIndex = "-1";
@@ -56,6 +62,28 @@ onMounted(() => {
   resize();
 
   window.addEventListener("resize", resize, false);
+
+  //webRTC
+  let videoId = "";
+
+  const mediaList = await media.searchDeviceList();
+  mediaList?.map((media) => {
+    if (media.kind === "videoinput") {
+      videoId = media.deviceId;
+    }
+  });
+
+  const instance = media.GetStream.getInstance();
+  const option = {
+    video: true,
+    audio: false,
+    elementKind: "video",
+    outputElement: pubVideoEl.value,
+  } as GetStreamSettings;
+  instance.settings(option);
+  localStream.value = await instance.getVideoStream(videoId, 1280, 800);
+  const rtcInstance = new webRTC(localStream.value);
+  rtcInstance.openPub();
 });
 </script>
 
@@ -65,6 +93,15 @@ onMounted(() => {
       id="sprite"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat"
     ></div>
+    <div>
+      pub
+      <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
+    </div>
+
+    <div>
+      sub
+      <video id="subVideo" class="bg-black h-20"></video>
+    </div>
   </div>
   <!-- <RouterView /> -->
 </template>
