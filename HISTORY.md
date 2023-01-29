@@ -131,3 +131,8 @@
 - offer, answer 전달
     -  보완할 점 : signalServer에서 접속하는 유저들에게 저장해놓은 offer를 매번 쏴주자. 
 - v0.0.0:49
+
+## 2023 1/29
+
+- golang signal server pub/sub 분해중
+- v0.0.0:50

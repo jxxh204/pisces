@@ -9,6 +9,7 @@ export default class webRTC {
   config: RTCConfiguration;
   localStream: MediaStream | null;
   socket: WebSocket | null;
+  wsurl: string;
   constructor(localStream: MediaStream) {
     this.pc = null;
     // this.localStream;
@@ -31,6 +32,7 @@ export default class webRTC {
     };
     this.localStream = localStream;
     this.socket = null;
+    this.wsurl = "ws://localhost:9100/pub";
   }
   async handleOffer(offer: RTCOfferOptions) {
     if (this.pc) {
@@ -75,7 +77,7 @@ export default class webRTC {
   }
 
   openWebSocket(kind: string) {
-    this.socket = new WebSocket("ws://localhost:9100/socket");
+    this.socket = new WebSocket(this.wsurl);
     this.socket.onopen = (evt) => {
       console.log("socket open");
     };
@@ -85,7 +87,7 @@ export default class webRTC {
         return;
       }
       const { type, data } = JSON.parse(e.data);
-      console.log(type);
+      console.log(type, kind);
       switch (type) {
         case "offer":
           //sub
@@ -125,13 +127,6 @@ export default class webRTC {
 
     this.pc = new RTCPeerConnection(this.config);
 
-    //sub addTransceiver
-    // this.pc.addTransceiver("video", { direction: "recvonly" });
-    // this.pc.ontrack = (evt) => {
-    //   //sub
-    //   console.log("ontrack", evt);
-    // };
-
     this.pc.oniceconnectionstatechange = () => {
       console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
     };
@@ -144,13 +139,14 @@ export default class webRTC {
       // }
     };
     this.localStream?.getTracks().forEach((track) => {
+      // console.log(" this.localStream", this.localStream);
       if (this.localStream) this.pc?.addTrack(track, this.localStream);
     });
     setTimeout(async () => {
       const offer = await this.pc.createOffer();
       await this.sendMessage("offer", offer.sdp);
       await this.pc?.setLocalDescription(offer);
-      await this.openSub();
+      // await this.openSub();
     }, 1000);
   }
   openSub() {
@@ -162,8 +158,7 @@ export default class webRTC {
     this.pc.addTransceiver("video", { direction: "recvonly" });
     this.pc.ontrack = (evt) => {
       //sub
-
-      console.log("ontrack", evt);
+      console.log("ontrack", evt.streams[0]);
     };
 
     this.pc.oniceconnectionstatechange = () => {
@@ -172,14 +167,7 @@ export default class webRTC {
 
     this.pc.onicecandidate = (evt) => {
       console.log("onicecandidate", evt);
-      // if (evt.candidate === null) {
-      // 	console.log('lsd', lsd);
-      // 	lsd = btoa(JSON.stringify(this.pc.localDescription));
-      // }
     };
-    // this.localStream?.getTracks().forEach((track) => {
-    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    // });
   }
   sendMessage(key: string, value: string) {
     console.log("sendMessage : ", key);
