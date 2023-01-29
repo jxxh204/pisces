@@ -9,7 +9,7 @@ export default class webRTC {
   config: RTCConfiguration;
   localStream: MediaStream | null;
   socket: WebSocket | null;
-  wsurl: string;
+  baseUrl: string;
   constructor(localStream: MediaStream) {
     this.pc = null;
     // this.localStream;
@@ -32,14 +32,18 @@ export default class webRTC {
     };
     this.localStream = localStream;
     this.socket = null;
-    this.wsurl = "ws://localhost:9100/pub";
+    this.baseUrl = "ws://localhost:9100";
   }
   async handleOffer(offer: RTCOfferOptions) {
-    if (this.pc) {
+    console.log(
+      "🚀 ~ file: webRTCsample.ts:38 ~ webRTC ~ handleOffer ~ handleOffer",
+      this.pc
+    );
+    if (!this.pc) {
       console.error("existing peerconnection");
       return;
     }
-    await this.pc?.setRemoteDescription(
+    await this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "offer",
         sdp: offer,
@@ -47,11 +51,14 @@ export default class webRTC {
     );
 
     const answer = await this.pc?.createAnswer();
-    this.sendMessage("answer", answer.sdp);
+    await this.sendMessage("answer", answer.sdp);
     await this.pc.setLocalDescription(answer);
   }
 
   async handleAnswer(answer: string) {
+    console.log(
+      "🚀 ~ file: webRTCsample.ts:55 ~ webRTC ~ handleAnswer ~ handleAnswer"
+    );
     if (!this.pc) {
       console.error("no peerconnection");
       return;
@@ -69,6 +76,7 @@ export default class webRTC {
       console.error("no peerconnection");
       return;
     }
+    console.log("handleCandidate", candidate);
     if (!candidate.candidate) {
       await this.pc.addIceCandidate(null);
     } else {
@@ -77,7 +85,13 @@ export default class webRTC {
   }
 
   openWebSocket(kind: string) {
-    this.socket = new WebSocket(this.wsurl);
+    const wsurl = this.baseUrl + `/${kind}`;
+    this.socket = new WebSocket(wsurl);
+
+    console.log(
+      "🚀 ~ file: webRTCsample.ts:83 ~ webRTC ~ openWebSocket ~ this.baseUrl",
+      wsurl
+    );
     this.socket.onopen = (evt) => {
       console.log("socket open");
     };
@@ -87,7 +101,7 @@ export default class webRTC {
         return;
       }
       const { type, data } = JSON.parse(e.data);
-      console.log(type, kind);
+      console.log("onmessage", type, kind);
       switch (type) {
         case "offer":
           //sub
@@ -132,28 +146,38 @@ export default class webRTC {
     };
 
     this.pc.onicecandidate = (evt) => {
+      const message = {
+        type: "candidate",
+        candidate: null,
+        sdpMid: null,
+        sdpMLineIndex: null,
+      } as CandidateMessageType;
+
+      if (evt.candidate) {
+        message.candidate = evt.candidate.candidate;
+        message.sdpMid = evt.candidate.sdpMid;
+        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+      }
+      this.socket?.send(JSON.stringify(message));
       console.log("onicecandidate", evt);
-      // if (evt.candidate === null) {
-      // 	console.log('lsd', lsd);
-      // 	lsd = btoa(JSON.stringify(this.pc.localDescription));
-      // }
     };
     this.localStream?.getTracks().forEach((track) => {
       // console.log(" this.localStream", this.localStream);
       if (this.localStream) this.pc?.addTrack(track, this.localStream);
     });
     setTimeout(async () => {
-      const offer = await this.pc.createOffer();
+      const offer = await this.pc?.createOffer();
       await this.sendMessage("offer", offer.sdp);
       await this.pc?.setLocalDescription(offer);
-      // await this.openSub();
+      await this.openSub();
     }, 1000);
   }
   openSub() {
-    this.openWebSocket("sub");
     this.pc = new RTCPeerConnection(this.config);
-    console.log("🚀 ~ file: webRTCsample.ts:79 ~ openRTC ~ this.pc", this.pc);
-
+    setTimeout(() => {
+      // 임시
+      this.openWebSocket("sub");
+    }, 500);
     //sub addTransceiver
     this.pc.addTransceiver("video", { direction: "recvonly" });
     this.pc.ontrack = (evt) => {
@@ -166,6 +190,19 @@ export default class webRTC {
     };
 
     this.pc.onicecandidate = (evt) => {
+      const message = {
+        type: "candidate",
+        candidate: null,
+        sdpMid: null,
+        sdpMLineIndex: null,
+      } as CandidateMessageType;
+
+      if (evt.candidate) {
+        message.candidate = evt.candidate.candidate;
+        message.sdpMid = evt.candidate.sdpMid;
+        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+      }
+      this.socket?.send(JSON.stringify(message));
       console.log("onicecandidate", evt);
     };
   }

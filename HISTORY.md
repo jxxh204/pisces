@@ -136,3 +136,6 @@
 
 - golang signal server pub/sub 분해중
 - v0.0.0:50
+- candidate도 교환
+    - 보완할 점 : pub/sub 구조가 아닌 chat서버 구조로 변경해야 할듯.
+- v0.0.0:51

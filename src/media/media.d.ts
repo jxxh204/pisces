@@ -1,4 +1,4 @@
-import type { UartService } from 'microbit-web-bluetooth/types/services/uart';
+import type { UartService } from "microbit-web-bluetooth/types/services/uart";
 // import * as microbit from "microbit-web-bluetooth";
 
 /// <reference types="web-bluetooth" />
@@ -44,16 +44,16 @@ interface reconnectOption {
   second: number;
 }
 
-type SettingDeviceKindStatus = 'audioinput' | 'audiooutput' | 'videoinput';
+type SettingDeviceKindStatus = "audioinput" | "audiooutput" | "videoinput";
 interface SettingDeviceOption {
   kind: SettingDeviceKindStatus;
-  outputElement: 'option' | 'div'; // default : option
+  outputElement: "option" | "div"; // default : option
 }
 
 interface GetStreamSettings {
   video: boolean;
   audio: boolean;
-  elementKind: 'canvas' | 'video';
+  elementKind: "canvas" | "video";
   outputElement: HTMLCanvasElement | HTMLVideoElement;
 }
 
@@ -80,7 +80,14 @@ interface ObserverState {
 
 type MothEventList = MothEventState[];
 interface MothEventState {
-  id: 'onopen' | 'getmime' | 'snapShot' | 'onmessage';
+  id: "onopen" | "getmime" | "snapShot" | "onmessage";
   // func: void;
   func: () => void;
 }
+
+type CandidateMessageType = {
+  type: string;
+  candidate: string;
+  sdpMid: string;
+  sdpMLineIndex: number;
+};
