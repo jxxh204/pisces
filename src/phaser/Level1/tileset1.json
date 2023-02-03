@@ -6355,7 +6355,7 @@
         {
          "columns":40,
          "firstgid":1452,
-         "image":"..\/..\/assets\/background\/city_background.jpeg",
+         "image":"background\/city_background.jpeg",
          "imageheight":1135,
          "imagewidth":640,
          "margin":0,
