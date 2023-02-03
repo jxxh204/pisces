@@ -35,20 +35,21 @@ export default class webRTC {
     this.baseUrl = "ws://localhost:9100";
   }
   async handleOffer(offer: RTCOfferOptions) {
-    console.log(
-      "🚀 ~ file: webRTCsample.ts:38 ~ webRTC ~ handleOffer ~ handleOffer",
-      this.pc
-    );
     if (!this.pc) {
       console.error("existing peerconnection");
       return;
     }
+    //여기서 영상 실행.
     await this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "offer",
         sdp: offer,
       })
     );
+    this.localStream?.getTracks().forEach((track) => {
+      // console.log(" this.localStream", this.localStream);
+      if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    });
 
     const answer = await this.pc?.createAnswer();
     await this.sendMessage("answer", answer.sdp);
@@ -84,8 +85,8 @@ export default class webRTC {
     }
   }
 
-  openWebSocket(kind: string) {
-    const wsurl = this.baseUrl + `/${kind}`;
+  openWebSocket() {
+    const wsurl = this.baseUrl + "/ws";
     this.socket = new WebSocket(wsurl);
 
     console.log(
@@ -101,15 +102,13 @@ export default class webRTC {
         return;
       }
       const { type, data } = JSON.parse(e.data);
-      console.log("onmessage", type, kind);
+      console.log("onmessage", type);
       switch (type) {
         case "offer":
-          //sub
-          if (kind === "sub") this.handleOffer(data);
+          this.handleOffer(data);
           break;
         case "answer":
-          //pub
-          if (kind === "pub") this.handleAnswer(data);
+          this.handleAnswer(data);
           break;
         case "candidate":
           this.handleCandidate(data);
@@ -135,6 +134,43 @@ export default class webRTC {
     this.socket.onclose = (evt) => {
       console.log("socket close");
     };
+  }
+  async openChat() {
+    this.openWebSocket();
+
+    this.pc = new RTCPeerConnection(this.config);
+
+    this.pc.oniceconnectionstatechange = () => {
+      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+    };
+
+    this.pc.onicecandidate = (evt) => {
+      const message = {
+        type: "candidate",
+        candidate: null,
+        sdpMid: null,
+        sdpMLineIndex: null,
+      } as CandidateMessageType;
+
+      if (evt.candidate) {
+        message.candidate = evt.candidate.candidate;
+        message.sdpMid = evt.candidate.sdpMid;
+        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+      }
+      this.socket?.send(JSON.stringify(message));
+      console.log("onicecandidate", evt);
+    };
+    this.pc.addTransceiver("video", { direction: "recvonly" });
+    this.pc.ontrack = (evt) => {
+      //sub
+      console.log("ontrack", evt.streams[0]);
+    };
+    // setTimeout(async () => {
+    //   const offer = await this.pc?.createOffer();
+    //   await this.sendMessage("offer", offer.sdp);
+    //   await this.pc?.setLocalDescription(offer);
+    //   await this.openSub();
+    // }, 1000);
   }
   async openPub() {
     this.openWebSocket("pub");
@@ -209,6 +245,7 @@ export default class webRTC {
   sendMessage(key: string, value: string) {
     console.log("sendMessage : ", key);
     const msg = {
+      target: "",
       type: key,
       data: value,
     };

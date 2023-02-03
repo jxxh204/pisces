@@ -10,6 +10,7 @@ import type { GetStreamSettings } from "./media/media";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
+const inputName = ref<HTMLInputElement>();
 
 const ZOOM_LEVEL = 2;
 
@@ -82,30 +83,52 @@ onMounted(async () => {
   } as GetStreamSettings;
   instance.settings(option);
   localStream.value = await instance.getVideoStream(videoId, 1280, 800);
-  const rtcInstance = new webRTC(localStream.value);
-  rtcInstance.openPub();
 
   // rtcInstance.openSub();
 });
+const onClickConnectRTC = () => {
+  if (inputName.value?.value) {
+    alert("이름을 입력해주세요");
+    return;
+  }
+  const rtcInstance = new webRTC(localStream.value, inputName.value?.value);
+  rtcInstance.openChat();
+};
 </script>
 
 <template>
-  <div>
+  <div class="w-full h-full fixed">
     <div
       id="sprite"
-      class="w-full h-full top-0 bottom-0 fixed cursor-cat"
+      class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
     ></div>
-    <div>
-      pub
-      <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
-    </div>
+    <div class="rtc-modal bg-white rounded-lg p-10">
+      <section>
+        pub
+        <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
+        <div class="border border-black p-2 rounded-lg">
+          이름 : <input type="text" ref="inputName" />
+          <button @click="onClickConnectRTC" class="buttons">접속</button>
+        </div>
+      </section>
 
-    <div>
-      sub
-      <video id="subVideo" class="bg-black h-20"></video>
+      <sdction>
+        sub
+        <video id="subVideo" class="bg-black h-20"></video>
+      </sdction>
     </div>
   </div>
   <!-- <RouterView /> -->
 </template>
 
-<style scoped></style>
+<style scoped>
+.buttons {
+  @apply bg-white px-2 hover:bg-slate-300 transition-all duration-200 rounded-lg;
+}
+.rtc-modal {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+</style>
