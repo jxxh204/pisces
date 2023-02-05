@@ -7,12 +7,13 @@ import Welcome from "./phaser/Welcome/Welcome";
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
+import LoadingView from "@/views/LoadingView.vue";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
 const inputName = ref<HTMLInputElement>();
 
-const ZOOM_LEVEL = 2;
+const ZOOM_LEVEL = 1;
 
 const SIZE_WIDTH_SCREEN = 800;
 const SIZE_HEIGHT_SCREEN = 600;
@@ -20,7 +21,7 @@ const SIZE_HEIGHT_SCREEN = 600;
 const config = {
   type: Phaser.AUTO,
   mode: Phaser.Scale.FIT, // 자동으로 화면을 꽉채워줌
-  parent: "sprite", //canvas id
+  parent: "phaser-wrapper", //canvas id
   width: SIZE_WIDTH_SCREEN,
   height: SIZE_HEIGHT_SCREEN,
   autoCenter: Phaser.Scale.CENTER_BOTH, // 화면을 자동으로 센터에 맞추어줌.
@@ -30,7 +31,7 @@ const config = {
   // zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, Level1], //Level1
+  scene: [Level1], //Level1 Welcome,
   physics: {
     default: "arcade",
     arcade: {
@@ -55,14 +56,14 @@ onMounted(async () => {
       canvas.style.width = SIZE_HEIGHT_SCREEN * gameRatio + "px";
       canvas.style.height = SIZE_HEIGHT_SCREEN + "px";
     }
-    // game.scale.resize(
-    //   window.innerWidth / ZOOM_LEVEL,
-    //   window.innerHeight / ZOOM_LEVEL
-    // );
+    game.scale.resize(
+      window.innerWidth / ZOOM_LEVEL,
+      window.innerHeight / ZOOM_LEVEL
+    );
   };
-  resize();
+  // resize();
 
-  window.addEventListener("resize", resize, false);
+  // window.addEventListener("resize", resize, false);
 
   //webRTC
   let videoId = "";
@@ -97,12 +98,13 @@ const onClickConnectRTC = () => {
 </script>
 
 <template>
-  <div class="w-full h-full fixed">
+  <div class="w-screen h-screen fixed">
+    <LoadingView />
     <div
-      id="sprite"
+      id="phaser-wrapper"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
     ></div>
-    <div class="rtc-modal bg-white rounded-lg p-10">
+    <!-- <div class="rtc-modal bg-white rounded-lg p-10">
       <section>
         pub
         <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
@@ -116,19 +118,29 @@ const onClickConnectRTC = () => {
         sub
         <video id="subVideo" class="bg-black h-20"></video>
       </sdction>
-    </div>
+    </div> -->
   </div>
   <!-- <RouterView /> -->
 </template>
 
 <style scoped>
-.buttons {
+/* .buttons {
   @apply bg-white px-2 hover:bg-slate-300 transition-all duration-200 rounded-lg;
-}
+} */
 .rtc-modal {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
+}
+body {
+  overflow: auto !important;
+}
+
+.phaser-wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  border: 1px solid #ccc;
 }
 </style>

@@ -2,8 +2,10 @@ import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
 import Swordsman from "@/assets/characters/swordsman-Sheet.png";
+
 // inGameLoading
 import inGameLoading from "./inGameLoading.png";
+
 // map
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
@@ -176,17 +178,19 @@ export default class Test extends Phaser.Scene {
 
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
-    cam.setZoom(1.5);
+    // canvas.style.width = '100%'
+    // canvas.style.height = '100%'
+    // cam.setZoom(1);
     // canvas.style.cursor = "none";
     // this.add.existing();
-
+    console.log(cam.width, cam.height);
     // cam.pan(400, this.bg.height - 200, 1000);
     //w:400, h:??, 2000초동안 이동.
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
     cam.setBounds(
       0, // 타일의 처음 지점.
-      this.bg.height - 200,
+      cam.width / 3,
       1000, //타일의 끝지점으로.
       this.bg.height
     );

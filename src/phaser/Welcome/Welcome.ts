@@ -19,7 +19,10 @@ export default class Welcome extends Phaser.Scene {
       y: 0,
     };
   }
-  preload() {
+  imageLoad() {
+    // this.load.image("starticon", "assets/images/icons/startup-icon.png");
+  }
+  progressLoad() {
     this.progressOption = {
       width: 320,
       height: 50,
@@ -40,9 +43,9 @@ export default class Welcome extends Phaser.Scene {
       this.progressOption.y - 30,
       "Loading.."
     );
-    let value = 0.2;
 
     progressBar.clear();
+    let value = 0.2;
 
     const progressInterval = setInterval(() => {
       value += 0.05;
@@ -55,11 +58,21 @@ export default class Welcome extends Phaser.Scene {
       );
       if (value > 1) {
         clearInterval(progressInterval);
-        this.scene.start("Level1");
+        // this.scene.start("Level1");
         // progressBar.destroy();
         // progressBox.destroy();
       }
     }, 100);
   }
-  create() {}
+  preload() {
+    this.imageLoad();
+    this.progressLoad();
+  }
+  create() {
+    // this.add.image(
+    //   this.progressOption.x,
+    //   this.progressOption.y - 30,
+    //   "starticon"
+    // );
+  }
 }
