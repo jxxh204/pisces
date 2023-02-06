@@ -10,6 +10,7 @@ import inGameLoading from "./inGameLoading.png";
 import tilesImg from "./Tiles.png";
 import macTileSetImg from "../Sprites/mac.png";
 import city_backgroundImg from "./background/city_background.jpeg";
+import mac_backgroundImg from "@/assets/images/bg/background.png";
 import keyboardImg from "./keyboard.jpeg";
 
 import { media } from "@/media/userMedia";
@@ -105,13 +106,14 @@ export default class Test extends Phaser.Scene {
     //tileName, tileImage,
     this.load.image("tileSetImage", tilesImg);
     this.load.image("macTileSetImage", macTileSetImg);
-    this.load.image("cityTileSetImage", city_backgroundImg);
+    // this.load.image("cityTileSetImage", city_backgroundImg);
     this.load.image("keyboardImage", keyboardImg);
+    this.load.image("macBackgroundImg", mac_backgroundImg);
     //tileMap JSON
     this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
   }
   setZindex() {
-    this.sprite.background.setDepth(-1);
+    this.sprite.macBackground.setDepth(-1);
   }
   createMap() {
     this.bg.width = this.scale.width;
@@ -121,25 +123,25 @@ export default class Test extends Phaser.Scene {
     });
 
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
-    const tileset = map.addTilesetImage("Tiles", "tileSetImage");
     const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
-    const cityTileSet = map.addTilesetImage(
-      "city_background",
-      "cityTileSetImage"
+
+    const macBackgroundTileSet = map.addTilesetImage(
+      "mac_background",
+      "macBackgroundImg"
     );
     const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
 
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.floor = map.createLayer("floor", tileset, 0, 0); //프로그램에서 설정한 레이어 불러옴.
     this.sprite.mac = map.createLayer("mac", macTileSet, 0, 0);
-    this.sprite.background = map.createLayer(
-      "city_background",
-      cityTileSet,
+
+    this.sprite.keyboard = map.createLayer("keyboard", keyboardTileSet, 0, 0);
+    this.sprite.macBackground = map.createLayer(
+      "mac_background",
+      macBackgroundTileSet,
       0,
       0
     );
-    this.sprite.keyboard = map.createLayer("keyboard", keyboardTileSet, 0, 0);
   }
   loadInGameLoading() {
     //위치 바꾸기
@@ -170,7 +172,7 @@ export default class Test extends Phaser.Scene {
     //내부 코드 정리하기.
     this.physics.world.setBounds(
       0, // 타일의 처음 지점.
-      this.bg.height - 100,
+      0,
       1000, //타일의 끝지점으로.
       this.bg.height
     );
@@ -180,17 +182,16 @@ export default class Test extends Phaser.Scene {
     const canvas = this.game.canvas;
     // canvas.style.width = '100%'
     // canvas.style.height = '100%'
-    // cam.setZoom(1);
+    cam.setZoom(1.5);
     // canvas.style.cursor = "none";
     // this.add.existing();
-    console.log(cam.width, cam.height);
     // cam.pan(400, this.bg.height - 200, 1000);
     //w:400, h:??, 2000초동안 이동.
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
     cam.setBounds(
       0, // 타일의 처음 지점.
-      cam.width / 3,
+      0,
       1000, //타일의 끝지점으로.
       this.bg.height
     );
@@ -207,23 +208,23 @@ export default class Test extends Phaser.Scene {
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
-    const setOnCollideFloor = (
-      c: Phaser.Types.Physics.Arcade.GameObjectWithBody
-    ) => {
-      this.colliders.floor = c.active;
-      if (this.colliders.timer) clearTimeout(this.colliders.timer);
-      this.colliders.timer = setTimeout(() => {
-        this.colliders.floor = false;
-      }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
-    };
-    //충돌감지 // update에 적용
-    this.physics.add.collider(
-      this.main_char.character,
-      this.sprite.floor,
-      (c) => setOnCollideFloor(c)
-    );
-
-    this.sprite.floor.setCollisionByProperty({ collides: true });
+    this.colliders.floor = true;
+    // const setOnCollideFloor = (
+    //   c: Phaser.Types.Physics.Arcade.GameObjectWithBody
+    // ) => {
+    //   this.colliders.floor = c.active;
+    //   if (this.colliders.timer) clearTimeout(this.colliders.timer);
+    //   this.colliders.timer = setTimeout(() => {
+    //     this.colliders.floor = false;
+    //   }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
+    // };
+    // //충돌감지 // update에 적용
+    // this.physics.add.collider(
+    //   this.main_char.character,
+    //   this.sprite.floor,
+    //   (c) => setOnCollideFloor(c)
+    // );
+    // this.sprite.floor.setCollisionByProperty({ collides: true });
     // var M = Phaser.Physics.Matter.MatterPhysics
   }
   async getCameraStream() {

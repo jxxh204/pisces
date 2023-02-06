@@ -120,7 +120,7 @@ img {
   @apply cursor-watch;
 }
 .starting {
-  background-image: url("@/assets/images/bg/bg-loading.png");
+  background-image: url("@/assets/images/bg/background.png");
   background-size: cover;
 }
 </style>

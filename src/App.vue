@@ -18,8 +18,8 @@ const inputName = ref<HTMLInputElement>();
 
 const ZOOM_LEVEL = 1;
 
-const SIZE_WIDTH_SCREEN = 800;
-const SIZE_HEIGHT_SCREEN = 600;
+const SIZE_WIDTH_SCREEN = window.innerWidth;
+const SIZE_HEIGHT_SCREEN = window.innerHeight;
 
 const config = {
   type: Phaser.AUTO,
@@ -59,14 +59,14 @@ onMounted(async () => {
       canvas.style.width = SIZE_HEIGHT_SCREEN * gameRatio + "px";
       canvas.style.height = SIZE_HEIGHT_SCREEN + "px";
     }
-    game.scale.resize(
-      window.innerWidth / ZOOM_LEVEL,
-      window.innerHeight / ZOOM_LEVEL
-    );
+    // game.scale.resize(
+    //   window.innerWidth / ZOOM_LEVEL,
+    //   window.innerHeight / ZOOM_LEVEL
+    // );
   };
-  // resize();
+  resize();
 
-  // window.addEventListener("resize", resize, false);
+  window.addEventListener("resize", resize, false);
 
   //webRTC
   let videoId = "";
