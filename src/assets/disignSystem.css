@@ -1,0 +1,90 @@
+@font-face {
+  font-family: "AppleGaramond-Light";
+  src: url("./fonts/AppleGaramond-Light.ttf");
+}
+@font-face {
+  font-family: "Charcoal";
+  src: url("./fonts/CHARCOAL.TTF");
+}
+@font-face {
+  font-family: "Monocraft";
+  src: url("./fonts/Monocraft.ttf");
+}
+.mono-lg-bold {
+  font-family: "Monocraft";
+  font-size: 1.5rem /* 24px */;
+  line-height: 2rem /* 32px */;
+}
+.mono-lg-light {
+  font-family: "Monocraft";
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+}
+.chco {
+  font-family: "Charcoal";
+  font-size: 0.625rem /* 10px */;
+  line-height: 0.75rem /* 12px */;
+}
+.mono-light {
+  font-family: "Monocraft";
+  font-size: 0.625rem /* 10px */;
+  line-height: 0.75rem /* 12px */;
+}
+/* Monocraft bold */
+.mono-bold {
+  font-family: "Monocraft";
+  font-size: 0.625rem /* 10px */;
+  line-height: 0.75rem /* 12px */;
+  font-weight: 700;
+}
+.italic {
+  font-style: italic;
+}
+
+button {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 14.09px;
+
+  position: relative;
+  width: 69.55px;
+  height: 31.27px;
+
+  /* Grays / 400 */
+
+  background: #cccccc;
+  border: 1.40909px solid #484848;
+  box-shadow: inset -2.81818px 0px 0px #808080, inset 0px -2.81818px 0px #808080,
+    inset 2.81818px 0px 0px #ffffff, inset 0px 2.81818px 0px #ffffff;
+}
+button:active,
+button:hover {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 14.09px;
+
+  position: relative;
+  width: 69.55px;
+  height: 31.27px;
+
+  /* Grays / 600 */
+
+  background: #999999;
+  border: 1px solid #484848;
+  box-shadow: inset -2px 0px 0px rgba(255, 255, 255, 0.2),
+    inset 0px -2px 0px rgba(255, 255, 255, 0.2),
+    inset 2px 0px 0px rgba(38, 38, 38, 0.6),
+    inset 0px 2px 0px rgba(38, 38, 38, 0.6);
+}

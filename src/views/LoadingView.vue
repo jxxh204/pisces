@@ -9,7 +9,7 @@ import ProgressBar from "@/assets/images/ProgressBar.png";
 // const isStartingIcon = useTimeout(1000);
 const { ready, start, stop } = useTimeout(1000, { controls: true });
 
-type LoadingTypes = "initial" | "welcome" | "progress" | "button";
+type LoadingTypes = "initial" | "welcome" | "progress" | "button" | "none";
 
 const loadingType = ref<LoadingTypes>("initial");
 const isStartingIcon = ref(true);
@@ -44,46 +44,58 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div
-    v-if="loadingType === 'initial'"
-    class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition-all"
-  >
-    <img v-if="isStartingIcon" :src="StartingIcon" class="h-[6%]" />
-  </div>
-  <!-- start -->
-  <div
-    v-else
-    class="starting loading flex flex-row justify-center items-center transition-all"
-  >
-    <img :src="Welcome_modal" class="h-[50%]" />
-    <p
-      v-if="loadingType === 'welcome'"
-      class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
-    >
-      Welcome to Jam OS
-    </p>
+  <Transition name="fade">
     <div
-      class="font-[Charcoal] w-40 fixed top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2"
-      v-if="loadingType === 'progress'"
+      v-if="loadingType === 'initial'"
+      class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition-all"
     >
-      <p>Starting Up...</p>
-      <div class="w-full">
-        <div class="w-full rounded-full h-2.5">
-          <img class="absolute w-full h-3" :src="ProgressBar" />
-          <div
-            class="h-3 rounded-full absolute bg-gradient-to-b from-mac-Azul via-mac-white to-mac-Azul"
-            :style="`width:${progressPercent}%`"
-          ></div>
+      <img v-if="isStartingIcon" :src="StartingIcon" class="h-[6%]" />
+    </div>
+    <!-- start -->
+    <div
+      v-else-if="
+        loadingType === 'welcome' ||
+        loadingType === 'progress' ||
+        loadingType === 'button'
+      "
+      class="starting loading flex flex-row justify-center items-center transition-all"
+    >
+      <img :src="Welcome_modal" class="h-[50%]" />
+      <p
+        v-if="loadingType === 'welcome'"
+        class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+      >
+        Welcome to Jam.Kim Portfolio
+      </p>
+      <div
+        class="font-[Charcoal] w-40 fixed top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2"
+        v-if="loadingType === 'progress'"
+      >
+        <p>Starting Up...</p>
+        <div class="w-full">
+          <div class="w-full rounded-full h-2.5">
+            <img class="absolute w-full h-3" :src="ProgressBar" />
+            <div
+              class="h-3 rounded-full absolute bg-gradient-to-b from-mac-Azul via-mac-white to-mac-Azul"
+              :style="`width:${progressPercent}%`"
+            ></div>
+          </div>
         </div>
       </div>
+      <div
+        v-if="loadingType === 'button'"
+        class="font-[Charcoal] fixed top-[69%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+      >
+        <button
+          @click="() => (loadingType = 'none')"
+          class="mono-lg-light flex flex-row justify-center items-center"
+        >
+          Start
+        </button>
+      </div>
     </div>
-    <div
-      v-if="loadingType === 'button'"
-      class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
-    >
-      <button class="">start</button>
-    </div>
-  </div>
+  </Transition>
+
   <!-- starting -->
 </template>
 
