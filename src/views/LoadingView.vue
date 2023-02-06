@@ -65,7 +65,8 @@ onMounted(async () => {
         v-if="loadingType === 'welcome'"
         class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
       >
-        Welcome to Jam.Kim Portfolio
+        <!-- Welcome to -->
+        Jam.Kim Portfolio
       </p>
       <div
         class="font-[Charcoal] w-40 fixed top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2"

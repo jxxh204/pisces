@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 import { onMounted, ref } from "vue";
+import LoadingView from "@/views/LoadingView.vue";
+
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
 import Welcome from "./phaser/Welcome/Welcome";
+
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
-import LoadingView from "@/views/LoadingView.vue";
+import MenuBar from "./components/menuBar.vue";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -99,7 +102,8 @@ const onClickConnectRTC = () => {
 
 <template>
   <div class="w-screen h-screen fixed">
-    <LoadingView />
+    <!-- <LoadingView /> -->
+    <MenuBar />
     <div
       id="phaser-wrapper"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
