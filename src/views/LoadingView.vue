@@ -9,11 +9,13 @@ import ProgressBar from "@/assets/images/ProgressBar.png";
 // const isStartingIcon = useTimeout(1000);
 const { ready, start, stop } = useTimeout(1000, { controls: true });
 
-type LoadingTypes = "start" | "starting" | "welcome";
+type LoadingTypes = "initial" | "welcome" | "progress" | "button";
 
-const loadingType = ref<LoadingTypes>("start");
+const loadingType = ref<LoadingTypes>("initial");
 const isStartingIcon = ref(true);
-const isProgressBar = ref(false);
+const progressPercent = ref(0);
+const progressInterval = ref<number>(0);
+
 onMounted(async () => {
   await promiseTimeout(1200);
   if (ready.value) {
@@ -21,40 +23,68 @@ onMounted(async () => {
   }
   await promiseTimeout(1200);
   if (ready.value) {
-    loadingType.value = "starting";
+    loadingType.value = "welcome";
   }
   await promiseTimeout(1200);
   if (ready.value) {
-    isProgressBar.value = true;
+    loadingType.value = "progress";
+    progressInterval.value = setInterval(() => {
+      progressPercent.value++;
+      console.log(
+        "🚀 ~ file: LoadingView.vue:39 ~ progressInterval.value=setInterval ~ progressPercent.value",
+        progressPercent.value
+      );
+
+      if (progressPercent.value > 99) {
+        clearInterval(progressInterval.value);
+        loadingType.value = "button";
+      }
+    }, 20);
   }
 });
 </script>
 <template>
   <div
-    v-if="loadingType === 'start'"
+    v-if="loadingType === 'initial'"
     class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition-all"
   >
     <img v-if="isStartingIcon" :src="StartingIcon" class="h-[6%]" />
   </div>
+  <!-- start -->
   <div
-    v-else-if="loadingType === 'starting'"
+    v-else
     class="starting loading flex flex-row justify-center items-center transition-all"
   >
     <img :src="Welcome_modal" class="h-[50%]" />
     <p
-      v-if="!isProgressBar"
+      v-if="loadingType === 'welcome'"
       class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
     >
       Welcome to Jam OS
     </p>
     <div
-      class="font-[Charcoal] fixed top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2"
-      v-else
+      class="font-[Charcoal] w-40 fixed top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2"
+      v-if="loadingType === 'progress'"
     >
       <p>Starting Up...</p>
-      <img :src="ProgressBar" />
+      <div class="w-full">
+        <div class="w-full rounded-full h-2.5">
+          <img class="absolute w-full h-3" :src="ProgressBar" />
+          <div
+            class="h-3 rounded-full absolute bg-gradient-to-b from-mac-Azul via-mac-white to-mac-Azul"
+            :style="`width:${progressPercent}%`"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="loadingType === 'button'"
+      class="font-[Charcoal] fixed top-[67%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+    >
+      <button class="">start</button>
     </div>
   </div>
+  <!-- starting -->
 </template>
 
 <style scoped>
