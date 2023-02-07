@@ -31,7 +31,7 @@ const config = {
   dom: {
     createContainer: true,
   },
-  // zoom: ZOOM_LEVEL,
+  zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
   scene: [Level1], //Level1 Welcome,
@@ -59,10 +59,10 @@ onMounted(async () => {
       canvas.style.width = SIZE_HEIGHT_SCREEN * gameRatio + "px";
       canvas.style.height = SIZE_HEIGHT_SCREEN + "px";
     }
-    // game.scale.resize(
-    //   window.innerWidth / ZOOM_LEVEL,
-    //   window.innerHeight / ZOOM_LEVEL
-    // );
+    game.scale.resize(
+      window.innerWidth / ZOOM_LEVEL,
+      window.innerHeight / ZOOM_LEVEL
+    );
   };
   resize();
 

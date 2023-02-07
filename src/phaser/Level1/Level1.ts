@@ -77,15 +77,6 @@ export default class Test extends Phaser.Scene {
     };
 
     this.isBehavior = false;
-    // this.motionState = {
-    //   idle: false,
-    //   up: false,
-    //   down: false,
-    //   left: false,
-    //   right: false,
-    //   space: false,
-    //   shift: false,
-    // };
     this.motionSpeed = {
       walk: 200,
       run: 100,
@@ -105,12 +96,16 @@ export default class Test extends Phaser.Scene {
     //tileSet
     //tileName, tileImage,
     this.load.image("tileSetImage", tilesImg);
-    this.load.image("macTileSetImage", macTileSetImg);
+    // this.load.image("macTileSetImage", macTileSetImg);
     // this.load.image("cityTileSetImage", city_backgroundImg);
-    this.load.image("keyboardImage", keyboardImg);
+    // this.load.image("keyboardImage", keyboardImg);
     this.load.image("macBackgroundImg", mac_backgroundImg);
     //tileMap JSON
-    this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
+    // this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
+    this.load.tilemapTiledJSON(
+      "macTileset",
+      "src/phaser/Level1/mac_tileset.json"
+    ); //무조건 주소 자체를 넣어야함.
   }
   setZindex() {
     this.sprite.macBackground.setDepth(-1);
@@ -119,7 +114,7 @@ export default class Test extends Phaser.Scene {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
     const map = this.make.tilemap({
-      key: "Level1",
+      key: "macTileset",
     });
 
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
@@ -129,18 +124,23 @@ export default class Test extends Phaser.Scene {
       "mac_background",
       "macBackgroundImg"
     );
-    const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
+    // const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
 
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.mac = map.createLayer("mac", macTileSet, 0, 0);
+    this.sprite.mac = map.createLayer("mac", macTileSet, 0, this.bg.height);
 
-    this.sprite.keyboard = map.createLayer("keyboard", keyboardTileSet, 0, 0);
+    // this.sprite.keyboard = map.createLayer(
+    //   "keyboard",
+    //   keyboardTileSet,
+    //   0,
+    //   this.bg.height - 200
+    // );
     this.sprite.macBackground = map.createLayer(
       "mac_background",
       macBackgroundTileSet,
       0,
-      0
+      this.bg.height
     );
   }
   loadInGameLoading() {
@@ -170,19 +170,19 @@ export default class Test extends Phaser.Scene {
   }
   createCamera() {
     //내부 코드 정리하기.
+    const cam = this.cameras.main;
+    const canvas = this.game.canvas;
+    const bottom = this.bg.height;
     this.physics.world.setBounds(
-      0, // 타일의 처음 지점.
-      0,
-      1000, //타일의 끝지점으로.
+      -50, // 타일의 처음 지점.
+      bottom,
+      this.bg.width + 100, //타일의 끝지점으로.
       this.bg.height
     );
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
 
-    const cam = this.cameras.main;
-    const canvas = this.game.canvas;
-    // canvas.style.width = '100%'
-    // canvas.style.height = '100%'
-    cam.setZoom(1.5);
+    // cam.setZoom(2); //해상도에따라 줌변경
+
     // canvas.style.cursor = "none";
     // this.add.existing();
     // cam.pan(400, this.bg.height - 200, 1000);
@@ -191,8 +191,8 @@ export default class Test extends Phaser.Scene {
     //1초동안 줌2로 변경
     cam.setBounds(
       0, // 타일의 처음 지점.
-      0,
-      1000, //타일의 끝지점으로.
+      bottom,
+      this.bg.width, //타일의 끝지점으로.
       this.bg.height
     );
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
@@ -203,7 +203,7 @@ export default class Test extends Phaser.Scene {
       0.8,
       0.8,
       0,
-      this.bg.height / 2 - 200
+      this.bg.height / 2 - 300
     ); //카메라 따라다님
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
@@ -345,8 +345,8 @@ export default class Test extends Phaser.Scene {
   }
   loadC2() {
     const location = {
-      w: 100,
-      h: window.innerHeight / 2,
+      x: 100,
+      y: this.bg.height,
       currentY: 0,
     };
     this.main_char = new CreateCharacter(
@@ -419,7 +419,7 @@ export default class Test extends Phaser.Scene {
 
     this.createMap();
     this.setZindex();
-    this.createInGameLoading();
+    // this.createInGameLoading();
     this.createCamera();
     this.setOverLap();
 

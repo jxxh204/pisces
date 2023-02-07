@@ -62,8 +62,8 @@ export default class CreateCharacter {
   }
   create() {
     this.character = this.phaser.physics.add.sprite(
-      this.characterLocation.w,
-      this.characterLocation.h,
+      this.characterLocation.x,
+      this.characterLocation.y,
       this.name
     );
     if (this.depth) this.character.setDepth(this.depth);

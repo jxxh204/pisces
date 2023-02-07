@@ -14,8 +14,8 @@ type ImageOptionType = {
 };
 
 type CharacterLocationType = {
-  w: number;
-  h: number;
+  x: number;
+  y: number;
   currentY: number;
 };
 type ActionKeyType =
