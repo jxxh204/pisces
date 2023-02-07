@@ -7,10 +7,11 @@ export default class webRTC {
   // ]
   pc: RTCPeerConnection | null;
   config: RTCConfiguration;
-  localStream: MediaStream | null;
+  localStream: MediaStream | undefined;
+  uuid: string;
   socket: WebSocket | null;
   baseUrl: string;
-  constructor(localStream: MediaStream) {
+  constructor(localStream: MediaStream | undefined, uuid: string) {
     this.pc = null;
     // this.localStream;
     this.config = {
@@ -31,6 +32,7 @@ export default class webRTC {
       // iceTransportPolicy: 'relay', // 서버 안죽게.
     };
     this.localStream = localStream;
+    this.uuid = uuid;
     this.socket = null;
     this.baseUrl = "ws://localhost:9100";
   }
@@ -89,20 +91,18 @@ export default class webRTC {
     const wsurl = this.baseUrl + "/ws";
     this.socket = new WebSocket(wsurl);
 
-    console.log(
-      "🚀 ~ file: webRTCsample.ts:83 ~ webRTC ~ openWebSocket ~ this.baseUrl",
-      wsurl
-    );
     this.socket.onopen = (evt) => {
       console.log("socket open");
+      this.sendMessage("id", this.uuid);
     };
     this.socket.onmessage = (e) => {
       if (!this.localStream) {
         console.log("not ready yet");
         return;
       }
-      const { type, data } = JSON.parse(e.data);
-      console.log("onmessage", type);
+      const { type, data, Id } = JSON.parse(e.data);
+      console.log("onmessage", type, Id);
+      if (Id === this.uuid) return;
       switch (type) {
         case "offer":
           this.handleOffer(data);
@@ -135,9 +135,7 @@ export default class webRTC {
       console.log("socket close");
     };
   }
-  async openChat() {
-    this.openWebSocket();
-
+  async openRTC() {
     this.pc = new RTCPeerConnection(this.config);
 
     this.pc.oniceconnectionstatechange = () => {
@@ -165,12 +163,16 @@ export default class webRTC {
       //sub
       console.log("ontrack", evt.streams[0]);
     };
-    // setTimeout(async () => {
-    //   const offer = await this.pc?.createOffer();
-    //   await this.sendMessage("offer", offer.sdp);
-    //   await this.pc?.setLocalDescription(offer);
-    //   await this.openSub();
-    // }, 1000);
+    this.localStream?.getTracks().forEach((track) => {
+      // console.log(" this.localStream", this.localStream);
+      if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    });
+    setTimeout(async () => {
+      const offer = await this.pc?.createOffer();
+      await this.sendMessage("offer", offer.sdp);
+      await this.pc?.setLocalDescription(offer);
+      await this.openSub();
+    }, 1000);
   }
   async openPub() {
     this.openWebSocket("pub");
@@ -210,10 +212,10 @@ export default class webRTC {
   }
   openSub() {
     this.pc = new RTCPeerConnection(this.config);
-    setTimeout(() => {
-      // 임시
-      this.openWebSocket("sub");
-    }, 500);
+    // setTimeout(() => {
+    //   // 임시
+    //   this.openWebSocket("sub");
+    // }, 500);
     //sub addTransceiver
     this.pc.addTransceiver("video", { direction: "recvonly" });
     this.pc.ontrack = (evt) => {

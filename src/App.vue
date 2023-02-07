@@ -12,6 +12,8 @@ import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
 import MenuBar from "./components/menuBar.vue";
 
+import { v4 as uuidv4 } from "uuid";
+
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
 const inputName = ref<HTMLInputElement>();
@@ -91,12 +93,9 @@ onMounted(async () => {
   // rtcInstance.openSub();
 });
 const onClickConnectRTC = () => {
-  if (inputName.value?.value) {
-    alert("이름을 입력해주세요");
-    return;
-  }
-  const rtcInstance = new webRTC(localStream.value, inputName.value?.value);
-  rtcInstance.openChat();
+  const rtcInstance = new webRTC(localStream.value, uuidv4());
+  rtcInstance.openWebSocket();
+  rtcInstance.openRTC();
 };
 </script>
 
@@ -108,12 +107,11 @@ const onClickConnectRTC = () => {
       id="phaser-wrapper"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
     ></div>
-    <!-- <div class="rtc-modal bg-white rounded-lg p-10">
+    <div class="rtc-modal bg-mac-white rounded-lg p-10">
       <section>
         pub
         <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
         <div class="border border-black p-2 rounded-lg">
-          이름 : <input type="text" ref="inputName" />
           <button @click="onClickConnectRTC" class="buttons">접속</button>
         </div>
       </section>
@@ -122,7 +120,7 @@ const onClickConnectRTC = () => {
         sub
         <video id="subVideo" class="bg-black h-20"></video>
       </sdction>
-    </div> -->
+    </div>
   </div>
   <!-- <RouterView /> -->
 </template>

@@ -1,15 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
+	"encoding/json"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
 
 type Message struct {
+	Id string `json:id`
 	Type string `json:"type"`
 	Data string `json:"data"`
 }
@@ -22,8 +25,8 @@ var (
 	wsConn *websocket.Conn
 )
 
-var offer string
-var answer string
+var currentUserId string
+var users [4]string
 
 func Chat(w http.ResponseWriter, r *http.Request) {
 	wsUpgrader.CheckOrigin = func(r *http.Request) bool {
@@ -39,6 +42,64 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer wsConn.Close()
+
+	for {
+		var msg Message
+
+		err := wsConn.ReadJSON(&msg)
+		if err != nil {
+			fmt.Printf("error reading JSON: %s\n", err.Error())
+			break
+		}
+
+		fmt.Printf("onMessage Received: %s\n", msg.Type)
+			//받은거 그대로 다시 다보냄
+		switch msg.Type {
+		case "id":
+			currentUserId = msg.Data
+		case "offer":
+			log.Printf("offer: %s\n")
+			offerMsg := Message{
+				Id: currentUserId,
+				Type: "offer",
+				Data: msg.Data,
+			}
+			offerJSON, err := json.Marshal(offerMsg)
+			if err != nil {
+				fmt.Printf("error marshal JSON: %s\n", err.Error())
+			}
+			offerString := string(offerJSON)
+		
+			SendMessage(offerString, wsConn)
+		case "answer":
+			log.Printf("answer: %s\n")
+			answerMsg := Message{
+				Id: currentUserId,
+				Type: "answer",
+				Data: msg.Data,
+			}
+			answerJSON, err := json.Marshal(answerMsg)
+			if err != nil {
+				fmt.Printf("error marshal JSON: %s\n", err.Error())
+				break
+			}
+			answerString := string(answerJSON)
+			SendMessage(answerString, wsConn)
+		case "candidate":
+			candidateMsg := Message{
+				Id: currentUserId,
+				Type: "candidate",
+				Data: msg.Data,
+			}
+			candidateJSON, err := json.Marshal(candidateMsg)
+			if err != nil {
+				fmt.Printf("error marshal JSON: %s\n", err.Error())
+			}
+			candidateString := string(candidateJSON)
+
+			SendMessage(candidateString, wsConn)
+		}
+	}
 }
 
 func SendMessage(msg string, wsConn *websocket.Conn) {
@@ -54,10 +115,20 @@ func main() {
 	router := mux.NewRouter()
 
 	// router.HandleFunc("/socket", WsEndpoint)
-	router.HandleFunc("/pub", Pub)
-	router.HandleFunc("/sub", Sub)
+	// router.HandleFunc("/pub", Pub)
+	// router.HandleFunc("/sub", Sub)
 	router.HandleFunc("/ws", Chat) // 이걸로 개선
 
 	log.Fatal(http.ListenAndServe(":9100", router))
 
+	flag.Parse()
+	hub := newHub()
+	go hub.run()
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+	})
+	err := http.ListenAndServe(*addr, nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }
