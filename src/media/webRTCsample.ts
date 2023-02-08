@@ -1,3 +1,5 @@
+import type { CandidateMessageType } from "./media";
+
 export default class webRTC {
   //싱글톤으로 변경하자.
 
@@ -20,22 +22,38 @@ export default class webRTC {
     this.pc = null;
     // this.localStream;
     this.config = {
-      //config 설정
       iceServers: [
-        { urls: `stun:stun.l.google.com:19302` },
         {
-          urls: `turn:turn01.hubl.in?transport=udp`,
-          username: "28224511:1379330808",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+          urls: "stun:stun.l.google.com:19302",
         },
         {
-          urls: `turn:turn02.hubl.in?transport=tcp`,
-          username: "28224511:1379330808",
+          urls: "turn:192.158.29.39:3478?transport=udp",
           credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+          username: "28224511:1379330808",
+        },
+        {
+          urls: "turn:192.158.29.39:3478?transport=tcp",
+          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+          username: "28224511:1379330808",
         },
       ],
-      // iceTransportPolicy: 'relay', // 서버 안죽게.
     };
+    // this.config = {
+    //   //config 설정
+    //   iceServers: [
+    //     { urls: `stun:stun.l.google.com:19302` },
+    //     {
+    //       urls: `turn:turn01.hubl.in?transport=udp`,
+    //       username: "28224511:1379330808",
+    //       credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+    //     },
+    //     {
+    //       urls: `turn:turn02.hubl.in?transport=tcp`,
+    //       username: "28224511:1379330808",
+    //       credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+    //     },
+    //   ],
+    // };
     this.localStream = localStream;
     this.subVideoEl = subVideoEl;
     this.uuid = uuid;
@@ -61,7 +79,7 @@ export default class webRTC {
 
     const answer = await this.pc?.createAnswer();
     await this.sendMessage("answer", answer.sdp);
-    await this.pc.setLocalDescription(answer);
+    this.pc.setLocalDescription(answer);
   }
 
   async handleAnswer(answer: string) {
@@ -82,14 +100,21 @@ export default class webRTC {
       console.error("no peerconnection");
       return;
     }
-    console.log("handleCandidate", candidate);
-    if (!candidate) {
+
+    console.log("handleCandidate", candidate.candidate);
+    if (!candidate.candidate) {
       await this.pc.addIceCandidate(null);
     } else {
-      await this.pc.addIceCandidate(candidate);
+      await this.pc.addIceCandidate(candidate).then((e) => {
+        console.log("addIceCandidate success");
+      });
     }
   }
-
+  async sendOffer() {
+    const offer = await this.pc?.createOffer();
+    await this.sendMessage("offer", offer.sdp);
+    this.pc?.setLocalDescription(offer);
+  }
   openWebSocket() {
     const wsurl = this.baseUrl + "/ws";
     this.socket = new WebSocket(wsurl);
@@ -103,10 +128,13 @@ export default class webRTC {
         console.log("not ready yet");
         return;
       }
+      // console.log(e.data);
       const { type, data, id } = JSON.parse(e.data);
       if (id === this.uuid) return;
       console.log("onmessge", type, data);
       switch (type) {
+        case "id": //유저 입장.
+          this.sendOffer();
         case "offer":
           this.handleOffer(data);
           break;
@@ -114,7 +142,8 @@ export default class webRTC {
           this.handleAnswer(data);
           break;
         case "candidate":
-          this.handleCandidate(data.candidate);
+          console.log("onmessage candidate ", JSON.parse(data));
+          this.handleCandidate(data);
           break;
         case "ready":
           // A second tab joined. This tab will initiate a call unless in a call already.
@@ -147,47 +176,41 @@ export default class webRTC {
     };
 
     this.pc.onicecandidate = (evt) => {
-      const message = {
-        id: this.uuid,
+      const data = {
         type: "candidate",
-        data: {
-          candidate: null,
-          sdpMid: null,
-          sdpMLineIndex: null,
-        },
+        candidate: "",
+        sdpMid: "",
+        sdpMLineIndex: 0,
       } as CandidateMessageType;
 
       if (evt.candidate) {
-        message.data.candidate = evt.candidate.candidate;
-        message.data.sdpMid = evt.candidate.sdpMid;
-        message.data.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+        data.candidate = evt.candidate.candidate;
+        data.sdpMid = evt.candidate.sdpMid;
+        data.sdpMLineIndex = evt.candidate.sdpMLineIndex;
       }
       console.log("onicecandidate", evt);
 
-      this.sendMessage("candidate", JSON.stringify(message.data));
+      this.sendMessage("candidate", JSON.stringify(data));
     };
     this.pc.ontrack = (evt) => {
       //sub
       console.log("ontrack", evt.streams[0], this.subVideoEl);
       this.subVideoEl.srcObject = evt.streams[0];
+      console.log(this.subVideoEl.srcObject);
+      this.subVideoEl.play();
     };
     this.localStream?.getTracks().forEach((track) => {
-      // console.log(" this.localStream", this.localStream);
+      console.log(" this.localStream", this.localStream);
       if (this.localStream) this.pc?.addTrack(track, this.localStream);
     });
   }
   async openRTC() {
     this.createPeerConnection();
     this.pc?.addTransceiver("video", { direction: "recvonly" });
-
-    setTimeout(async () => {
-      const offer = await this.pc?.createOffer();
-      await this.sendMessage("offer", offer.sdp);
-      await this.pc?.setLocalDescription(offer);
-    }, 500);
+    // this.pc?.addTransceiver("audio", { direction: "recvonly" });
+    this.sendOffer();
   }
   sendMessage(key: string, value: string) {
-    console.log("sendMessage : ", key);
     const msg = {
       id: this.uuid,
       target: "",
