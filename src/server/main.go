@@ -1,18 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"encoding/json"
 
-	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
 
 type Message struct {
-	Id string `json:id`
+	Id   string `json:id`
 	Type string `json:"type"`
 	Data string `json:"data"`
 }
@@ -24,6 +23,7 @@ var (
 	}
 	wsConn *websocket.Conn
 )
+var addr = flag.String("addr", ":9100", "http service address")
 
 var currentUserId string
 var users [4]string
@@ -53,14 +53,14 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Printf("onMessage Received: %s\n", msg.Type)
-			//받은거 그대로 다시 다보냄
+		//받은거 그대로 다시 다보냄
 		switch msg.Type {
 		case "id":
 			currentUserId = msg.Data
 		case "offer":
 			log.Printf("offer: %s\n")
 			offerMsg := Message{
-				Id: currentUserId,
+				Id:   currentUserId,
 				Type: "offer",
 				Data: msg.Data,
 			}
@@ -69,12 +69,12 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 				fmt.Printf("error marshal JSON: %s\n", err.Error())
 			}
 			offerString := string(offerJSON)
-		
+
 			SendMessage(offerString, wsConn)
 		case "answer":
 			log.Printf("answer: %s\n")
 			answerMsg := Message{
-				Id: currentUserId,
+				Id:   currentUserId,
 				Type: "answer",
 				Data: msg.Data,
 			}
@@ -87,7 +87,7 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 			SendMessage(answerString, wsConn)
 		case "candidate":
 			candidateMsg := Message{
-				Id: currentUserId,
+				Id:   currentUserId,
 				Type: "candidate",
 				Data: msg.Data,
 			}
@@ -109,21 +109,39 @@ func SendMessage(msg string, wsConn *websocket.Conn) {
 	}
 }
 
+// chat
+
+func serveHome(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL)
+	if r.URL.Path != "/" {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	http.ServeFile(w, r, "home.html")
+}
+
 // main 함수는 프로그램이 실행될 때 제일 먼저 실행된다.
 func main() {
 
-	router := mux.NewRouter()
+	// router := mux.NewRouter()
 
 	// router.HandleFunc("/socket", WsEndpoint)
 	// router.HandleFunc("/pub", Pub)
 	// router.HandleFunc("/sub", Sub)
-	router.HandleFunc("/ws", Chat) // 이걸로 개선
+	// router.HandleFunc("/ws", Chat) // 이걸로 개선
 
-	log.Fatal(http.ListenAndServe(":9100", router))
-
+	// err := http.ListenAndServe(*addr, nil)
+	// if err != nil {
+	// 	log.Fatal("ListenAndServe: ", err)
+	// }
 	flag.Parse()
 	hub := newHub()
 	go hub.run()
+	log.Printf("Server started on port %s", *addr)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
