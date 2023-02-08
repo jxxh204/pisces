@@ -8,10 +8,15 @@ export default class webRTC {
   pc: RTCPeerConnection | null;
   config: RTCConfiguration;
   localStream: MediaStream | undefined;
+  subVideoEl: HTMLVideoElement;
   uuid: string;
   socket: WebSocket | null;
   baseUrl: string;
-  constructor(localStream: MediaStream | undefined, uuid: string) {
+  constructor(
+    localStream: MediaStream,
+    subVideoEl: HTMLVideoElement,
+    uuid: string
+  ) {
     this.pc = null;
     // this.localStream;
     this.config = {
@@ -32,6 +37,7 @@ export default class webRTC {
       // iceTransportPolicy: 'relay', // 서버 안죽게.
     };
     this.localStream = localStream;
+    this.subVideoEl = subVideoEl;
     this.uuid = uuid;
     this.socket = null;
     this.baseUrl = "ws://localhost:9100";
@@ -48,10 +54,10 @@ export default class webRTC {
         sdp: offer,
       })
     );
-    this.localStream?.getTracks().forEach((track) => {
-      // console.log(" this.localStream", this.localStream);
-      if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    });
+    // this.localStream?.getTracks().forEach((track) => {
+    //   // console.log(" this.localStream", this.localStream);
+    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    // });
 
     const answer = await this.pc?.createAnswer();
     await this.sendMessage("answer", answer.sdp);
@@ -59,9 +65,6 @@ export default class webRTC {
   }
 
   async handleAnswer(answer: string) {
-    console.log(
-      "🚀 ~ file: webRTCsample.ts:55 ~ webRTC ~ handleAnswer ~ handleAnswer"
-    );
     if (!this.pc) {
       console.error("no peerconnection");
       return;
@@ -80,7 +83,7 @@ export default class webRTC {
       return;
     }
     console.log("handleCandidate", candidate);
-    if (!candidate.candidate) {
+    if (!candidate) {
       await this.pc.addIceCandidate(null);
     } else {
       await this.pc.addIceCandidate(candidate);
@@ -100,9 +103,9 @@ export default class webRTC {
         console.log("not ready yet");
         return;
       }
-      const { type, data, Id } = JSON.parse(e.data);
-      console.log("onmessage", type, Id);
-      if (Id === this.uuid) return;
+      const { type, data, id } = JSON.parse(e.data);
+      if (id === this.uuid) return;
+      console.log("onmessge", type, data);
       switch (type) {
         case "offer":
           this.handleOffer(data);
@@ -111,7 +114,7 @@ export default class webRTC {
           this.handleAnswer(data);
           break;
         case "candidate":
-          this.handleCandidate(data);
+          this.handleCandidate(data.candidate);
           break;
         case "ready":
           // A second tab joined. This tab will initiate a call unless in a call already.
@@ -135,122 +138,132 @@ export default class webRTC {
       console.log("socket close");
     };
   }
+  createPeerConnection() {
+    // 일단 이거만씀.
+    this.pc = new RTCPeerConnection(this.config);
+
+    this.pc.oniceconnectionstatechange = () => {
+      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+    };
+
+    this.pc.onicecandidate = (evt) => {
+      const message = {
+        id: this.uuid,
+        type: "candidate",
+        data: {
+          candidate: null,
+          sdpMid: null,
+          sdpMLineIndex: null,
+        },
+      } as CandidateMessageType;
+
+      if (evt.candidate) {
+        message.data.candidate = evt.candidate.candidate;
+        message.data.sdpMid = evt.candidate.sdpMid;
+        message.data.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+      }
+      console.log("onicecandidate", evt);
+
+      this.sendMessage("candidate", JSON.stringify(message.data));
+    };
+    this.pc.ontrack = (evt) => {
+      //sub
+      console.log("ontrack", evt.streams[0], this.subVideoEl);
+      this.subVideoEl.srcObject = evt.streams[0];
+    };
+    this.localStream?.getTracks().forEach((track) => {
+      // console.log(" this.localStream", this.localStream);
+      if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    });
+  }
   async openRTC() {
-    this.pc = new RTCPeerConnection(this.config);
+    this.createPeerConnection();
+    this.pc?.addTransceiver("video", { direction: "recvonly" });
 
-    this.pc.oniceconnectionstatechange = () => {
-      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
-    };
-
-    this.pc.onicecandidate = (evt) => {
-      const message = {
-        type: "candidate",
-        candidate: null,
-        sdpMid: null,
-        sdpMLineIndex: null,
-      } as CandidateMessageType;
-
-      if (evt.candidate) {
-        message.candidate = evt.candidate.candidate;
-        message.sdpMid = evt.candidate.sdpMid;
-        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
-      }
-      this.socket?.send(JSON.stringify(message));
-      console.log("onicecandidate", evt);
-    };
-    this.pc.addTransceiver("video", { direction: "recvonly" });
-    this.pc.ontrack = (evt) => {
-      //sub
-      console.log("ontrack", evt.streams[0]);
-    };
-    this.localStream?.getTracks().forEach((track) => {
-      // console.log(" this.localStream", this.localStream);
-      if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    });
     setTimeout(async () => {
       const offer = await this.pc?.createOffer();
       await this.sendMessage("offer", offer.sdp);
       await this.pc?.setLocalDescription(offer);
-      await this.openSub();
-    }, 1000);
-  }
-  async openPub() {
-    this.openWebSocket("pub");
-
-    this.pc = new RTCPeerConnection(this.config);
-
-    this.pc.oniceconnectionstatechange = () => {
-      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
-    };
-
-    this.pc.onicecandidate = (evt) => {
-      const message = {
-        type: "candidate",
-        candidate: null,
-        sdpMid: null,
-        sdpMLineIndex: null,
-      } as CandidateMessageType;
-
-      if (evt.candidate) {
-        message.candidate = evt.candidate.candidate;
-        message.sdpMid = evt.candidate.sdpMid;
-        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
-      }
-      this.socket?.send(JSON.stringify(message));
-      console.log("onicecandidate", evt);
-    };
-    this.localStream?.getTracks().forEach((track) => {
-      // console.log(" this.localStream", this.localStream);
-      if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    });
-    setTimeout(async () => {
-      const offer = await this.pc?.createOffer();
-      await this.sendMessage("offer", offer.sdp);
-      await this.pc?.setLocalDescription(offer);
-      await this.openSub();
-    }, 1000);
-  }
-  openSub() {
-    this.pc = new RTCPeerConnection(this.config);
-    // setTimeout(() => {
-    //   // 임시
-    //   this.openWebSocket("sub");
-    // }, 500);
-    //sub addTransceiver
-    this.pc.addTransceiver("video", { direction: "recvonly" });
-    this.pc.ontrack = (evt) => {
-      //sub
-      console.log("ontrack", evt.streams[0]);
-    };
-
-    this.pc.oniceconnectionstatechange = () => {
-      console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
-    };
-
-    this.pc.onicecandidate = (evt) => {
-      const message = {
-        type: "candidate",
-        candidate: null,
-        sdpMid: null,
-        sdpMLineIndex: null,
-      } as CandidateMessageType;
-
-      if (evt.candidate) {
-        message.candidate = evt.candidate.candidate;
-        message.sdpMid = evt.candidate.sdpMid;
-        message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
-      }
-      this.socket?.send(JSON.stringify(message));
-      console.log("onicecandidate", evt);
-    };
+    }, 500);
   }
   sendMessage(key: string, value: string) {
     console.log("sendMessage : ", key);
     const msg = {
+      id: this.uuid,
       target: "",
       type: key,
       data: value,
     };
     this.socket?.send(JSON.stringify(msg));
   }
+  // async openPub() {
+  //   this.openWebSocket("pub");
+
+  //   this.pc = new RTCPeerConnection(this.config);
+
+  //   this.pc.oniceconnectionstatechange = () => {
+  //     console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+  //   };
+
+  //   this.pc.onicecandidate = (evt) => {
+  //     const message = {
+  //       type: "candidate",
+  //       candidate: null,
+  //       sdpMid: null,
+  //       sdpMLineIndex: null,
+  //     } as CandidateMessageType;
+
+  //     if (evt.candidate) {
+  //       message.candidate = evt.candidate.candidate;
+  //       message.sdpMid = evt.candidate.sdpMid;
+  //       message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+  //     }
+  //     this.socket?.send(JSON.stringify(message));
+  //     console.log("onicecandidate", evt);
+  //   };
+  //   this.localStream?.getTracks().forEach((track) => {
+  //     // console.log(" this.localStream", this.localStream);
+  //     if (this.localStream) this.pc?.addTrack(track, this.localStream);
+  //   });
+  //   setTimeout(async () => {
+  //     const offer = await this.pc?.createOffer();
+  //     await this.sendMessage("offer", offer.sdp);
+  //     await this.pc?.setLocalDescription(offer);
+  //     await this.openSub();
+  //   }, 1000);
+  // }
+  // openSub() {
+  //   this.pc = new RTCPeerConnection(this.config);
+  //   // setTimeout(() => {
+  //   //   // 임시
+  //   //   this.openWebSocket("sub");
+  //   // }, 500);
+  //   //sub addTransceiver
+  //   this.pc.addTransceiver("video", { direction: "recvonly" });
+  //   this.pc.ontrack = (evt) => {
+  //     //sub
+  //     console.log("ontrack", evt.streams[0]);
+  //   };
+
+  //   this.pc.oniceconnectionstatechange = () => {
+  //     console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+  //   };
+
+  //   this.pc.onicecandidate = (evt) => {
+  //     const message = {
+  //       type: "candidate",
+  //       candidate: null,
+  //       sdpMid: null,
+  //       sdpMLineIndex: null,
+  //     } as CandidateMessageType;
+
+  //     if (evt.candidate) {
+  //       message.candidate = evt.candidate.candidate;
+  //       message.sdpMid = evt.candidate.sdpMid;
+  //       message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+  //     }
+  //     this.socket?.send(JSON.stringify(message));
+  //     console.log("onicecandidate", evt);
+  //   };
+  // }
 }

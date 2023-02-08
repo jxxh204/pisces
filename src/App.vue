@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
+const subVideoEl = ref<HTMLVideoElement>();
 const inputName = ref<HTMLInputElement>();
 
 const ZOOM_LEVEL = 1;
@@ -93,9 +94,11 @@ onMounted(async () => {
   // rtcInstance.openSub();
 });
 const onClickConnectRTC = () => {
-  const rtcInstance = new webRTC(localStream.value, uuidv4());
+  const rtcInstance = new webRTC(localStream.value, subVideoEl.value, uuidv4());
   rtcInstance.openWebSocket();
-  rtcInstance.openRTC();
+  setTimeout(() => {
+    rtcInstance.openRTC();
+  }, 1000);
 };
 </script>
 
@@ -110,16 +113,21 @@ const onClickConnectRTC = () => {
     <div class="rtc-modal bg-mac-white rounded-lg p-10">
       <section>
         pub
-        <video id="pubVideo" ref="pubVideoEl" class="bg-black h-20"></video>
+        <video id="pubVideo" ref="pubVideoEl" class="bg-mac-black h-20"></video>
         <div class="border border-black p-2 rounded-lg">
           <button @click="onClickConnectRTC" class="buttons">접속</button>
         </div>
       </section>
 
-      <sdction>
+      <section>
         sub
-        <video id="subVideo" class="bg-black h-20"></video>
-      </sdction>
+        <video
+          id="subVideo"
+          ref="subVideoEl"
+          class="bg-mac-black h-20"
+          autoplay
+        ></video>
+      </section>
     </div>
   </div>
   <!-- <RouterView /> -->
