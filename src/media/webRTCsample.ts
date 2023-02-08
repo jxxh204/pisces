@@ -101,7 +101,6 @@ export default class webRTC {
       return;
     }
 
-    console.log("handleCandidate", candidate.candidate);
     if (!candidate.candidate) {
       await this.pc.addIceCandidate(null);
     } else {
@@ -109,11 +108,6 @@ export default class webRTC {
         console.log("addIceCandidate success");
       });
     }
-  }
-  async sendOffer() {
-    const offer = await this.pc?.createOffer();
-    await this.sendMessage("offer", offer.sdp);
-    this.pc?.setLocalDescription(offer);
   }
   openWebSocket() {
     const wsurl = this.baseUrl + "/ws";
@@ -132,35 +126,44 @@ export default class webRTC {
       const { type, data, id } = JSON.parse(e.data);
       if (id === this.uuid) return;
       console.log("onmessge", type, data);
-      switch (type) {
-        case "id": //유저 입장.
-          this.sendOffer();
-        case "offer":
-          this.handleOffer(data);
-          break;
-        case "answer":
-          this.handleAnswer(data);
-          break;
-        case "candidate":
-          console.log("onmessage candidate ", JSON.parse(data));
-          this.handleCandidate(data);
-          break;
-        case "ready":
-          // A second tab joined. This tab will initiate a call unless in a call already.
-          if (this.pc) {
-            console.log("already in call, ignoring");
-            return;
-          }
-          // makeCall();
-          break;
-        case "bye":
-          if (this.pc) {
-            // hangup();
-          }
-          break;
-        default:
-          console.log("unhandled", e);
-          break;
+      try {
+        switch (type) {
+          case "id": //유저 입장.
+            if (this.pc) {
+              console.log("already in call, ignoring");
+              return;
+            }
+            this.openRTC();
+
+          case "offer":
+            this.handleOffer(data);
+            break;
+          case "answer":
+            this.handleAnswer(data);
+            break;
+          case "candidate":
+            console.log("onmessage candidate ", JSON.parse(data));
+            this.handleCandidate(data);
+            break;
+          case "ready":
+            // A second tab joined. This tab will initiate a call unless in a call already.
+            if (this.pc) {
+              console.log("already in call, ignoring");
+              return;
+            }
+            // makeCall();
+            break;
+          case "bye":
+            if (this.pc) {
+              // hangup();
+            }
+            break;
+          default:
+            console.log("unhandled", e);
+            break;
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
     this.socket.onclose = (evt) => {
@@ -208,7 +211,9 @@ export default class webRTC {
     this.createPeerConnection();
     this.pc?.addTransceiver("video", { direction: "recvonly" });
     // this.pc?.addTransceiver("audio", { direction: "recvonly" });
-    this.sendOffer();
+    const offer = await this.pc?.createOffer();
+    await this.sendMessage("offer", offer.sdp);
+    this.pc?.setLocalDescription(offer);
   }
   sendMessage(key: string, value: string) {
     const msg = {
