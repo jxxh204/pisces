@@ -37,7 +37,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1], //Level1 Welcome,
+  scene: [Level1], //Level1 Welcome,systemIcons 만들기.
   physics: {
     default: "arcade",
     arcade: {
@@ -104,22 +104,23 @@ const onClickConnectRTC = () => {
 
 <template>
   <div class="w-screen h-screen fixed">
-    <LoadingView />
+    <!-- <LoadingView /> -->
     <MenuBar />
     <div
       id="phaser-wrapper"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
     ></div>
-    <div class="rtc-modal bg-mac-white rounded-lg p-10">
-      <section>
+    <section class="rtc-modal bg-mac-white rounded-lg p-10">
+      webRTC
+      <article>
         pub
         <video id="pubVideo" ref="pubVideoEl" class="bg-mac-black h-20"></video>
         <div class="border border-black p-2 rounded-lg">
           <button @click="onClickConnectRTC" class="buttons">접속</button>
         </div>
-      </section>
+      </article>
 
-      <section>
+      <article>
         sub
         <video
           id="subVideo"
@@ -127,8 +128,8 @@ const onClickConnectRTC = () => {
           class="bg-mac-black h-20"
           autoplay
         ></video>
-      </section>
-    </div>
+      </article>
+    </section>
   </div>
   <!-- <RouterView /> -->
 </template>
@@ -138,8 +139,9 @@ const onClickConnectRTC = () => {
   @apply bg-white px-2 hover:bg-slate-300 transition-all duration-200 rounded-lg;
 } */
 .rtc-modal {
-  left: 50%;
-  top: 50%;
+  /* left: 50%; */
+  right: 0;
+  top: 30%;
   transform: translate(-50%, -50%);
   position: absolute;
 }

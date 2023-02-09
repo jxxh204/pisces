@@ -13,6 +13,8 @@ import city_backgroundImg from "./background/city_background.jpeg";
 import mac_backgroundImg from "@/assets/images/bg/background.png";
 import keyboardImg from "./keyboard.jpeg";
 
+import system_trashImg from "@/assets/images/system/Trash.png";
+
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 
@@ -100,6 +102,10 @@ export default class Test extends Phaser.Scene {
     // this.load.image("cityTileSetImage", city_backgroundImg);
     // this.load.image("keyboardImage", keyboardImg);
     this.load.image("macBackgroundImg", mac_backgroundImg);
+    this.load.spritesheet("system_trash", system_trashImg, {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
     //tileMap JSON
     // this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
     this.load.tilemapTiledJSON(
@@ -109,6 +115,32 @@ export default class Test extends Phaser.Scene {
   }
   setZindex() {
     this.sprite.macBackground.setDepth(-1);
+  }
+  createSprite() {
+    // const sprite = this.add.sprite(100, -500, "system_trash");
+    const sprite = this.physics.add.staticSprite(
+      500,
+      this.scale.height * 2 - 80,
+      `system_trash`
+    );
+
+    sprite.setInteractive();
+    sprite.addListener("pointerdown", (e: MouseEvent) => {
+      sprite.setTint(0x333333);
+      // sprite.setTintFill("0000000");
+    });
+    console.log(
+      "🚀 ~ file: Level1.ts:138 ~ Test ~ createSprite ~ this.scale.height ",
+      this.scale.height
+    );
+    // text
+    const text = this.add.text(500 - 22, this.scale.height * 2 - 60, "Trash");
+    text.setAlign("center");
+    text.setFontFamily("Monocraft");
+    text.setColor("black");
+    text.setBackgroundColor("#CCCCFF");
+    text.setFontSize(14);
+    text.setPadding(3);
   }
   createMap() {
     this.bg.width = this.scale.width;
@@ -128,7 +160,7 @@ export default class Test extends Phaser.Scene {
 
     // const platforms = this.physics.add.staticGroup();
 
-    this.sprite.mac = map.createLayer("mac", macTileSet, 0, this.bg.height);
+    // this.sprite.mac = map.createLayer("mac", macTileSet, 0, this.bg.height);
 
     // this.sprite.keyboard = map.createLayer(
     //   "keyboard",
@@ -422,6 +454,7 @@ export default class Test extends Phaser.Scene {
     // this.createInGameLoading();
     this.createCamera();
     this.setOverLap();
+    this.createSprite();
 
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
