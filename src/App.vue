@@ -10,8 +10,8 @@ import Welcome from "./phaser/Welcome/Welcome";
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
-import MenuBar from "./components/menuBar.vue";
 
+import MenuBar from "./components/MenuBar.vue";
 import { v4 as uuidv4 } from "uuid";
 
 const localStream = ref<MediaStream>();
@@ -104,7 +104,7 @@ const onClickConnectRTC = () => {
 
 <template>
   <div class="w-screen h-screen fixed">
-    <!-- <LoadingView /> -->
+    <LoadingView />
     <MenuBar />
     <div
       id="phaser-wrapper"

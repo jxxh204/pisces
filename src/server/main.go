@@ -112,6 +112,8 @@ func SendMessage(msg string, wsConn *websocket.Conn) {
 // chat
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./index.html")
+
 	log.Println(r.URL)
 	if r.URL.Path != "/" {
 		http.Error(w, "Not found", http.StatusNotFound)
@@ -121,7 +123,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	http.ServeFile(w, r, "home.html")
 }
 
 // main 함수는 프로그램이 실행될 때 제일 먼저 실행된다.
@@ -142,6 +143,10 @@ func main() {
 	hub := newHub()
 	go hub.run()
 	log.Printf("Server started on port %s", *addr)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello World")
+	})
+	http.HandleFunc("/home", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
