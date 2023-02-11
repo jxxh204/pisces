@@ -3,8 +3,8 @@
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
     "composite": true,
-    "types": ["node"],
-    "typeRoots": ["./src/types"],
+    "types": ["node",  "Phaser"],
+    "typeRoots": ["./src/types","./node_modules/phaser/types"],
     "baseUrl": "types",
     "moduleResolution": "node",
     "resolveJsonModule": true,

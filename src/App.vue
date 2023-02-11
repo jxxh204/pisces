@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
 import { onMounted, ref } from "vue";
-import LoadingView from "@/views/LoadingView.vue";
 
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
@@ -13,6 +11,8 @@ import type { GetStreamSettings } from "./media/media";
 
 import MenuBar from "./components/MenuBar.vue";
 import { v4 as uuidv4 } from "uuid";
+import { Icons } from "./phaser/IconSprite/Icons";
+import ClickOutsidePlugin from "phaser3-rex-plugins/plugins/clickoutside-plugin.js";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -37,13 +37,22 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1], //Level1 Welcome,systemIcons 만들기.
+  scene: [Level1, Icons], //Level1 Welcome,systemIcons 만들기.
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 300 },
       // debug: true,
     },
+  },
+  plugins: {
+    global: [
+      {
+        key: "rexClickOutsiden",
+        plugin: ClickOutsidePlugin,
+        start: true,
+      },
+    ],
   },
 };
 
