@@ -3,7 +3,7 @@
 export class Sample extends Phaser.Scene {
   constructor() {
     super({
-      key: "Level1",
+      key: "Samples",
       active: true,
     });
   }

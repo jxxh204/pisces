@@ -4,6 +4,8 @@ import { onMounted, ref } from "vue";
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
 import Welcome from "./phaser/Welcome/Welcome";
+import { DropDownTest } from "./phaser/Test/Test";
+import { Icons } from "./phaser/IconSprite/Icons";
 
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
@@ -11,8 +13,8 @@ import type { GetStreamSettings } from "./media/media";
 
 import MenuBar from "./components/MenuBar.vue";
 import { v4 as uuidv4 } from "uuid";
-import { Icons } from "./phaser/IconSprite/Icons";
-import ClickOutsidePlugin from "phaser3-rex-plugins/plugins/clickoutside-plugin.js";
+//phaser plugin
+import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -27,6 +29,10 @@ const SIZE_HEIGHT_SCREEN = window.innerHeight;
 const config = {
   type: Phaser.AUTO,
   mode: Phaser.Scale.FIT, // 자동으로 화면을 꽉채워줌
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
   parent: "phaser-wrapper", //canvas id
   width: SIZE_WIDTH_SCREEN,
   height: SIZE_HEIGHT_SCREEN,
@@ -37,7 +43,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons], //Level1 Welcome,systemIcons 만들기.
+  scene: [Level1, Icons, DropDownTest], //Level1 Welcome,systemIcons 만들기.
   physics: {
     default: "arcade",
     arcade: {
@@ -46,11 +52,11 @@ const config = {
     },
   },
   plugins: {
-    global: [
+    scene: [
       {
-        key: "rexClickOutsiden",
-        plugin: ClickOutsidePlugin,
-        start: true,
+        key: "rexUI",
+        plugin: UIPlugin,
+        mapping: "rexUI",
       },
     ],
   },
@@ -80,35 +86,35 @@ onMounted(async () => {
 
   window.addEventListener("resize", resize, false);
 
-  //webRTC
-  let videoId = "";
+  //webRTC 렉때매 잠시 끔.
+  //   let videoId = "";
 
-  const mediaList = await media.searchDeviceList();
-  mediaList?.map((media) => {
-    if (media.kind === "videoinput") {
-      videoId = media.deviceId;
-    }
-  });
+  //   const mediaList = await media.searchDeviceList();
+  //   mediaList?.map((media) => {
+  //     if (media.kind === "videoinput") {
+  //       videoId = media.deviceId;
+  //     }
+  //   });
 
-  const instance = media.GetStream.getInstance();
-  const option = {
-    video: true,
-    audio: false,
-    elementKind: "video",
-    outputElement: pubVideoEl.value,
-  } as GetStreamSettings;
-  instance.settings(option);
-  localStream.value = await instance.getVideoStream(videoId, 1280, 800);
+  //   const instance = media.GetStream.getInstance();
+  //   const option = {
+  //     video: true,
+  //     audio: false,
+  //     elementKind: "video",
+  //     outputElement: pubVideoEl.value,
+  //   } as GetStreamSettings;
+  //   instance.settings(option);
+  //   localStream.value = await instance.getVideoStream(videoId, 1280, 800);
 
-  // rtcInstance.openSub();
+  //   // rtcInstance.openSub();
+  // });
+  // const onClickConnectRTC = () => {
+  //   const rtcInstance = new webRTC(localStream.value, subVideoEl.value, uuidv4());
+  //   rtcInstance.openWebSocket();
+  //   setTimeout(() => {
+  //     rtcInstance.openRTC();
+  //   }, 1000);
 });
-const onClickConnectRTC = () => {
-  const rtcInstance = new webRTC(localStream.value, subVideoEl.value, uuidv4());
-  rtcInstance.openWebSocket();
-  setTimeout(() => {
-    rtcInstance.openRTC();
-  }, 1000);
-};
 </script>
 
 <template>
@@ -125,7 +131,7 @@ const onClickConnectRTC = () => {
         pub
         <video id="pubVideo" ref="pubVideoEl" class="bg-mac-black h-20"></video>
         <div class="border border-black p-2 rounded-lg">
-          <button @click="onClickConnectRTC" class="buttons">접속</button>
+          // <button @click="onClickConnectRTC" class="buttons">접속</button>
         </div>
       </article>
 

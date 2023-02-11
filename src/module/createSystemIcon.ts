@@ -7,8 +7,6 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
   scene: Phaser.Scene;
   name: string;
   image: string;
-  width: number;
-  height: number;
   location: LocationType;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   textSprite: any;
@@ -16,8 +14,6 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     scene: Phaser.Scene,
     name: string,
     image: string,
-    width: number,
-    height: number,
     location: LocationType
   ) {
     super(scene, location.x, location.y, name);
@@ -25,17 +21,11 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.name = name;
     this.image = image;
-    this.width = width;
-    this.height = height;
     this.location = location;
     this.sprite = null;
     this.textSprite = null;
   }
   loadImage() {
-    // this.phaser.load.spritesheet(`system_${this.name}`, this.image, {
-    //   frameWidth: this.width,
-    //   frameHeight: this.height,
-    // });
     this.setTexture(this.name);
     this.setPosition(this.location.x, this.location.y);
     this.scene.load.image(`system_${this.name}`, this.image);
@@ -76,9 +66,6 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     this.textSprite.addListener("pointerdown", (e: MouseEvent) => {
       this.sprite?.setTint(0x333333);
       this.textSprite.setTint(0x333333);
-    });
-    this.scene.plugins.get("rexClickOutsiden").add(this.sprite, {
-      mode: "pointerdown",
     });
     this.scene.add.existing(this.sprite);
     const outClickSprite = new ClickOutside(this.sprite, {

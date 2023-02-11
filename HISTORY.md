@@ -191,3 +191,8 @@
 - 시스템 아이콘 추상화완료, 외부 클릭 시 클릭 사라지도록 구현.
 - phaser3-rex-plugins/plugins/clickoutside.js
 - v0.0.0:67
+
+## 2023 2/12
+
+- phaser3에서 드롭다운 메뉴 구현
+- v0.0.0:68

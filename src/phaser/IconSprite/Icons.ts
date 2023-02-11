@@ -1,15 +1,18 @@
 import * as Phaser from "phaser";
 import system_trashImg from "@/assets/images/system/Trash.png";
+import system_webRTCImg from "@/assets/images/system/webRTC.png";
 import { CreateSystemIcon } from "@/module/createSystemIcon";
 
 export class Icons extends Phaser.Scene {
   trash: CreateSystemIcon | null;
+  rtc: CreateSystemIcon | null;
   constructor() {
     super({
       key: "icons",
       active: true,
     });
     this.trash = null;
+    this.rtc = null;
   }
   preload() {
     const trashLocation = {
@@ -20,15 +23,26 @@ export class Icons extends Phaser.Scene {
       this,
       "Trash",
       system_trashImg,
-      32,
-      32,
       trashLocation
     );
-
     this.trash?.loadImage();
+
+    const /* A location object that is passed to the CreateSystemIcon class. */
+      rtcLocation = {
+        x: 500,
+        y: 300,
+      };
+    this.rtc = new CreateSystemIcon(
+      this,
+      "webRTC",
+      system_webRTCImg,
+      rtcLocation
+    );
+    this.rtc?.loadImage();
   }
   create() {
     this.trash?.create();
+    this.rtc?.create();
   }
   update() {}
 }

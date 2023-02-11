@@ -3,7 +3,7 @@
 export default class Buttons extends Phaser.Scene {
   constructor() {
     super({
-      key: "Level1",
+      key: "Buttons",
       active: true,
     });
   }

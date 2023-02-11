@@ -281,6 +281,7 @@ export default class Test extends Phaser.Scene {
       }
     );
   }
+
   loadC1() {
     const location = {
       w: 100,
