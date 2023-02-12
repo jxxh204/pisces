@@ -201,6 +201,11 @@
   resolved "https://registry.npmjs.org/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz"
   integrity sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==
 
+"@types/webfontloader@*":
+  version "1.6.35"
+  resolved "https://registry.npmjs.org/@types/webfontloader/-/webfontloader-1.6.35.tgz"
+  integrity sha512-IJlrsiDWq6KghQ7tPlL5tcwSUyOxLDceT+AFUY7Ylj0Fcv3/h3QkANqQxZ0B5mEpEKxhTw76vDmvrruSMV9n9Q==
+
 "@types/webrtc@^0.0.33":
   version "0.0.33"
   resolved "https://registry.npmjs.org/@types/webrtc/-/webrtc-0.0.33.tgz"
@@ -1549,15 +1554,15 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
+eventemitter3@*, eventemitter3@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
 eventemitter3@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-3.1.2.tgz"
   integrity sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
-
-eventemitter3@^4.0.7:
-  version "4.0.7"
-  resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
-  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
 express@^4.18.2:
   version "4.18.2"
@@ -2673,6 +2678,15 @@ pathval@^1.1.1:
   resolved "https://registry.npmjs.org/pathval/-/pathval-1.1.1.tgz"
   integrity sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==
 
+phaser3-rex-plugins-types@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/phaser3-rex-plugins-types/-/phaser3-rex-plugins-types-0.2.0.tgz"
+  integrity sha512-dNe65URYeZHPV2JK/7CsTHFzZJrUvnTpvPUDB/m5XMuBTLAZ1aTsWS0SZVs9/1aj9dvXEMdRTDbv+ljkHrWQxQ==
+  dependencies:
+    "@types/webfontloader" "*"
+    eventemitter3 "*"
+    phaser "*"
+
 phaser3-rex-plugins@^1.1.80:
   version "1.1.80"
   resolved "https://registry.npmjs.org/phaser3-rex-plugins/-/phaser3-rex-plugins-1.1.80.tgz"
@@ -2684,7 +2698,7 @@ phaser3-rex-plugins@^1.1.80:
     papaparse "^5.3.2"
     webfontloader "^1.6.28"
 
-phaser@^3.55.2:
+phaser@*, phaser@^3.55.2:
   version "3.55.2"
   resolved "https://registry.npmjs.org/phaser/-/phaser-3.55.2.tgz"
   integrity sha512-amKXsbb2Ht29dGPKvt1edq3yGGYKtq8373GpJYGKPNPnneYY6MtVTOgjHDuZwtmUyK4v86FugkT3hzW/N4tjxQ==

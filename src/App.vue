@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
 import Welcome from "./phaser/Welcome/Welcome";
-import { DropDownTest } from "./phaser/Test/Test";
+import { DropDownTest, ModalDialog } from "./phaser/Test/Test";
 import { Icons } from "./phaser/IconSprite/Icons";
 
 import { media } from "./media/userMedia";
@@ -43,7 +43,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons, DropDownTest], //Level1 Welcome,systemIcons 만들기.
+  scene: [Level1, Icons, DropDownTest, ModalDialog], //Level1 Welcome,systemIcons 만들기.
   physics: {
     default: "arcade",
     arcade: {

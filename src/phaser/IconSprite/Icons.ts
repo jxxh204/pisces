@@ -27,11 +27,10 @@ export class Icons extends Phaser.Scene {
     );
     this.trash?.loadImage();
 
-    const /* A location object that is passed to the CreateSystemIcon class. */
-      rtcLocation = {
-        x: 500,
-        y: 300,
-      };
+    const rtcLocation = {
+      x: 500,
+      y: 300,
+    };
     this.rtc = new CreateSystemIcon(
       this,
       "webRTC",
