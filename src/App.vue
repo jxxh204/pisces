@@ -5,7 +5,8 @@ import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
 import Welcome from "./phaser/Welcome/Welcome";
 import { DropDownTest, ModalDialog } from "./phaser/Test/Test";
-import { Icons } from "./phaser/IconSprite/Icons";
+import { Icons } from "@/phaser/IconSprite/Icons";
+import { Finder } from "./phaser/Test/Finder";
 
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
@@ -44,7 +45,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons], //Level1 Welcome,systemIcons,DropDownTest 만들기.
+  scene: [Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기.
   physics: {
     default: "arcade",
     arcade: {

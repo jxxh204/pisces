@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import { DropDownList } from "phaser3-rex-plugins/templates/ui/ui-components.js";
-import { CreateSystemIcon } from "../../module/createSystemIcon";
+import { CreateSystemIcon } from "@/module/createSystemIcon";
 import system_webRTCImg from "@/assets/images/system/webRTC.png";
 
 const COLOR_PRIMARY = 0x4e342e;
@@ -157,24 +157,30 @@ const CreateDialog = function (scene: Phaser.Scene) {
       background: scene.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
       title: scene.rexUI.add.label({
-        background: scene.rexUI.add.roundRectangle(0, 0, 100, 40, 20, 0x003c8f),
-        text: scene.add.text(0, 0, "Title", {
-          fontSize: "24px",
+        background: scene.rexUI.add.roundRectangle(
+          0,
+          0,
+          100,
+          40,
+          20,
+          "#C5C5C5"
+        ),
+        text: scene.add.text(0, 0, "Finder", {
+          fontSize: "12px",
         }),
         space: {
-          left: 15,
-          right: 15,
-          top: 10,
-          bottom: 10,
+          left: 5,
+          right: 5,
+          top: 1,
+          bottom: 1,
         },
       }),
 
-      content: scene.add.text(0, 0, "Do you want to build a snow man?", {
-        fontSize: "24px",
-      }),
-      // content:
+      // content: scene.add.text(0, 0, "Do you want to build a snow man?", {
+      //   fontSize: "24px",
+      // }),
 
-      actions: [CreateLabel(scene, "Yes"), CreateLabel(scene, "No")],
+      actions: [CreateLabel(scene, "확인"), CreateLabel(scene, "취소")],
 
       space: {
         title: 25,
@@ -270,7 +276,7 @@ export class ModalDialog extends Phaser.Scene {
   preload() {}
 
   async create() {
-    CreateDialog(this).setPosition(200, 300).setVisible(true).layout();
+    CreateDialog(this).setPosition(300, 300).setVisible(true).layout();
     // .moveFromPromise(1000, undefined, "-=400", "Back");
     // di.modalPromise();
 

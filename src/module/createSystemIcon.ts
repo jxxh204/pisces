@@ -82,12 +82,5 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
       this.sprite?.setTint(undefined);
       this.textSprite.setTint(undefined);
     });
-
-    //     .on('clickoutside', function () {
-    //         console.log("outside")
-    //     })
   }
-
-  // this.sprite.addListener('')
-  // this.phaser.
 }
