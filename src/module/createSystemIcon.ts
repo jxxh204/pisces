@@ -1,4 +1,5 @@
 import ClickOutside from "phaser3-rex-plugins/plugins/clickoutside.js";
+import { useFinderAddressStore } from "@/stores/store_finderAddress";
 type LocationType = {
   x: number;
   y: number;
@@ -8,12 +9,14 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
   name: string;
   image: string;
   location: LocationType;
+  address: AddressType | undefined;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   textSprite: any;
   constructor(
     scene: Phaser.Scene,
     name: string,
     image: string,
+    address: AddressType,
     location: LocationType
   ) {
     super(scene, location.x, location.y, name);
@@ -22,6 +25,7 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     this.name = name;
     this.image = image;
     this.location = location;
+    this.address = address;
     this.sprite = null;
     this.textSprite = null;
   }
@@ -31,6 +35,7 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     this.scene.load.image(`system_${this.name}`, this.image);
   }
   create() {
+    const finderAddressStore = useFinderAddressStore();
     this.sprite = this.scene.physics.add.staticSprite(
       this.location.x,
       this.location.y,
@@ -58,14 +63,31 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     let clicked = {
       sprite: false,
       text: false,
+      double: false,
+    };
+    let dbCount = 0;
+    const dblClick = () => {
+      dbCount++;
+      // if (this.address) {
+      setTimeout(() => {
+        dbCount = 0;
+      }, 300);
+      if (dbCount > 1) {
+        //더블클릭했을경우.
+        finderAddressStore.moveAddress(this.address);
+        console.log(this.address, "이동!");
+      }
+      // }
     };
     this.sprite.addListener("pointerdown", (e: MouseEvent) => {
       this.sprite?.setTint(0x333333);
       this.textSprite.setTint(0x333333);
+      dblClick();
     });
     this.textSprite.addListener("pointerdown", (e: MouseEvent) => {
       this.sprite?.setTint(0x333333);
       this.textSprite.setTint(0x333333);
+      dblClick();
     });
     this.scene.add.existing(this.sprite);
     const outClickSprite = new ClickOutside(this.sprite, {

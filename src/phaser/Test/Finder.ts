@@ -1,15 +1,18 @@
 import * as Phaser from "phaser";
 import { CreateFinder } from "@/module/createFinder";
 import finder_webRTC from "@/assets/images/Finder/finder_webRTC.png";
+import { useFinderAddressStore } from "../../stores/store_finderAddress";
 
 type FinderType = {
   // x,y,texture는 형식상 넣는것.
   scene: Phaser.Scene;
   name: string;
   image: string;
+  active: boolean;
   x: 0;
   y: 0;
   texture: "";
+  address: AddressType;
 };
 export class Finder extends Phaser.Scene {
   finderClass: CreateFinder[];
@@ -27,9 +30,11 @@ export class Finder extends Phaser.Scene {
         scene: this,
         name: "webRTC_finder",
         image: finder_webRTC,
+        active: false,
         x: 0,
         y: 0,
         texture: "",
+        address: "webRTC",
       },
     ];
 
@@ -38,9 +43,11 @@ export class Finder extends Phaser.Scene {
         finder.scene,
         finder.name,
         finder.image,
+        finder.active,
         finder.x,
         finder.y,
-        finder.texture
+        finder.texture,
+        finder.address
       );
       this.finderClass.push(createdFinder);
     });
@@ -53,5 +60,10 @@ export class Finder extends Phaser.Scene {
       finder.create();
     });
   }
-  update() {}
+  update() {
+    //observer로 사용하는게 더 효율적일듯.
+    this.finderClass.map((finder) => {
+      finder.update();
+    });
+  }
 }

@@ -45,7 +45,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기.
+  scene: [Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
   physics: {
     default: "arcade",
     arcade: {

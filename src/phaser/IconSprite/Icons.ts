@@ -11,6 +11,7 @@ type IconType = {
   scene: Phaser.Scene;
   name: string;
   image: string;
+  address: AddressType;
   location: {
     x: number;
     y: number;
@@ -32,6 +33,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "Trash",
         image: system_trashImg,
+        address: "",
         location: {
           x: 500,
           y: 100,
@@ -41,6 +43,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "WebRTC",
         image: system_webRTCImg,
+        address: "webRTC",
         location: {
           x: 500,
           y: 200,
@@ -50,6 +53,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "Folder",
         image: system_folder,
+        address: "",
         location: {
           x: 500,
           y: 300,
@@ -59,6 +63,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "Contact",
         image: system_contact,
+        address: "",
         location: {
           x: 500,
           y: 400,
@@ -68,6 +73,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "Codec",
         image: system_codec,
+        address: "",
         location: {
           x: 500,
           y: 500,
@@ -77,6 +83,7 @@ export class Icons extends Phaser.Scene {
         scene: this,
         name: "Audio",
         image: system_audio,
+        address: "audio",
         location: {
           x: 500,
           y: 600,
@@ -89,6 +96,7 @@ export class Icons extends Phaser.Scene {
         icon.scene,
         icon.name,
         icon.image,
+        icon.address,
         icon.location
       );
       this.iconClass.push(createdIcon);
