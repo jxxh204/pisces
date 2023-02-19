@@ -127,7 +127,7 @@ onMounted(async () => {
       id="phaser-wrapper"
       class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
     ></div>
-    <section class="rtc-modal bg-mac-white rounded-lg p-10">
+    <!-- <section class="rtc-modal bg-mac-white rounded-lg p-10">
       webRTC
       <article>
         pub
@@ -146,7 +146,7 @@ onMounted(async () => {
           autoplay
         ></video>
       </article>
-    </section>
+    </section> -->
   </div>
   <!-- <RouterView /> -->
 </template>

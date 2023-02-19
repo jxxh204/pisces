@@ -1,7 +1,6 @@
-import * as Phaser from "phaser";
+// import * as Phaser from "phaser";
 import { CreateFinder } from "@/module/createFinder";
 import finder_webRTC from "@/assets/images/Finder/finder_webRTC.png";
-import { useFinderAddressStore } from "../../stores/store_finderAddress";
 
 type FinderType = {
   // x,y,texture는 형식상 넣는것.

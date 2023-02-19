@@ -1,9 +1,11 @@
 import { useFinderAddressStore } from "@/stores/store_finderAddress";
+import finder_exit_idle from "@/assets/images/Finder/finder_exit_idle.png";
 export class CreateFinder extends Phaser.GameObjects.Sprite {
   scene: Phaser.Scene;
   name: string;
   image: string;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
+  exitButton: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   textSprite: any;
   address: AddressType;
   constructor(
@@ -25,12 +27,45 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.address = address;
     // this.location = location;
     this.sprite = null;
+    this.exitButton = null;
     this.textSprite = null;
   }
   loadImage() {
-    this.setTexture(this.name);
+    // this.setTexture(this.name);
     // this.setPosition(this.location.x, this.location.y);
     this.scene.load.image(`finder_${this.name}`, this.image);
+    this.scene.load.image("finder_exit_idle", finder_exit_idle);
+  }
+  setLocation() {
+    if (this.sprite) {
+      Phaser.Display.Align.In.Center(
+        this.sprite,
+        this.scene.add.zone(
+          window.innerWidth / 2,
+          window.innerHeight / 2,
+          window.innerWidth,
+          window.innerHeight
+        )
+      );
+      if (this.exitButton) {
+        Phaser.Display.Align.In.TopLeft(this.exitButton, this.sprite);
+        this.exitButton.setX(this.exitButton.x + 4);
+        this.exitButton.setY(this.exitButton.y + 4);
+      }
+    }
+  }
+  setPointer() {
+    this.exitButton?.setInteractive();
+    this.exitButton?.addListener("pointerover", (e: MouseEvent) => {
+      this.exitButton?.setTint(0x3333);
+    });
+    this.exitButton?.addListener("pointerout", (e: MouseEvent) => {
+      this.exitButton?.setTint(undefined);
+    });
+    this.exitButton?.addListener("pointerdown", (e: MouseEvent) => {
+      const finderAddressStore = useFinderAddressStore();
+      finderAddressStore.moveAddress("");
+    });
   }
   create() {
     this.sprite = this.scene.physics.add.staticSprite(
@@ -38,24 +73,26 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
       0,
       `finder_${this.name}`
     );
-    Phaser.Display.Align.In.Center(
-      this.sprite,
-      this.scene.add.zone(
-        window.innerWidth / 2,
-        window.innerHeight / 2,
-        window.innerWidth,
-        window.innerHeight
-      )
+    this.exitButton = this.scene.physics.add.staticSprite(
+      100,
+      100,
+      `finder_exit_idle`
     );
-    this.sprite.setInteractive();
+    this.sprite.setDepth(1);
+    this.exitButton.setDepth(2);
+
+    this.setPointer();
+    this.setLocation();
     // this.sprite.input.cursor.valueOf('')
   }
   update() {
     const finderAddressStore = useFinderAddressStore();
     if (this.address === finderAddressStore.getAddress()) {
       this.sprite?.setVisible(true);
+      this.exitButton?.setVisible(true);
     } else {
       this.sprite?.setVisible(false);
+      this.exitButton?.setVisible(false);
     }
   }
 }
