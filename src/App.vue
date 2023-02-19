@@ -15,6 +15,7 @@ import MenuBar from "./components/MenuBar.vue";
 import { v4 as uuidv4 } from "uuid";
 //phaser plugin
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+import LoadingView from "./views/LoadingView.vue";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -43,7 +44,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons, DropDownTest, ModalDialog], //Level1 Welcome,systemIcons 만들기.
+  scene: [Level1, Icons], //Level1 Welcome,systemIcons,DropDownTest 만들기.
   physics: {
     default: "arcade",
     arcade: {
@@ -131,7 +132,7 @@ onMounted(async () => {
         pub
         <video id="pubVideo" ref="pubVideoEl" class="bg-mac-black h-20"></video>
         <div class="border border-black p-2 rounded-lg">
-          // <button @click="onClickConnectRTC" class="buttons">접속</button>
+          <button @click="onClickConnectRTC" class="buttons">접속</button>
         </div>
       </article>
 
