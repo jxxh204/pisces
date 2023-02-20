@@ -3,20 +3,24 @@ import { onMounted, ref } from "vue";
 
 import * as Phaser from "phaser";
 import Level1 from "./phaser/Level1/Level1";
-import Welcome from "./phaser/Welcome/Welcome";
-import { DropDownTest, ModalDialog } from "./phaser/Test/Test";
+
 import { Icons } from "@/phaser/IconSprite/Icons";
 import { Finder } from "./phaser/Test/Finder";
 
+//안씀.
+import Welcome from "./phaser/Welcome/Welcome";
+import { DropDownTest, ModalDialog } from "./phaser/Test/Test";
 import { media } from "./media/userMedia";
 import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
+import { v4 as uuidv4 } from "uuid";
+//
+import LoadingView from "./views/LoadingView.vue";
 
 import MenuBar from "./components/MenuBar.vue";
-import { v4 as uuidv4 } from "uuid";
 //phaser plugin
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import LoadingView from "./views/LoadingView.vue";
+import { TileObject } from "./phaser/Test/TileObject";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -45,7 +49,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
+  scene: [TileObject, Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
   physics: {
     default: "arcade",
     arcade: {

@@ -97,39 +97,35 @@ export default class Test extends Phaser.Scene {
   loadMap() {
     //tileSet
     //tileName, tileImage,
-    this.load.image("tileSetImage", tilesImg);
-    // this.load.image("macTileSetImage", macTileSetImg);
-    // this.load.image("cityTileSetImage", city_backgroundImg);
-    // this.load.image("keyboardImage", keyboardImg);
-    this.load.image("macBackgroundImg", mac_backgroundImg);
-    this.load.spritesheet("system_trash", system_trashImg, {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    //tileMap JSON
-    // this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
-    this.load.tilemapTiledJSON(
-      "macTileset",
-      "src/phaser/Level1/mac_tileset.json"
-    ); //무조건 주소 자체를 넣어야함.
+    // this.load.image("tileSetImage", tilesImg);
+    // // this.load.image("macTileSetImage", macTileSetImg);
+    // // this.load.image("cityTileSetImage", city_backgroundImg);
+    // // this.load.image("keyboardImage", keyboardImg);
+    // this.load.image("macBackgroundImg", mac_backgroundImg);
+    // //tileMap JSON
+    // // this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
+    // this.load.tilemapTiledJSON(
+    //   "macTileset",
+    //   "src/phaser/Level1/mac_tileset.json"
+    // ); //무조건 주소 자체를 넣어야함.
   }
   setZindex() {
-    this.sprite.macBackground.setDepth(-1);
+    // this.sprite.macBackground.setDepth(-1);
   }
   createMap() {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
-    const map = this.make.tilemap({
-      key: "macTileset",
-    });
+    // const map = this.make.tilemap({
+    //   key: "macTileset",
+    // });
 
     // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
-    const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
+    // const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
 
-    const macBackgroundTileSet = map.addTilesetImage(
-      "mac_background",
-      "macBackgroundImg"
-    );
+    // const macBackgroundTileSet = map.addTilesetImage(
+    //   "mac_background",
+    //   "macBackgroundImg"
+    // );
     // const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
 
     // const platforms = this.physics.add.staticGroup();
@@ -142,12 +138,12 @@ export default class Test extends Phaser.Scene {
     //   0,
     //   this.bg.height - 200
     // );
-    this.sprite.macBackground = map.createLayer(
-      "mac_background",
-      macBackgroundTileSet,
-      0,
-      this.bg.height
-    );
+    // this.sprite.macBackground = map.createLayer(
+    //   "mac_background",
+    //   macBackgroundTileSet,
+    //   0,
+    //   this.bg.height
+    // );
   }
   loadInGameLoading() {
     //위치 바꾸기
