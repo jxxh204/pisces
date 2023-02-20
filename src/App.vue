@@ -49,7 +49,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [TileObject, Character, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
+  scene: [TileObject, Icons, Finder, Character], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
   physics: {
     default: "arcade",
     arcade: {
@@ -88,9 +88,9 @@ onMounted(async () => {
       window.innerHeight / ZOOM_LEVEL
     );
   };
-  resize();
+  // resize();
 
-  window.addEventListener("resize", resize, false);
+  // window.addEventListener("resize", resize, false);
 
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";

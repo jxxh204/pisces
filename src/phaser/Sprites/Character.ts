@@ -1,3 +1,4 @@
+import type { Finder } from "./../Test/Finder";
 import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
@@ -8,6 +9,7 @@ import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
+import { useFinderAddressStore } from "../../stores/store_finderAddress";
 
 type ColliderType = {
   floor: boolean;
@@ -46,6 +48,8 @@ export default class Test extends Phaser.Scene {
   video: any;
   main_char: any;
 
+  scene_finder: Finder | null;
+
   constructor() {
     super({
       key: "Character", // 여러 scene을 사용할려면 키입력해야함.
@@ -83,6 +87,7 @@ export default class Test extends Phaser.Scene {
     this.sameTimeMotionInterval = {} as NodeJS.Timeout;
 
     this.main_char = null;
+    this.scene_finder = null;
   }
 
   // loadInGameLoading() {
@@ -119,7 +124,7 @@ export default class Test extends Phaser.Scene {
       -50, // 타일의 처음 지점.
       bottom,
       this.bg.width + 100, //타일의 끝지점으로.
-      this.bg.height
+      bottom
     );
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
 
@@ -358,6 +363,12 @@ export default class Test extends Phaser.Scene {
     this.createC2();
     this.createCamera();
 
+    this.scene_finder = this.scene.get("Finder") as Finder;
+    console.log(
+      "🚀 ~ file: Character.ts:366 ~ Test ~ create ~ this.scene_finder ",
+      this.scene_finder?.finderClass
+    );
+
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
 
@@ -371,9 +382,23 @@ export default class Test extends Phaser.Scene {
 
     // this.playerLocation.currentY = this.player.y
     // this.playerLocation.currentY = 424;
+
+    this.main_char.character.setDepth(10);
   }
   update() {
     this.setCollider();
     this.main_char.updateAnimations();
+
+    //test
+    this.scene_finder?.finderClass.map((finder: FinderType) => {
+      if (finder.address === "webRTC") {
+        this.cameras.main.setBounds(
+          -380, // 타일의 처음 지점.
+          this.bg.height,
+          1100, //타일의 끝지점으로.
+          1000
+        );
+      }
+    });
   }
 }

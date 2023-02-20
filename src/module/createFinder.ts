@@ -1,5 +1,7 @@
 import { useFinderAddressStore } from "@/stores/store_finderAddress";
 import finder_exit_idle from "@/assets/images/Finder/finder_exit_idle.png";
+import computerImg from "@/assets/images/computer.gif";
+
 export class CreateFinder extends Phaser.GameObjects.Sprite {
   scene: Phaser.Scene;
   name: string;
@@ -7,6 +9,8 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
   sprite: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   exitButton: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   textSprite: any;
+  computer1: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
+  computer2: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
   address: AddressType;
   constructor(
     scene: Phaser.Scene,
@@ -29,12 +33,17 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.sprite = null;
     this.exitButton = null;
     this.textSprite = null;
+    this.computer1 = null;
+    this.computer2 = null;
   }
   loadImage() {
     // this.setTexture(this.name);
     // this.setPosition(this.location.x, this.location.y);
     this.scene.load.image(`finder_${this.name}`, this.image);
     this.scene.load.image("finder_exit_idle", finder_exit_idle);
+
+    //pc
+    this.scene.load.image("pc1TileSetName", computerImg);
   }
   setLocation() {
     if (this.sprite) {
@@ -78,21 +87,42 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
       100,
       `finder_exit_idle`
     );
+    this.computer1 = this.scene.physics.add.staticSprite(
+      0,
+      0,
+      "pc1TileSetName"
+    );
+    this.computer2 = this.scene.physics.add.staticSprite(
+      0,
+      0,
+      "pc1TileSetName"
+    );
     this.sprite.setDepth(1);
     this.exitButton.setDepth(2);
+    //pc
+    this.computer1.setDepth(2);
+    this.computer1.setScale(0.6);
+    this.computer2.setDepth(2);
+    this.computer2.setScale(0.6);
 
     this.setPointer();
     this.setLocation();
-    // this.sprite.input.cursor.valueOf('')
+    //pc 내용물은 따로 클래스를 만들어서 관리해야할듯.
+    Phaser.Display.Align.In.LeftCenter(this.computer1, this.sprite);
+    Phaser.Display.Align.In.RightCenter(this.computer2, this.sprite);
   }
   update() {
     const finderAddressStore = useFinderAddressStore();
     if (this.address === finderAddressStore.getAddress()) {
       this.sprite?.setVisible(true);
       this.exitButton?.setVisible(true);
+      this.computer1?.setVisible(true);
+      this.computer2?.setVisible(true);
     } else {
       this.sprite?.setVisible(false);
       this.exitButton?.setVisible(false);
+      this.computer1?.setVisible(false);
+      this.computer2?.setVisible(false);
     }
   }
 }

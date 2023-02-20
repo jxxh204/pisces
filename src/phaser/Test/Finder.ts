@@ -2,23 +2,12 @@
 import { CreateFinder } from "@/module/createFinder";
 import finder_webRTC from "@/assets/images/Finder/finder_webRTC.png";
 
-type FinderType = {
-  // x,y,texture는 형식상 넣는것.
-  scene: Phaser.Scene;
-  name: string;
-  image: string;
-  active: boolean;
-  x: 0;
-  y: 0;
-  texture: "";
-  address: AddressType;
-};
 export class Finder extends Phaser.Scene {
   finderClass: CreateFinder[];
 
   constructor() {
     super({
-      key: "finder",
+      key: "Finder",
       active: true,
     });
     this.finderClass = [];
@@ -53,6 +42,8 @@ export class Finder extends Phaser.Scene {
     this.finderClass.map((finder) => {
       finder.loadImage();
     });
+
+    //computer
   }
   create() {
     this.finderClass.map((finder) => {
