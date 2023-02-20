@@ -4,16 +4,7 @@ import Mushroom from "@/assets/characters/Mushroom.png";
 import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 
 // inGameLoading
-import inGameLoading from "./inGameLoading.png";
-
-// map
-import tilesImg from "./Tiles.png";
-import macTileSetImg from "../Sprites/mac.png";
-import city_backgroundImg from "./background/city_background.jpeg";
-import mac_backgroundImg from "@/assets/images/bg/background.png";
-import keyboardImg from "./keyboard.jpeg";
-
-import system_trashImg from "@/assets/images/system/Trash.png";
+// import inGameLoading from "./inGameLoading.png";
 
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
@@ -57,8 +48,8 @@ export default class Test extends Phaser.Scene {
 
   constructor() {
     super({
-      key: "Level1", // 여러 scene을 사용할려면 키입력해야함.
-      active: false,
+      key: "Character", // 여러 scene을 사용할려면 키입력해야함.
+      active: true,
     });
     this.bg = {
       width: 0,
@@ -94,82 +85,31 @@ export default class Test extends Phaser.Scene {
     this.main_char = null;
   }
 
-  loadMap() {
-    //tileSet
-    //tileName, tileImage,
-    // this.load.image("tileSetImage", tilesImg);
-    // // this.load.image("macTileSetImage", macTileSetImg);
-    // // this.load.image("cityTileSetImage", city_backgroundImg);
-    // // this.load.image("keyboardImage", keyboardImg);
-    // this.load.image("macBackgroundImg", mac_backgroundImg);
-    // //tileMap JSON
-    // // this.load.tilemapTiledJSON("Level1", "src/phaser/Level1/tileset1.json"); //무조건 주소 자체를 넣어야함.
-    // this.load.tilemapTiledJSON(
-    //   "macTileset",
-    //   "src/phaser/Level1/mac_tileset.json"
-    // ); //무조건 주소 자체를 넣어야함.
-  }
-  setZindex() {
-    // this.sprite.macBackground.setDepth(-1);
-  }
-  createMap() {
-    this.bg.width = this.scale.width;
-    this.bg.height = this.scale.height;
-    // const map = this.make.tilemap({
-    //   key: "macTileset",
-    // });
-
-    // {tiled에서 설정한 타일셋 이름, 불러온 타일셋 이름}
-    // const macTileSet = map.addTilesetImage("mac", "macTileSetImage");
-
-    // const macBackgroundTileSet = map.addTilesetImage(
-    //   "mac_background",
-    //   "macBackgroundImg"
-    // );
-    // const keyboardTileSet = map.addTilesetImage("keyboard", "keyboardImage");
-
-    // const platforms = this.physics.add.staticGroup();
-
-    // this.sprite.mac = map.createLayer("mac", macTileSet, 0, this.bg.height);
-
-    // this.sprite.keyboard = map.createLayer(
-    //   "keyboard",
-    //   keyboardTileSet,
-    //   0,
-    //   this.bg.height - 200
-    // );
-    // this.sprite.macBackground = map.createLayer(
-    //   "mac_background",
-    //   macBackgroundTileSet,
-    //   0,
-    //   this.bg.height
-    // );
-  }
-  loadInGameLoading() {
-    //위치 바꾸기
-    this.load.spritesheet("inGameLoading", inGameLoading, {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-  }
-  createInGameLoading() {
-    this.inGameLoading = this.physics.add.staticSprite(
-      345,
-      this.bg.height + 60,
-      `inGameLoading`
-    );
-    console.log(this.sprite.mac, this.game.scale.baseSize.height);
-    this.anims.create({
-      key: "loading",
-      frames: this.anims.generateFrameNames("inGameLoading", {
-        start: 0,
-        end: 20,
-      }),
-      frameRate: 5,
-      repeat: -1,
-    });
-    this.inGameLoading.play("loading", true);
-  }
+  // loadInGameLoading() {
+  //   //위치 바꾸기
+  //   this.load.spritesheet("inGameLoading", inGameLoading, {
+  //     frameWidth: 32,
+  //     frameHeight: 32,
+  //   });
+  // }
+  // createInGameLoading() {
+  //   this.inGameLoading = this.physics.add.staticSprite(
+  //     345,
+  //     this.bg.height + 60,
+  //     `inGameLoading`
+  //   );
+  //   console.log(this.sprite.mac, this.game.scale.baseSize.height);
+  //   this.anims.create({
+  //     key: "loading",
+  //     frames: this.anims.generateFrameNames("inGameLoading", {
+  //       start: 0,
+  //       end: 20,
+  //     }),
+  //     frameRate: 5,
+  //     repeat: -1,
+  //   });
+  //   this.inGameLoading.play("loading", true);
+  // }
   createCamera() {
     //내부 코드 정리하기.
     const cam = this.cameras.main;
@@ -409,22 +349,14 @@ export default class Test extends Phaser.Scene {
     this.main_char.getAnimations();
   }
   preload() {
-    this.game.canvas.classList.add(
-      `cursor-[../../assets/images/cat_cursor.gif(hand.cur),_pointer]`
-    );
-    this.loadC2();
+    this.bg.width = this.scale.width;
+    this.bg.height = this.scale.height;
 
-    this.loadInGameLoading();
-    this.loadMap();
+    this.loadC2();
   }
   create() {
     this.createC2();
-
-    this.createMap();
-    this.setZindex();
-    // this.createInGameLoading();
     this.createCamera();
-    this.setOverLap();
 
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();

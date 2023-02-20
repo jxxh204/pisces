@@ -214,3 +214,5 @@
 
 - tileObject 분리
 - v0.0.0:74
+- characters 분리
+- v0.0.0:75

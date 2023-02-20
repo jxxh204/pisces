@@ -1,4 +1,4 @@
-import type Level1 from "../phaser/Level1/Level1";
+import type Level1 from "../phaser/Sprites/Character";
 type ColliderType = {
   floor: boolean;
   activeCount: boolean[];

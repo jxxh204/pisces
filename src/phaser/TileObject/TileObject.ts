@@ -37,8 +37,6 @@ export class TileObject extends Phaser.Scene {
       0,
       0
     );
-
-    background.setDepth(-10);
   }
   update() {}
 }

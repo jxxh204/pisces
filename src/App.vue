@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 
 import * as Phaser from "phaser";
-import Level1 from "./phaser/Level1/Level1";
+import Character from "./phaser/Sprites/Character";
 
 import { Icons } from "@/phaser/IconSprite/Icons";
 import { Finder } from "./phaser/Test/Finder";
@@ -20,7 +20,7 @@ import LoadingView from "./views/LoadingView.vue";
 import MenuBar from "./components/MenuBar.vue";
 //phaser plugin
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import { TileObject } from "./phaser/Test/TileObject";
+import { TileObject } from "./phaser/TileObject/TileObject";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -49,7 +49,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [TileObject, Level1, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
+  scene: [TileObject, Character, Icons, Finder], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
   physics: {
     default: "arcade",
     arcade: {
