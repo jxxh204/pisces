@@ -25,7 +25,6 @@ export class Finder extends Phaser.Scene {
         address: "webRTC",
       },
     ];
-
     finders.map((finder: FinderType) => {
       const createdFinder = new CreateFinder(
         finder.scene,

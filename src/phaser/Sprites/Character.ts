@@ -31,10 +31,11 @@ const motionStateArray = [
   "idle",
 ];
 
-export default class Test extends Phaser.Scene {
+export default class Character extends Phaser.Scene {
   bg: {
     width: number;
     height: number;
+    tileWidth: number;
   };
   inGameLoading: any;
   sprite: any;
@@ -49,7 +50,7 @@ export default class Test extends Phaser.Scene {
   video: any;
   main_char: any;
 
-  scene_finder: Finder | null;
+  scene_finder: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
 
   constructor() {
     super({
@@ -59,6 +60,7 @@ export default class Test extends Phaser.Scene {
     this.bg = {
       width: 0,
       height: 0,
+      tileWidth: 1800,
     };
     this.inGameLoading = {} as any;
     this.sprite = {
@@ -124,11 +126,10 @@ export default class Test extends Phaser.Scene {
     this.physics.world.setBounds(
       -50, // 타일의 처음 지점.
       bottom,
-      this.bg.width + 100, //타일의 끝지점으로.
+      this.bg.tileWidth, //타일의 끝지점으로.
       bottom
     );
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
-
     // cam.setZoom(2); //해상도에따라 줌변경
 
     // canvas.style.cursor = "none";
@@ -145,14 +146,7 @@ export default class Test extends Phaser.Scene {
     );
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    cam.startFollow(
-      this.main_char.character,
-      true,
-      0.8,
-      0.8,
-      0,
-      this.bg.height / 2 - 300
-    ); //카메라 따라다님
+    cam.startFollow(this.main_char.character, true, 0.8, 0.8); //카메라 따라다님
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
@@ -364,12 +358,6 @@ export default class Test extends Phaser.Scene {
     this.createC2();
     this.createCamera();
 
-    this.scene_finder = this.scene.get("Finder") as Finder;
-    console.log(
-      "🚀 ~ file: Character.ts:366 ~ Test ~ create ~ this.scene_finder ",
-      this.scene_finder?.finderClass
-    );
-
     // this.bg = this.add.image(400, 300, 'background');
     // this.platforms = this.physics.add.staticGroup();
 
@@ -401,15 +389,22 @@ export default class Test extends Phaser.Scene {
             this.bg.width, //타일의 끝지점으로.
             this.bg.height
           );
+          // this.cameras.main.setZoom(1);
+          // this.cameras.main.zoomTo(1, 1000);
           return;
         }
         if (address === "webRTC") {
           this.cameras.main.setBounds(
-            -380, // 타일의 처음 지점.
+            -this.scene_finder?.x, // 타일의 처음 지점.
             this.bg.height,
             1100, //타일의 끝지점으로.
             1000
           );
+          // this.cameras.main.pan(400, 1000, 1000);
+          // w:400, h:??, 2000초동안 이동.
+          // this.cameras.main.setZoom(2);
+          // this.cameras.main.zoomTo(2, 1000);
+          // this.physics.world
         }
       },
     };
@@ -418,8 +413,13 @@ export default class Test extends Phaser.Scene {
   update() {
     this.setCollider();
     this.main_char.updateAnimations();
-
-    //test
-    this.scene_finder?.finderClass.map((finder: FinderType) => {});
+    if (!this.scene_finder) {
+      const finderScene = this.scene.get("Finder") as Finder;
+      this.scene_finder = finderScene.finderClass[0].finderSprite;
+      console.log(
+        "🚀 ~ file: Character.ts:366 ~ Test ~ create ~ this.scene_finder ",
+        this.scene_finder
+      );
+    }
   }
 }
