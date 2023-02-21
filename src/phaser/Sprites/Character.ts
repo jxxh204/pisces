@@ -10,6 +10,7 @@ import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 import { useFinderAddressStore } from "../../stores/store_finderAddress";
+import Observer from "@/module/observer";
 
 type ColliderType = {
   floor: boolean;
@@ -384,21 +385,41 @@ export default class Test extends Phaser.Scene {
     // this.playerLocation.currentY = 424;
 
     this.main_char.character.setDepth(10);
+    const observer = Observer.getInstance();
+    //파인더 열릴 경우 캐릭터 위치 이동
+    const observer_event = {
+      id: "finder_address",
+      func: (address: AddressType) => {
+        if (!address) {
+          console.log(
+            "🚀 ~ file: Character.ts:411 ~ Test ~ create ~ address",
+            address
+          );
+          this.cameras.main.setBounds(
+            0, // 타일의 처음 지점.
+            this.bg.height,
+            this.bg.width, //타일의 끝지점으로.
+            this.bg.height
+          );
+          return;
+        }
+        if (address === "webRTC") {
+          this.cameras.main.setBounds(
+            -380, // 타일의 처음 지점.
+            this.bg.height,
+            1100, //타일의 끝지점으로.
+            1000
+          );
+        }
+      },
+    };
+    observer.addObserver(observer_event);
   }
   update() {
     this.setCollider();
     this.main_char.updateAnimations();
 
     //test
-    this.scene_finder?.finderClass.map((finder: FinderType) => {
-      if (finder.address === "webRTC") {
-        this.cameras.main.setBounds(
-          -380, // 타일의 처음 지점.
-          this.bg.height,
-          1100, //타일의 끝지점으로.
-          1000
-        );
-      }
-    });
+    this.scene_finder?.finderClass.map((finder: FinderType) => {});
   }
 }
