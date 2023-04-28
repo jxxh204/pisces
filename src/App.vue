@@ -15,7 +15,7 @@ import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
 import { v4 as uuidv4 } from "uuid";
 //
-import LoadingView from "./views/LoadingView.vue";
+import Loading from "./components/Loading/App.Loading.vue";
 
 import MenuBar from "./composition/App/MenuBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
