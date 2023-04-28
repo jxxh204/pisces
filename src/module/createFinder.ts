@@ -142,18 +142,5 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.computer2?.setVisible(false);
     this.setObserver();
   }
-  update() {
-    // const finderAddressStore = useFinderAddressStore();
-    // if (this.address === finderAddressStore.getAddress()) {
-    //   this.sprite?.setVisible(true);
-    //   this.exitButton?.setVisible(true);
-    //   this.computer1?.setVisible(true);
-    //   this.computer2?.setVisible(true);
-    // } else {
-    //   this.sprite?.setVisible(false);
-    //   this.exitButton?.setVisible(false);
-    //   this.computer1?.setVisible(false);
-    //   this.computer2?.setVisible(false);
-    // }
-  }
+  update() {}
 }

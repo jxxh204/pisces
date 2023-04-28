@@ -69,6 +69,7 @@ export default class CreateCharacter {
     if (this.depth) this.character.setDepth(this.depth);
     this.character.setBounce(0.2); // 바닥에서 튕기는 힘
     this.character.setCollideWorldBounds(true); // 바닥과 충돌
+    this.phaser.cameras.main.startFollow(this.character);
   }
   /**
    * @key : 애니메이션 이름

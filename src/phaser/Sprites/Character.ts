@@ -124,14 +124,12 @@ export default class Character extends Phaser.Scene {
     const canvas = this.game.canvas;
     const bottom = this.bg.height;
     this.physics.world.setBounds(
-      -50, // 타일의 처음 지점.
+      0, // 타일의 처음 지점.
       bottom,
-      this.bg.tileWidth, //타일의 끝지점으로.
+      this.bg.width, //타일의 끝지점으로.
       bottom
     );
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
-    // cam.setZoom(2); //해상도에따라 줌변경
-
     // canvas.style.cursor = "none";
     // this.add.existing();
     // cam.pan(400, this.bg.height - 200, 1000);
@@ -142,11 +140,16 @@ export default class Character extends Phaser.Scene {
       0, // 타일의 처음 지점.
       bottom,
       this.bg.width, //타일의 끝지점으로.
-      this.bg.height
+      bottom
     );
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    cam.startFollow(this.main_char.character, true, 0.8, 0.8); //카메라 따라다님
+    cam.startFollow(this.main_char.character); //카메라 따라다님
+    console.log(
+      "🚀 ~ file: Character.ts:148 ~ Character ~ createCamera ~ this.main_char.character",
+      this.main_char.character
+    );
+    // cam.followOffset.set(-300, 0);
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
   setCollider() {
@@ -395,10 +398,17 @@ export default class Character extends Phaser.Scene {
         }
         if (address === "webRTC") {
           this.cameras.main.setBounds(
-            -this.scene_finder?.x, // 타일의 처음 지점.
+            -430, // 타일의 처음 지점.
             this.bg.height,
-            1100, //타일의 끝지점으로.
-            1000
+            900, //타일의 끝지점으로.
+            1200
+          );
+          this.cameras.main.centerOn(this.bg.width / 2, this.bg.height - 150);
+          this.physics.world.setBounds(
+            0, // 타일의 처음 지점.
+            this.bg.height,
+            900, //타일의 끝지점으로.
+            this.bg.height
           );
           // this.cameras.main.pan(400, 1000, 1000);
           // w:400, h:??, 2000초동안 이동.
