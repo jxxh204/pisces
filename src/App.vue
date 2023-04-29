@@ -120,7 +120,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen fixed">
+  <div class="w-screen h-screen fixed cursor-default">
     <!-- <LoadingView /> -->
     <MenuBar />
     <Body />

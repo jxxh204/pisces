@@ -9,8 +9,9 @@ module.exports = {
     },
     extend: {
       cursor: {
-        watch: "url(src/assets/images/Watch.png),pointer",
-        cat: "url(src/assets/images/cat_cursor32x32.gif), pointer",
+        watch: "url(src/assets/images/cursor/Watch.png),pointer",
+        cat: "url(src/assets/images/cursor/cat_cursor32x32.gif), pointer",
+        default: "url(src/assets/images/cursor/Arrow.svg), pointer",
       },
       backgroundImage: {
         "default-pattern": "url(src/assets/images/bg/default.svg)",
