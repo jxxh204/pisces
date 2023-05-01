@@ -22,6 +22,7 @@ import Body from "./composition/App/Body.App.vue";
 //phaser plugin
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import { TileObject } from "./phaser/TileObject/TileObject";
+import FinderMacVue from "./components/Mac/Finder.Mac.vue";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -122,6 +123,7 @@ onMounted(async () => {
 <template>
   <div class="w-screen h-screen fixed cursor-default">
     <!-- <LoadingView /> -->
+    <FinderMacVue />
     <MenuBar />
     <Body />
 

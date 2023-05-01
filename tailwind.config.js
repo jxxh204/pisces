@@ -17,6 +17,7 @@ module.exports = {
         "default-pattern": "url(src/assets/images/bg/default.svg)",
         "finder-pattern": "url(src/assets/images/bg/finder.svg)",
         "blueDalmation-pattern": "url(src/assets/images/bg/blueDalmation.svg)",
+        barPicker: "url(src/assets/images/Finder/barpicker.svg)",
       },
     },
     colors: {
