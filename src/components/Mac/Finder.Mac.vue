@@ -86,13 +86,4 @@ const onClickClose = () => {
 .finder_boder {
   @apply border-2 border-mac-black;
 }
-.finder_shadow_in {
-  box-shadow: inset -1px 0px 0px rgba(38, 38, 38, 0.4),
-    inset 0px -1px 0px rgba(38, 38, 38, 0.4), inset 1px 0px 0px #ffffff,
-    inset 0px 1px 0px #ffffff;
-}
-.finder_shadow_out {
-  box-shadow: -1px 0px 0px rgba(38, 38, 38, 0.4),
-    0px -1px 0px rgba(38, 38, 38, 0.4), 1px 0px 0px #ffffff, 0px 1px 0px #ffffff;
-}
 </style>

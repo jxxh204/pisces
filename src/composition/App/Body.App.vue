@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import MacFile from "@/components/Mac/File.Mac.vue";
 import FinderMacVue from "@/components/Mac/Finder.Mac.vue";
+import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
 
 const files = ["About", "Contact", "Projects", "Game"];
 </script>
 아이콘은 전체 영역에 있어야하고 아이콘과 파인더는 같은 영역에 존재해야한다.
 
 <template>
-  <div
-    id="app-body"
-    class="w-full h-full bg-default-pattern bg-cover bg-center"
-  >
-    <section class="w-full h-full absolute">
+  <div id="app-body" class="w-full h-full">
+    <section class="w-full h-full">
       <FinderMacVue />
       <article
         id="files"
@@ -23,6 +21,7 @@ const files = ["About", "Contact", "Projects", "Game"];
           :key="name + `${index}`"
         />
       </article>
+      <MenuMacVue />
     </section>
   </div>
 </template>

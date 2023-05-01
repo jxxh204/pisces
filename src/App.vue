@@ -17,12 +17,11 @@ import { v4 as uuidv4 } from "uuid";
 //
 import Loading from "./components/Loading/App.Loading.vue";
 
-import MenuBar from "./composition/App/MenuBar.App.vue";
+import NavBar from "./composition/App/NavBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
 //phaser plugin
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import { TileObject } from "./phaser/TileObject/TileObject";
-
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
@@ -121,10 +120,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen fixed cursor-default">
+  <div
+    class="w-screen h-screen fixed cursor-default bg-default-pattern bg-cover bg-center"
+  >
     <!-- <LoadingView /> -->
 
-    <MenuBar />
+    <NavBar />
     <Body />
 
     <!-- Phaser -->
