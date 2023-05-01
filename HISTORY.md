@@ -241,5 +241,8 @@
 - v0.0.0:82
 
 ## 2023 5/1
+
 - Finder.Mac resizable finder 외형 제작
 - v0.0.0:83
+- Finder.Mac header 개선
+- v0.0.0:84

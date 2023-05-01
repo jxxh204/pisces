@@ -11,13 +11,13 @@ interface Props {
 const props = defineProps<Props>();
 </script>
 <template>
-  <div class="absolute w-screen h-screen">
+  <div class="absolute w-full h-full">
     <!-- :max-width=""
         :max-height="maxH | checkEmpty" -->
     <vue-resizable
       dragSelector=".drag-container"
       :fit-parent="true"
-      :top="100"
+      :top="200"
       :width="400"
       :height="400"
       :min-width="300"
@@ -30,15 +30,12 @@ const props = defineProps<Props>();
         >
           <img :src="CloseBox" />
           <div class="barPicker"></div>
-          <article class="flex flex-row gap-2 h-full w-full">
-            <img :src="sample" />
-            <p class="">Finder</p>
-          </article>
+          <img :src="sample" />
+          <p class="">Finder</p>
           <div class="barPicker"></div>
-          <article class="flex flex-row h-full w-full">
-            <img :src="ZoomBox" />
-            <img :src="Collapsebox" />
-          </article>
+
+          <img :src="ZoomBox" />
+          <img :src="Collapsebox" />
         </section>
         <section
           id="finder_body"

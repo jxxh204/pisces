@@ -5,6 +5,7 @@ import Projects from "@/assets/images/icons/projects.svg";
 import Game from "@/assets/images/icons/game.svg";
 
 import MacFile from "@/components/Mac/File.Mac.vue";
+import FinderMacVue from "@/components/Mac/Finder.Mac.vue";
 
 const files = [
   { file: About, name: "About" },
@@ -13,12 +14,14 @@ const files = [
   { file: Game, name: "Game" },
 ];
 </script>
-z
+
 <template>
   <div
     id="app-body"
     class="w-full h-full bg-default-pattern bg-cover bg-center"
   >
+    <FinderMacVue />
+
     <section
       id="files"
       class="w-full h-full flex flex-row justify-center items-center gap-8"

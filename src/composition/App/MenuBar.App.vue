@@ -53,7 +53,6 @@ onMounted(() => {});
 
 <style scoped>
 .menuBar {
-  position: fixed;
   width: 100%;
   height: 20px;
   left: 0px;
