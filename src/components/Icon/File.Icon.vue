@@ -7,7 +7,7 @@ import Game from "@/assets/images/icons/game.svg";
 
 interface Props {
   name: FileNames;
-  isClick: boolean;
+  isClick?: boolean;
 }
 const props = defineProps<Props>();
 const images = {

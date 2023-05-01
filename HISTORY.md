@@ -259,3 +259,10 @@
 - v0.0.0:88
 - Icon Component로 통합
 - v0.0.0:89
+- menubar 제작
+- v0.0.0:90
+
+## 2023 5/3
+
+- game finder에 game 적용.
+- v0.0.0:91
