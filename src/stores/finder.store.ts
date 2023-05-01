@@ -18,11 +18,14 @@ export default defineStore("useFinderStore", () => {
     console.log(currentFinders.value);
   };
   const clickFinder = (name: FileNames) => {
-    currentFinders.value[name].zIndex = finderLength.value++;
+    try {
+      currentFinders.value[name].zIndex = finderLength.value++;
+    } catch {
+      console.log("clickFinder : removeError");
+    }
   };
-  const removeFinder = (address: FinderComponentType) => {
-    // clickFinder(address);
-    // currentFinders.value.push(address);
+  const removeFinder = (name: FileNames) => {
+    delete currentFinders.value[name];
   };
 
   return { addFinder, clickFinder, removeFinder, currentFinders };

@@ -13,9 +13,6 @@ const finderStore = useFinderStore();
 const onClickClose = () => {
   finderStore.removeFinder();
 };
-const onClickFinder = (name: FileNames) => {
-  // console.log(zIndex.value);
-};
 
 // 이미지는 icon.vue를 만들어서 모두 거기서 불러오도록 하자.
 </script>
@@ -41,7 +38,11 @@ const onClickFinder = (name: FileNames) => {
         id="finder_header"
         class="drag-container h-5 flex flex-row items-center gap-2"
       >
-        <img :src="CloseBox" class="button_hover" />
+        <img
+          :src="CloseBox"
+          @click="finderStore.removeFinder(finder.name)"
+          class="button_hover"
+        />
         <div class="barPicker"></div>
         <img :src="sample" />
         <p class="">{{ finder.name }}</p>
