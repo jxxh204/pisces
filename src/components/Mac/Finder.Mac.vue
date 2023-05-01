@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import VueResizable from "vue-resizable";
+import { ref, inject } from "vue";
+import VueResizable from 'vue-resizable';
 import useFinderStore from "@/stores/finder.store";
 
 import CloseBox from "@/assets/images/Finder/closebox.svg";
@@ -8,9 +8,25 @@ import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
 import sample from "@/assets/images/icons/game.svg";
 import FileIcon from "../Icon/File.Icon.vue";
-
+import GameFinder from "@/composition/Finder/Game.Finder.vue"
 const finderStore = useFinderStore();
+interface Props {
+    name: FileNames;
+    zIndex:number;
+}
+const props = defineProps<Props>();
+const emitter = inject('emitter');
 
+const eHandler =(data:any) => {
+
+    // width.value = data.width;
+    // height.value = data.height;
+    // left.value = data.left;
+    // top.value = data.top;
+    // event.value = data.eventName;
+    finderStore.changeFinderState(props.name,data.width,data.height,data.top,data.left)
+    emitter.emit(`finder:${props.name}`)
+}
 const onClickClose = () => {
   finderStore.removeFinder();
 };
@@ -21,18 +37,23 @@ const onClickClose = () => {
   <!-- :max-width=""
         :max-height="maxH | checkEmpty" -->
   <vue-resizable
-    v-for="(finder, index) in finderStore.currentFinders"
-    @click="finderStore.clickFinder(finder.name)"
-    :key="finder.name + index"
+
     id="resizable"
     dragSelector=".drag-container"
     :fit-parent="true"
     :top="200"
     :width="400"
-    :height="400"
+    :height="300"
     :min-width="300"
     :min-height="200"
-    :style="'z-index:' + finder.zIndex"
+    :style="'z-index:' +props.zIndex"
+    @mount="eHandler"
+    @resize:move="eHandler"
+    @resize:start="eHandler"
+    @resize:end="eHandler"
+    @drag:move="eHandler"
+    @drag:start="eHandler"
+    @drag:end="eHandler"
   >
     <div class="resizable-content">
       <section
@@ -41,12 +62,13 @@ const onClickClose = () => {
       >
         <img
           :src="CloseBox"
-          @click="finderStore.removeFinder(finder.name)"
+          @click="finderStore.removeFinder(props.name)"
           class="button_hover"
         />
         <div class="barPicker"></div>
-        <file-icon :name="finder.name" :isClick="isClick" />
-        <p class="">{{ finder.name }}</p>
+<!--          :isClick="isClick" -->
+        <file-icon :name="props.name" />
+        <p class="">{{ props.name }}</p>
         <div class="barPicker"></div>
 
         <img :src="ZoomBox" class="button_hover" />
@@ -62,7 +84,9 @@ const onClickClose = () => {
         >
           item
         </article>
-        <article id="finder_body_content"></article>
+        <article id="finder_body_content">
+            <GameFinder v-if="props.name === 'Game'" />
+        </article>
       </section>
     </div>
   </vue-resizable>
@@ -85,14 +109,5 @@ const onClickClose = () => {
 }
 .finder_boder {
   @apply border-2 border-mac-black;
-}
-.finder_shadow_in {
-  box-shadow: inset -1px 0px 0px rgba(38, 38, 38, 0.4),
-    inset 0px -1px 0px rgba(38, 38, 38, 0.4), inset 1px 0px 0px #ffffff,
-    inset 0px 1px 0px #ffffff;
-}
-.finder_shadow_out {
-  box-shadow: -1px 0px 0px rgba(38, 38, 38, 0.4),
-    0px -1px 0px rgba(38, 38, 38, 0.4), 1px 0px 0px #ffffff, 0px 1px 0px #ffffff;
 }
 </style>

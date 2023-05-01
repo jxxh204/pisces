@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import AppleLogo from "@/assets/images/icons/apple-logo.png";
-import MenuBarResize from "@/assets/images/icons/Menu-bar-resizer.png";
+import NavBarResize from "@/assets/images/icons/Menu-bar-resizer.png";
 import FinderIcon from "@/assets/images/icons/Finder.png";
 const menus = [
   { name: "File" },
@@ -28,7 +28,7 @@ onMounted(() => {});
 
 <template>
   <div
-    class="menuBar font-normal bg-mac-gray-300 z-10 flex flex-row justify-between chco rounded-t-md px-5"
+    class="NavBar font-normal bg-mac-gray-300 z-10 flex flex-row justify-between chco rounded-t-md px-5"
   >
     <section class="flex flex-row gap-6 items-center">
       <img
@@ -44,7 +44,7 @@ onMounted(() => {});
     </section>
     <section class="flex flex-row items-center gap-2">
       <p>{{ time }} {{ meridiem }}</p>
-      <img :src="MenuBarResize" />
+      <img :src="NavBarResize" />
       <img class="h-4" :src="FinderIcon" />
       <p>Finder</p>
     </section>
@@ -52,7 +52,7 @@ onMounted(() => {});
 </template>
 
 <style scoped>
-.menuBar {
+.NavBar {
   width: 100%;
   height: 20px;
   left: 0px;

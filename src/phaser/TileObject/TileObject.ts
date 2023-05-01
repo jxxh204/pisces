@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import pcImg from "@/assets/images/computer.gif";
-import mac_backgroundImg from "@/assets/images/bg/background.png";
+import mac_backgroundImg from "@/assets/images/bg/finder.svg";
 
 export class TileObject extends Phaser.Scene {
   map: Phaser.Tilemaps.Tilemap | null;
