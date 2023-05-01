@@ -1,4 +1,3 @@
-import { useFinderAddressStore } from "@/stores/store_finderAddress";
 import finder_exit_idle from "@/assets/images/Finder/finder_exit_idle.png";
 import computerImg from "@/assets/images/computer.gif";
 import Observer from "@/module/observer";
@@ -74,10 +73,7 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.exitButton?.addListener("pointerout", (e: MouseEvent) => {
       this.exitButton?.setTint(undefined);
     });
-    this.exitButton?.addListener("pointerdown", (e: MouseEvent) => {
-      const finderAddressStore = useFinderAddressStore();
-      finderAddressStore.moveAddress("");
-    });
+    this.exitButton?.addListener("pointerdown", (e: MouseEvent) => {});
   }
   setObserver() {
     const observer = Observer.getInstance();

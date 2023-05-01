@@ -9,7 +9,6 @@ import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
-import { useFinderAddressStore } from "../../stores/store_finderAddress";
 import Observer from "@/module/observer";
 
 type ColliderType = {

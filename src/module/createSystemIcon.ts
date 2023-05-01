@@ -1,5 +1,4 @@
 import ClickOutside from "phaser3-rex-plugins/plugins/clickoutside.js";
-import { useFinderAddressStore } from "@/stores/store_finderAddress";
 type LocationType = {
   x: number;
   y: number;
@@ -35,7 +34,6 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
     this.scene.load.image(`system_${this.name}`, this.image);
   }
   create() {
-    const finderAddressStore = useFinderAddressStore();
     this.sprite = this.scene.physics.add.staticSprite(
       this.location.x,
       this.location.y,
@@ -74,7 +72,6 @@ export class CreateSystemIcon extends Phaser.GameObjects.Sprite {
       }, 300);
       if (dbCount > 1) {
         //더블클릭했을경우.
-        finderAddressStore.moveAddress(this.address);
         console.log(this.address, "이동!");
       }
       // }

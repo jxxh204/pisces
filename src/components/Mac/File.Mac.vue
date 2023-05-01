@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { onClickOutside } from "@vueuse/core";
 import { ref } from "vue";
+import useFinderStore from "@/stores/finder.store";
 
 interface Props {
   img: ImageData;
-  name: string;
+  name: AddressType;
 }
 const props = defineProps<Props>();
+const finderStore = useFinderStore();
 const macIcon = ref<HTMLDivElement>();
 const isClick = ref(false);
 
@@ -15,8 +17,9 @@ const onClickFile = () => {
   console.log("onClickFile");
   isClick.value = true;
 };
-const onDblClick = () => {
+const onDblClick = (name: AddressType) => {
   console.log("onDblClick");
+  finderStore.addFinder(name);
 };
 </script>
 
@@ -25,7 +28,7 @@ const onDblClick = () => {
     id="macIcon"
     ref="macIcon"
     @click="onClickFile"
-    @dblclick="onDblClick"
+    @dblclick="onDblClick(props.name)"
     class="flex flex-col justify-center items-center gap-1"
   >
     <!-- <div class="w-full h-full absolute bg-mac-black"></div> -->

@@ -1,8 +1,1 @@
-type AddressType =
-  | ""
-  | "webRTC"
-  | "contact"
-  | "portfolio"
-  | "hobby"
-  | "codec"
-  | "audio";
+type AddressType = "About" | "Contact" | "Projects" | "Game";
