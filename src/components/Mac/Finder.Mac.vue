@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 
@@ -12,6 +13,10 @@ const finderStore = useFinderStore();
 const onClickClose = () => {
   finderStore.removeFinder();
 };
+const onClickFinder = (name: FileNames) => {
+  // console.log(zIndex.value);
+};
+
 // 이미지는 icon.vue를 만들어서 모두 거기서 불러오도록 하자.
 </script>
 <template>
@@ -19,7 +24,8 @@ const onClickClose = () => {
         :max-height="maxH | checkEmpty" -->
   <vue-resizable
     v-for="(finder, index) in finderStore.currentFinders"
-    :key="finder + index"
+    @click="finderStore.clickFinder(finder.name)"
+    :key="finder.name + index"
     id="resizable"
     dragSelector=".drag-container"
     :fit-parent="true"
@@ -28,6 +34,7 @@ const onClickClose = () => {
     :height="400"
     :min-width="300"
     :min-height="200"
+    :style="'z-index:' + finder.zIndex"
   >
     <div class="resizable-content">
       <section
@@ -37,7 +44,7 @@ const onClickClose = () => {
         <img :src="CloseBox" class="button_hover" />
         <div class="barPicker"></div>
         <img :src="sample" />
-        <p class="">{{ finder }}</p>
+        <p class="">{{ finder.name }}</p>
         <div class="barPicker"></div>
 
         <img :src="ZoomBox" class="button_hover" />
@@ -61,7 +68,6 @@ const onClickClose = () => {
 <style scoped>
 #resizable {
   position: absolute;
-  z-index: 10;
 }
 .resizable-content {
   @apply w-full h-full bg-mac-gray-400 finder_boder p-1 flex flex-col gap-1 justify-start;
