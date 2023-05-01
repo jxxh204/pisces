@@ -246,3 +246,5 @@
 - v0.0.0:83
 - Finder.Mac header 개선
 - v0.0.0:84
+- Finder.Mac shadow 적용하여 디테일 개선
+- v0.0.0:85

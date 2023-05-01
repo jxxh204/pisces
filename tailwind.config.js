@@ -11,6 +11,7 @@ module.exports = {
       cursor: {
         watch: "url(src/assets/images/cursor/Watch.png),pointer",
         cat: "url(src/assets/images/cursor/cat_cursor32x32.gif), pointer",
+        select: "url(src/assets/images/cursor/Select.svg), pointer",
         default: "url(src/assets/images/cursor/Arrow.svg), pointer",
       },
       backgroundImage: {
