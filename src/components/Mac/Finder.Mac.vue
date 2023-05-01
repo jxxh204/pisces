@@ -7,6 +7,7 @@ import CloseBox from "@/assets/images/Finder/closebox.svg";
 import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
 import sample from "@/assets/images/icons/game.svg";
+import FileIcon from "../Icon/File.Icon.vue";
 
 const finderStore = useFinderStore();
 
@@ -44,7 +45,7 @@ const onClickClose = () => {
           class="button_hover"
         />
         <div class="barPicker"></div>
-        <img :src="sample" />
+        <file-icon :name="finder.name" :isClick="isClick" />
         <p class="">{{ finder.name }}</p>
         <div class="barPicker"></div>
 

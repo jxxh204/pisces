@@ -257,3 +257,5 @@
 - v0.0.0:87
 - finderClose 구현
 - v0.0.0:88
+- Icon Component로 통합
+- v0.0.0:89
