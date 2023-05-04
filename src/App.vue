@@ -15,81 +15,20 @@ import webRTC from "./media/webRTCsample";
 import type { GetStreamSettings } from "./media/media";
 import { v4 as uuidv4 } from "uuid";
 //
-import Loading from "./components/Loading/App.Loading.vue";
+import LoadingView from "./components/Loading/App.Loading.vue";
 
 import NavBar from "./composition/App/NavBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
-//phaser plugin
-import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import { TileObject } from "./phaser/TileObject/TileObject";
 
 const localStream = ref<MediaStream>();
 const pubVideoEl = ref<HTMLVideoElement>();
 const subVideoEl = ref<HTMLVideoElement>();
 const inputName = ref<HTMLInputElement>();
 
-const ZOOM_LEVEL = 1;
 
-const SIZE_WIDTH_SCREEN = window.innerWidth;
-const SIZE_HEIGHT_SCREEN = window.innerHeight;
-
-const config = {
-  type: Phaser.AUTO,
-  mode: Phaser.Scale.FIT, // 자동으로 화면을 꽉채워줌
-  // scale: {
-  //   mode: Phaser.Scale.FIT,
-  //   autoCenter: Phaser.Scale.CENTER_BOTH,
-  // },
-  parent: "phaser-wrapper", //canvas id
-  width: SIZE_WIDTH_SCREEN,
-  height: SIZE_HEIGHT_SCREEN,
-  autoCenter: Phaser.Scale.CENTER_BOTH, // 화면을 자동으로 센터에 맞추어줌.
-  dom: {
-    createContainer: true,
-  },
-  zoom: ZOOM_LEVEL,
-  backgroundColor: "#000000",
-  pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [TileObject, Icons, Finder, Character], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 300 },
-      // debug: true,
-    },
-  },
-  plugins: {
-    scene: [
-      {
-        key: "rexUI",
-        plugin: UIPlugin,
-        mapping: "rexUI",
-      },
-    ],
-  },
-};
 
 onMounted(async () => {
-  //Phaser
-  // const game = new Phaser.Game(config);
-  // const canvas = game.canvas;
-  // // canvas.style.zIndex = "-1";
-  // const resize = () => {
-  //   const windowRatio = SIZE_WIDTH_SCREEN / SIZE_HEIGHT_SCREEN;
-  //   const gameRatio = game.config.width / game.config.height;
-  //   if (windowRatio < gameRatio) {
-  //     canvas.style.width = SIZE_WIDTH_SCREEN + "px";
-  //     canvas.style.height = SIZE_WIDTH_SCREEN / gameRatio + "px";
-  //   } else {
-  //     canvas.style.width = SIZE_HEIGHT_SCREEN * gameRatio + "px";
-  //     canvas.style.height = SIZE_HEIGHT_SCREEN + "px";
-  //   }
-  //   game.scale.resize(
-  //     window.innerWidth / ZOOM_LEVEL,
-  //     window.innerHeight / ZOOM_LEVEL
-  //   );
-  // };
-  //Phaser
+
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";
@@ -128,12 +67,7 @@ onMounted(async () => {
     <NavBar />
     <Body />
 
-    <!-- Phaser -->
-    <!-- <div
-      id="phaser-wrapper"
-      class="w-full h-full top-0 bottom-0 fixed cursor-cat -z-20"
-    ></div> -->
-    <!-- Phaser -->
+
     <!-- webRTC -->
     <!-- <section class="rtc-modal bg-mac-white rounded-lg p-10">
       webRTC

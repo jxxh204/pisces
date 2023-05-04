@@ -23,7 +23,7 @@ var (
 	}
 	wsConn *websocket.Conn
 )
-var addr = flag.String("addr", ":9100", "http service address")
+var addr = flag.String("addr", ":3000", "http service address")
 
 var currentUserId string
 var users [4]string
@@ -133,25 +133,26 @@ func main() {
 	// router.HandleFunc("/socket", WsEndpoint)
 	// router.HandleFunc("/pub", Pub)
 	// router.HandleFunc("/sub", Sub)
-	// router.HandleFunc("/ws", Chat) // 이걸로 개선
+	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/ws", Chat) // 이걸로 개선
 
-	// err := http.ListenAndServe(*addr, nil)
-	// if err != nil {
-	// 	log.Fatal("ListenAndServe: ", err)
-	// }
-	flag.Parse()
-	hub := newHub()
-	go hub.run()
-	log.Printf("Server started on port %s", *addr)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello World")
-	})
-	http.HandleFunc("/home", serveHome)
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
-	})
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+	// flag.Parse()
+	// hub := newHub()
+	// go hub.run()
+	// log.Printf("Server started on port %s", *addr)
+	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	fmt.Fprintf(w, "Hello World")
+	// })
+	// http.HandleFunc("/home", serveHome)
+	// http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	// 	serveWs(hub, w, r)
+	// })
+	// err := http.ListenAndServe(*addr, nil)
+	// if err != nil {
+	// 	log.Fatal("ListenAndServe: ", err)
+	// }
 }

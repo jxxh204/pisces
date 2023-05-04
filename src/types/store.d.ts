@@ -4,18 +4,34 @@ type FinderComponentType = {
   About: {
     name: FileNames;
     zIndex: number;
+    width?:number,
+    height?:number,
+    top?:number,
+    left?:number
   };
   Contact: {
     name: FileNames;
     zIndex: number;
+    width?:number,
+    height?:number,
+    top?:number,
+    left?:number
   };
   Projects: {
     name: FileNames;
     zIndex: number;
+    width?:number,
+    height?:number,
+    top?:number,
+    left?:number
   };
   Game: {
     name: FileNames;
     zIndex: number;
+    width?:number,
+    height?:number,
+    top?:number,
+    left?:number
   };
 };
 

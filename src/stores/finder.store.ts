@@ -27,6 +27,13 @@ export default defineStore("useFinderStore", () => {
   const removeFinder = (name: FileNames) => {
     delete currentFinders.value[name];
   };
+  const changeFinderState = (name:FileNames, width:number,height:number,top:number,left:number) => {
+    currentFinders.value[name].width = width
+    currentFinders.value[name].height = height
+    currentFinders.value[name].top = top
+    currentFinders.value[name].left = left
 
-  return { addFinder, clickFinder, removeFinder, currentFinders };
+  }
+
+  return { addFinder, clickFinder, removeFinder,changeFinderState, currentFinders };
 });

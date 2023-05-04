@@ -2,15 +2,24 @@
 import MacFile from "@/components/Mac/File.Mac.vue";
 import FinderMacVue from "@/components/Mac/Finder.Mac.vue";
 import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
+import useFinderStore from "@/stores/finder.store"
 
+const finderStore = useFinderStore();
 const files = ["About", "Contact", "Projects", "Game"];
 </script>
-아이콘은 전체 영역에 있어야하고 아이콘과 파인더는 같은 영역에 존재해야한다.
+<!--아이콘은 전체 영역에 있어야하고 아이콘과 파인더는 같은 영역에 존재해야한다.-->
 
 <template>
   <div id="app-body" class="w-full h-full">
     <section class="w-full h-full">
-      <FinderMacVue />
+      <FinderMacVue
+              v-for="(finder, index) in finderStore.currentFinders"
+              @click="finderStore.clickFinder(finder.name)"
+              :key="finder.name + index"
+              :name="finder.name"
+              :zIndex="finder.zIndex"
+
+      />
       <article
         id="files"
         class="w-full h-full flex flex-row justify-center items-center gap-8"
