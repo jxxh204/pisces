@@ -61,7 +61,7 @@ export default class webRTC {
     // this.subVideoEl = subVideoEl;
     this.uuid = uuid;
     this.socket = null;
-    this.baseUrl = "ws://localhost:9100";
+    this.baseUrl = "ws://localhost:3000";
   }
   async handleOffer(offer: RTCOfferOptions) {
     if (!this.pc) {
