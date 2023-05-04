@@ -16,6 +16,7 @@
     "@vueuse/components": "^9.5.0",
     "@vueuse/core": "^9.5.0",
     "@vueuse/rxjs": "^9.5.0",
+    "eslint-plugin-import": "^2.27.5",
     "express": "^4.18.2",
     "mitt": "^3.0.0",
     "phaser": "^3.55.2",

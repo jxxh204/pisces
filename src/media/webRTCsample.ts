@@ -8,18 +8,21 @@ export default class webRTC {
   // 	{ urls: 'stun:stun.l.google.com:19302' }
   // ]
   pc: RTCPeerConnection | null;
+  dcm_msg: RTCDataChannel | null;
   config: RTCConfiguration;
-  localStream: MediaStream | undefined;
+  localStream?: MediaStream | undefined;
   subVideoEl: HTMLVideoElement;
   uuid: string;
   socket: WebSocket | null;
   baseUrl: string;
+
   constructor(
-    localStream: MediaStream,
-    subVideoEl: HTMLVideoElement,
-    uuid: string
+    uuid: string,
+    localStream?: MediaStream,
+    subVideoEl?: HTMLVideoElement
   ) {
     this.pc = null;
+    this.dcm_msg = null;
     // this.localStream;
     this.config = {
       iceServers: [
@@ -54,8 +57,8 @@ export default class webRTC {
     //     },
     //   ],
     // };
-    this.localStream = localStream;
-    this.subVideoEl = subVideoEl;
+    // this.localStream = localStream;
+    // this.subVideoEl = subVideoEl;
     this.uuid = uuid;
     this.socket = null;
     this.baseUrl = "ws://localhost:9100";
@@ -118,10 +121,10 @@ export default class webRTC {
       this.sendMessage("id", this.uuid);
     };
     this.socket.onmessage = (e) => {
-      if (!this.localStream) {
-        console.log("not ready yet");
-        return;
-      }
+      // if (!this.localStream) {
+      //   console.log("not ready yet");
+      //   return;
+      // }
       // console.log(e.data);
       const { type, data, id } = JSON.parse(e.data);
       if (id === this.uuid) return;
@@ -196,16 +199,17 @@ export default class webRTC {
       this.sendMessage("candidate", JSON.stringify(data));
     };
     this.pc.ontrack = (evt) => {
+      console.log(ontrack);
       //sub
-      console.log("ontrack", evt.streams[0], this.subVideoEl);
-      this.subVideoEl.srcObject = evt.streams[0];
-      console.log(this.subVideoEl.srcObject);
-      this.subVideoEl.play();
+      // console.log("ontrack", evt.streams[0], this.subVideoEl);
+      // this.subVideoEl.srcObject = evt.streams[0];
+      // console.log(this.subVideoEl.srcObject);
+      // this.subVideoEl.play();
     };
-    this.localStream?.getTracks().forEach((track) => {
-      console.log(" this.localStream", this.localStream);
-      if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    });
+    // this.localStream?.getTracks().forEach((track) => {
+    //   console.log(" this.localStream", this.localStream);
+    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    // });
   }
   async openRTC() {
     this.createPeerConnection();
@@ -216,6 +220,7 @@ export default class webRTC {
     this.pc?.setLocalDescription(offer);
   }
   sendMessage(key: string, value: string) {
+    // 시그널 서버로의 전송
     const msg = {
       id: this.uuid,
       target: "",
@@ -223,6 +228,16 @@ export default class webRTC {
       data: value,
     };
     this.socket?.send(JSON.stringify(msg));
+  }
+  createDataChannel() {
+    this.dcm_msg = this.pc?.createDataChannel("msg");
+    if (this.dcm_msg) {
+      this.dcm_msg.onopen = () => console.log("dcm has opened!!!!!!");
+      this.dcm_msg.onclose = () => console.log("dcm has closed111111");
+      this.dcm_msg.onmessage = (e) => {
+        console.log("this.dcm_msg message!", e);
+      };
+    }
   }
   // async openPub() {
   //   this.openWebSocket("pub");
