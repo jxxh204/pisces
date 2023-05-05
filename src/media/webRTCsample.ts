@@ -79,7 +79,7 @@ export default class webRTC {
     //   // console.log(" this.localStream", this.localStream);
     //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
     // });
-
+    //offer 받으면 바로 answer 보냄.
     const answer = await this.pc?.createAnswer();
     await this.sendMessage("answer", answer.sdp);
     this.pc.setLocalDescription(answer);
@@ -118,7 +118,7 @@ export default class webRTC {
 
     this.socket.onopen = (evt) => {
       console.log("socket open");
-      this.sendMessage("id", this.uuid);
+      this.sendMessage("id", this.uuid); // id
     };
     this.socket.onmessage = (e) => {
       // if (!this.localStream) {
@@ -126,9 +126,14 @@ export default class webRTC {
       //   return;
       // }
       // console.log(e.data);
-      const { type, data, id } = JSON.parse(e.data);
-      if (id === this.uuid) return;
-      console.log("onmessge", type, data);
+      const { type, data, Id } = JSON.parse(e.data);
+
+      if (Id === this.uuid) {
+        console.log("내 아이디로 들어옴.");
+        return; //나의 offer혹은 answr가 오면 무시한다.
+      }
+      console.log("onmessge", type, Id);
+
       try {
         switch (type) {
           case "id": //유저 입장.
@@ -136,8 +141,8 @@ export default class webRTC {
               console.log("already in call, ignoring");
               return;
             }
-            this.openRTC();
-
+            this.openRTC(); // peer가 없을 경우.
+            break;
           case "offer":
             this.handleOffer(data);
             break;
@@ -213,7 +218,8 @@ export default class webRTC {
   }
   async openRTC() {
     this.createPeerConnection();
-    this.pc?.addTransceiver("video", { direction: "recvonly" });
+    // 잠시 비디오 제거.
+    // this.pc?.addTransceiver("video", { direction: "recvonly" });
     // this.pc?.addTransceiver("audio", { direction: "recvonly" });
     const offer = await this.pc?.createOffer();
     await this.sendMessage("offer", offer.sdp);

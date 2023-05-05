@@ -15,7 +15,9 @@ type Message struct {
 	Type string `json:"type"`
 	Data string `json:"data"`
 }
-
+var currentOffers []Message
+var currentOffer Message
+var currentAnswer Message
 var (
 	wsUpgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
@@ -57,20 +59,44 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 		switch msg.Type {
 		case "id":
 			currentUserId = msg.Data
+		case "out":
+			//id값 받아옴.
+			// idToRemove := msg.Data
+			// for _, offer := range currentOffers {
+			// 	if offer.Id != idToRemove {
+			// 		currentOffers = append(currentOffers, offer)
+			// 	}
+			// }
 		case "offer":
-			log.Printf("offer: %s\n")
-			offerMsg := Message{
+			//기존에 있을 경우 보냄. - 1:1통신용으로 만듬.
+			log.Printf("들어있음??: %s\n",currentOffer)
+			if currentOffer.Id != "" {
+				log.Printf("들어있음: %s\n",currentOffer)
+				SendOffer(currentOffer)
+			}
+			
+			currentOffer := Message{
 				Id:   currentUserId,
 				Type: "offer",
 				Data: msg.Data,
 			}
-			offerJSON, err := json.Marshal(offerMsg)
-			if err != nil {
-				fmt.Printf("error marshal JSON: %s\n", err.Error())
-			}
-			offerString := string(offerJSON)
+			log.Printf("넣음??: %s\n",currentOffer)
+			SendOffer(currentOffer)
+			// currentOffers = append(currentOffers, Message{
+			// 	Id:   currentUserId,
+			// 	Type: "offer",
+			// 	Data: msg.Data,
+			// })
+			// log.Printf("offer: %s\n",currentOffers)
 
-			SendMessage(offerString, wsConn)
+			// // 모든 offer를 접속자에게 전달.
+			// for _, offer := range currentOffers {
+			// 	SendOffer(offer)
+			// }
+			
+			
+			//offer를 받으면 currentOffers에 저장해놓는다.
+
 		case "answer":
 			log.Printf("answer: %s\n")
 			answerMsg := Message{
@@ -107,6 +133,15 @@ func SendMessage(msg string, wsConn *websocket.Conn) {
 	if err != nil {
 		fmt.Printf("error sending message: %s\n", err.Error())
 	}
+}
+func SendOffer(offerMsg Message) {
+	offerJSON, err := json.Marshal(offerMsg)
+	if err != nil {
+		fmt.Printf("error marshal JSON: %s\n", err.Error())
+	}
+	offerString := string(offerJSON)
+
+	SendMessage(offerString, wsConn)
 }
 
 // chat
