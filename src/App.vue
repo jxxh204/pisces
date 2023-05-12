@@ -25,10 +25,7 @@ const pubVideoEl = ref<HTMLVideoElement>();
 const subVideoEl = ref<HTMLVideoElement>();
 const inputName = ref<HTMLInputElement>();
 
-
-
 onMounted(async () => {
-
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";
@@ -66,7 +63,6 @@ onMounted(async () => {
 
     <NavBar />
     <Body />
-
 
     <!-- webRTC -->
     <!-- <section class="rtc-modal bg-mac-white rounded-lg p-10">

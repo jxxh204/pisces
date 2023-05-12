@@ -5,19 +5,14 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
-
-// type Message struct {
-// 	Id   string `json:id`
-// 	Type string `json:"type"`
-// 	Data string `json:"data"`
-// }
 
 const (
 	// Time allowed to write a message to the peer.
@@ -54,6 +49,12 @@ type Client struct {
 	send chan []byte
 }
 
+type wsMessage struct {
+	Id   string `json:id`
+	Type string `json:"type"`
+	Data string `json:"data"`
+}
+var sendOfferData Message
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application
@@ -67,19 +68,37 @@ func (c *Client) readPump() {
 	// c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	
+	// c.hub.broadcast := []byte("Hello, World!")
+	// fmt.Printf("client register : %s\n", client.hub.register)
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var msg wsMessage
+		 err := c.conn.ReadJSON(&msg)
+			//받은 값 들어옴.
+			//1. 누가 보내는지 확인
+			//2. 여기서 클라이언트로 보내는 법.
+		log.Printf("readPump: %s", msg.Type, msg.Data)
 
-		log.Printf("readPump: %s", message)
-
+		switch msg.Type {
+		case "id":
+			currentUserId = msg.Data
+		case "out":
+		case "offer":
+			sendOfferData := Message{
+				Id:   currentUserId,
+				Type: "offer",
+				Data: msg.Data,
+			}
+			SendOffer_test(sendOfferData, c.hub)
+		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		// c.hub.broadcast <- message
 	}
 }
 
@@ -128,7 +147,16 @@ func (c *Client) writePump() {
 		}
 	}
 }
+func SendOffer_test(offerMsg Message, wsConn *Hub ){
+	offerJSON, err := json.Marshal(offerMsg)
+	if err != nil {
+		fmt.Printf("error marshal JSON: %s\n", err.Error())
+	}
+	offerString := string(offerJSON)
+	wsConn.broadcast <- []byte(string(offerString))
 
+	// wsConn.WriteJSON([]byte(offerString))
+}
 // serveWs handles websocket requests from the peer.
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {

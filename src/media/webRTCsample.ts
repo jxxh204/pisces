@@ -121,6 +121,7 @@ export default class webRTC {
       this.sendMessage("id", this.uuid); // id
     };
     this.socket.onmessage = (e) => {
+      console.log("onmessge", e.data);
       // if (!this.localStream) {
       //   console.log("not ready yet");
       //   return;
@@ -132,7 +133,7 @@ export default class webRTC {
         console.log("내 아이디로 들어옴.");
         return; //나의 offer혹은 answr가 오면 무시한다.
       }
-      console.log("onmessge", type, Id);
+      // console.log("onmessge", type, Id);
 
       try {
         switch (type) {
