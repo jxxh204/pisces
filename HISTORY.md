@@ -283,3 +283,8 @@
 - go hub broadcast 완료!
 -     c.hub.broadcast <- []byte(string(offerString))
 - v0.0.0:94
+
+## 2023 5/15
+
+- log 띄움
+- v0.0.0:95

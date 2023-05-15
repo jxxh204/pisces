@@ -54,7 +54,9 @@ type wsMessage struct {
 	Type string `json:"type"`
 	Data string `json:"data"`
 }
-var sendOfferData Message
+
+var currentUserId string
+var userList []string
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application
@@ -82,14 +84,28 @@ func (c *Client) readPump() {
 		switch msg.Type {
 		case "id":
 			currentUserId = msg.Data
+			userList = append(userList, currentUserId) //add user
+			if len(c.hub.clients) > 1{
+				//일단 전부 던진다.
+				for i:=0; i< len(c.hub.clients); i++ {
+					// SendBroadCast(offerList[i], c.hub)
+					// SendBroadCast(answerList[i], c.hub)
+				}
+			}
+			SendLog(currentUserId+"접속", c.hub)
 		case "out":
 		case "offer":
-			sendOfferData := Message{
-				Id:   currentUserId,
-				Type: "offer",
-				Data: msg.Data,
-			}
-			SendOffer_test(sendOfferData, c.hub)
+			log.Printf("offer: %s\n",len(userList))
+			
+			log.Printf("offer: %s\n")
+			// if len(userList) == 1{ // 유저가 없을 때만 offer를 보낸다.
+				onOfferHandler(msg.Data, c.hub)
+			// }
+		case "answer":
+			log.Printf("answer: %s\n")
+			onAnswerHandler(msg.Data, c.hub)
+		case "candidate":
+			onCandidateHandler(msg.Data, c.hub)
 		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -147,16 +163,27 @@ func (c *Client) writePump() {
 		}
 	}
 }
-func SendOffer_test(offerMsg Message, wsConn *Hub ){
-	offerJSON, err := json.Marshal(offerMsg)
+
+func SendLog(msg string, hub  *Hub) {
+	logMsg := Message{
+		Id:   "log",
+		Type: "log",
+		Data: msg,
+	}
+	logJSON, err := json.Marshal(logMsg)
 	if err != nil {
 		fmt.Printf("error marshal JSON: %s\n", err.Error())
 	}
-	offerString := string(offerJSON)
-	wsConn.broadcast <- []byte(string(offerString))
-
-	// wsConn.WriteJSON([]byte(offerString))
+	logString := string(logJSON)
+	select {
+	case hub.broadcast <-[]byte(string(logString)):
+		// Message was sent successfully
+	default:
+		// The channel wasn't ready to receive data
+		fmt.Println("error: broadcast channel was not ready")
+	}
 }
+
 // serveWs handles websocket requests from the peer.
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {

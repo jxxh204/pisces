@@ -137,7 +137,7 @@ export default class webRTC {
 
       try {
         switch (type) {
-          case "id": //유저 입장.
+          case "id": //다른 유저 입장.
             if (this.pc) {
               console.log("already in call, ignoring");
               return;
@@ -223,7 +223,7 @@ export default class webRTC {
     // this.pc?.addTransceiver("video", { direction: "recvonly" });
     // this.pc?.addTransceiver("audio", { direction: "recvonly" });
     const offer = await this.pc?.createOffer();
-    await this.sendMessage("offer", offer.sdp);
+    await this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
     this.pc?.setLocalDescription(offer);
   }
   sendMessage(key: string, value: string) {
