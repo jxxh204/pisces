@@ -49,10 +49,10 @@ type Client struct {
 	send chan []byte
 }
 
-type wsMessage struct {
+type logMessage struct {
 	Id   string `json:id`
 	Type string `json:"type"`
-	Data string `json:"data"`
+	user string `json:"data"`
 }
 
 var currentUserId string
@@ -74,33 +74,38 @@ func (c *Client) readPump() {
 	// c.hub.broadcast := []byte("Hello, World!")
 	// fmt.Printf("client register : %s\n", client.hub.register)
 	for {
-		var msg wsMessage
+		var msg Message
 		 err := c.conn.ReadJSON(&msg)
 			//받은 값 들어옴.
 			//1. 누가 보내는지 확인
 			//2. 여기서 클라이언트로 보내는 법.
-		log.Printf("readPump: %s", msg.Type, msg.Data)
+		log.Printf("readPump: %s",msg.Id, msg.Type, msg.Data)
 
+
+		SendLog(msg.Type,msg.Data, c.hub)
 		switch msg.Type {
 		case "id":
 			currentUserId = msg.Data
 			userList = append(userList, currentUserId) //add user
+			
 			if len(c.hub.clients) > 1{
+				log.Printf("c.hub.clients: %s", c.hub.clients, len(c.hub.clients))
 				//일단 전부 던진다.
-				for i:=0; i< len(c.hub.clients); i++ {
-					// SendBroadCast(offerList[i], c.hub)
-					// SendBroadCast(answerList[i], c.hub)
+				for i:=0; i< len(offerList); i++ {
+					SendBroadCast(offerList[i], c.hub)
 				}
+				// for i:=0; i< len(answerList); i++ {
+				// 	SendBroadCast(answerList[i], c.hub)
+				// }
 			}
-			SendLog(currentUserId+"접속", c.hub)
 		case "out":
 		case "offer":
-			log.Printf("offer: %s\n",len(userList))
 			
-			log.Printf("offer: %s\n")
 			// if len(userList) == 1{ // 유저가 없을 때만 offer를 보낸다.
 				onOfferHandler(msg.Data, c.hub)
 			// }
+			log.Printf("offer: %s\n")
+
 		case "answer":
 			log.Printf("answer: %s\n")
 			onAnswerHandler(msg.Data, c.hub)
@@ -164,13 +169,13 @@ func (c *Client) writePump() {
 	}
 }
 
-func SendLog(msg string, hub  *Hub) {
-	logMsg := Message{
-		Id:   "log",
+func SendLog(logTitle string,msg string, hub  *Hub) {
+	logMessage := logMessage{
+		Id:   logTitle,
 		Type: "log",
-		Data: msg,
+		user: hub.clients,
 	}
-	logJSON, err := json.Marshal(logMsg)
+	logJSON, err := json.Marshal(logMessage)
 	if err != nil {
 		fmt.Printf("error marshal JSON: %s\n", err.Error())
 	}

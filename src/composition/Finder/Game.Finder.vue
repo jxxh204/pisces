@@ -73,7 +73,6 @@ onMounted(() => {
 
   rtcInstance.openWebSocket();
   setTimeout(() => {
-    rtcInstance.openRTC();
     rtcInstance.dcm_msg?.send("테스트 해봐.");
   }, 1000);
 });

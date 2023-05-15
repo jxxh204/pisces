@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 
@@ -43,7 +44,7 @@ func onAnswerHandler(msg string, hub *Hub) {
 	}
 	answerString := string(answerJSON)
 	answerList = append(answerList, answerString)
-	// SendBroadCast(answerString, hub)
+	SendBroadCast(answerString, hub)
 }
 func onCandidateHandler(msg string, hub *Hub) {
 	candidateMsg := Message{
@@ -60,6 +61,7 @@ func onCandidateHandler(msg string, hub *Hub) {
 	SendBroadCast(candidateString, hub)
 }
 func SendBroadCast(msg string, wsConn  *Hub) {
+	time.Sleep(time.Second * 1) // 1초 뒤 실행
 	select {
 	case wsConn.broadcast <-[]byte(string(msg)):
 		// Message was sent successfully
