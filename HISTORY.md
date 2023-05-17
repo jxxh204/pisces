@@ -277,3 +277,16 @@
 - ws 포트 수정 9100 => 3000
 - go 실행안되는 문제 해결
 - v0.0.0:93
+
+## 2023 5/12
+
+- go hub broadcast 완료!
+-     c.hub.broadcast <- []byte(string(offerString))
+- v0.0.0:94
+
+## 2023 5/15
+
+- log 띄움
+- v0.0.0:95
+- client를 이용해서 candidate를 지정한 유저에게 줘야함.
+- v0.0.0:96

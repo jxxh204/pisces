@@ -5,19 +5,14 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
-
-// type Message struct {
-// 	Id   string `json:id`
-// 	Type string `json:"type"`
-// 	Data string `json:"data"`
-// }
 
 const (
 	// Time allowed to write a message to the peer.
@@ -54,6 +49,14 @@ type Client struct {
 	send chan []byte
 }
 
+type logMessage struct {
+	Id   string `json:id`
+	Type string `json:"type"`
+	user string `json:"data"`
+}
+
+var currentUserId string
+var userList []string
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application
@@ -67,19 +70,56 @@ func (c *Client) readPump() {
 	// c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	
+	// c.hub.broadcast := []byte("Hello, World!")
+	// fmt.Printf("client register : %s\n", client.hub.register)
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var msg Message
+		 err := c.conn.ReadJSON(&msg)
+			//받은 값 들어옴.
+			//1. 누가 보내는지 확인
+			//2. 여기서 클라이언트로 보내는 법.
+		log.Printf("readPump: %s",msg.Id, msg.Type, msg.Data)
 
-		log.Printf("readPump: %s", message)
 
+		SendLog(msg.Type,msg.Data, c.hub)
+		switch msg.Type {
+		case "id":
+			currentUserId = msg.Data
+			userList = append(userList, currentUserId) //add user
+			
+			if len(c.hub.clients) > 1{
+				log.Printf("c.hub.clients: %s", c.hub.clients, len(c.hub.clients))
+				//일단 전부 던진다.
+				for i:=0; i< len(offerList); i++ {
+					SendBroadCast(offerList[i], c.hub)
+				}
+				// for i:=0; i< len(answerList); i++ {
+				// 	SendBroadCast(answerList[i], c.hub)
+				// }
+			}
+		case "out":
+		case "offer":
+			
+			// if len(userList) == 1{ // 유저가 없을 때만 offer를 보낸다.
+				onOfferHandler(msg.Data, c.hub)
+			// }
+			log.Printf("offer: %s\n")
+
+		case "answer":
+			log.Printf("answer: %s\n")
+			onAnswerHandler(msg.Data, c.hub)
+		case "candidate":
+			onCandidateHandler(msg.Data, c.hub)
+		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		// c.hub.broadcast <- message
 	}
 }
 
@@ -126,6 +166,26 @@ func (c *Client) writePump() {
 				return
 			}
 		}
+	}
+}
+
+func SendLog(logTitle string,msg string, hub  *Hub) {
+	logMessage := logMessage{
+		Id:   logTitle,
+		Type: "log",
+		user: hub.clients,
+	}
+	logJSON, err := json.Marshal(logMessage)
+	if err != nil {
+		fmt.Printf("error marshal JSON: %s\n", err.Error())
+	}
+	logString := string(logJSON)
+	select {
+	case hub.broadcast <-[]byte(string(logString)):
+		// Message was sent successfully
+	default:
+		// The channel wasn't ready to receive data
+		fmt.Println("error: broadcast channel was not ready")
 	}
 }
 

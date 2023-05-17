@@ -75,17 +75,14 @@ export default class webRTC {
         sdp: offer,
       })
     );
-    // this.localStream?.getTracks().forEach((track) => {
-    //   // console.log(" this.localStream", this.localStream);
-    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    // });
-
+    //offer 받으면 바로 answer 보냄.
     const answer = await this.pc?.createAnswer();
     await this.sendMessage("answer", answer.sdp);
     this.pc.setLocalDescription(answer);
   }
 
   async handleAnswer(answer: string) {
+    console.log("handleAnswer", answer);
     if (!this.pc) {
       console.error("no peerconnection");
       return;
@@ -118,7 +115,8 @@ export default class webRTC {
 
     this.socket.onopen = (evt) => {
       console.log("socket open");
-      this.sendMessage("id", this.uuid);
+      this.openRTC();
+      this.sendMessage("id", this.uuid); // id
     };
     this.socket.onmessage = (e) => {
       // if (!this.localStream) {
@@ -126,18 +124,26 @@ export default class webRTC {
       //   return;
       // }
       // console.log(e.data);
-      const { type, data, id } = JSON.parse(e.data);
-      if (id === this.uuid) return;
-      console.log("onmessge", type, data);
+      const { type, data, Id } = JSON.parse(e.data);
+      if (type === "log") {
+        return;
+      }
+      if (Id === this.uuid) {
+        console.log("내 아이디로 들어옴.");
+        return; //나의 offer혹은 answr가 오면 무시한다.
+      }
+      // console.log("onmessge", type, Id);
+      console.log("onmessge", e.data);
+
       try {
         switch (type) {
-          case "id": //유저 입장.
+          case "id": //다른 유저 입장.
             if (this.pc) {
               console.log("already in call, ignoring");
               return;
             }
-            this.openRTC();
-
+            this.openRTC(); // peer가 없을 경우.
+            break;
           case "offer":
             this.handleOffer(data);
             break;
@@ -174,6 +180,7 @@ export default class webRTC {
     };
   }
   createPeerConnection() {
+    console.log("createPeerConnection");
     // 일단 이거만씀.
     this.pc = new RTCPeerConnection(this.config);
 
@@ -198,8 +205,10 @@ export default class webRTC {
 
       this.sendMessage("candidate", JSON.stringify(data));
     };
+    // 임시
+
     this.pc.ontrack = (evt) => {
-      console.log(ontrack);
+      console.log("ontrack", evt);
       //sub
       // console.log("ontrack", evt.streams[0], this.subVideoEl);
       // this.subVideoEl.srcObject = evt.streams[0];
@@ -213,11 +222,22 @@ export default class webRTC {
   }
   async openRTC() {
     this.createPeerConnection();
-    this.pc?.addTransceiver("video", { direction: "recvonly" });
+    // 잠시 비디오 제거.
+    // this.pc?.addTransceiver("video", { direction: "recvonly" });
     // this.pc?.addTransceiver("audio", { direction: "recvonly" });
-    const offer = await this.pc?.createOffer();
-    await this.sendMessage("offer", offer.sdp);
-    this.pc?.setLocalDescription(offer);
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        this.localStream = stream;
+        this.localStream?.getTracks().forEach((track) => {
+          if (this.localStream) this.pc?.addTrack(track, this.localStream);
+        });
+        return this.pc?.createOffer();
+      })
+      .then((offer) => {
+        this.pc?.setLocalDescription(offer);
+        this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
+      });
   }
   sendMessage(key: string, value: string) {
     // 시그널 서버로의 전송
@@ -239,74 +259,4 @@ export default class webRTC {
       };
     }
   }
-  // async openPub() {
-  //   this.openWebSocket("pub");
-
-  //   this.pc = new RTCPeerConnection(this.config);
-
-  //   this.pc.oniceconnectionstatechange = () => {
-  //     console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
-  //   };
-
-  //   this.pc.onicecandidate = (evt) => {
-  //     const message = {
-  //       type: "candidate",
-  //       candidate: null,
-  //       sdpMid: null,
-  //       sdpMLineIndex: null,
-  //     } as CandidateMessageType;
-
-  //     if (evt.candidate) {
-  //       message.candidate = evt.candidate.candidate;
-  //       message.sdpMid = evt.candidate.sdpMid;
-  //       message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
-  //     }
-  //     this.socket?.send(JSON.stringify(message));
-  //     console.log("onicecandidate", evt);
-  //   };
-  //   this.localStream?.getTracks().forEach((track) => {
-  //     // console.log(" this.localStream", this.localStream);
-  //     if (this.localStream) this.pc?.addTrack(track, this.localStream);
-  //   });
-  //   setTimeout(async () => {
-  //     const offer = await this.pc?.createOffer();
-  //     await this.sendMessage("offer", offer.sdp);
-  //     await this.pc?.setLocalDescription(offer);
-  //     await this.openSub();
-  //   }, 1000);
-  // }
-  // openSub() {
-  //   this.pc = new RTCPeerConnection(this.config);
-  //   // setTimeout(() => {
-  //   //   // 임시
-  //   //   this.openWebSocket("sub");
-  //   // }, 500);
-  //   //sub addTransceiver
-  //   this.pc.addTransceiver("video", { direction: "recvonly" });
-  //   this.pc.ontrack = (evt) => {
-  //     //sub
-  //     console.log("ontrack", evt.streams[0]);
-  //   };
-
-  //   this.pc.oniceconnectionstatechange = () => {
-  //     console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
-  //   };
-
-  //   this.pc.onicecandidate = (evt) => {
-  //     const message = {
-  //       type: "candidate",
-  //       candidate: null,
-  //       sdpMid: null,
-  //       sdpMLineIndex: null,
-  //     } as CandidateMessageType;
-
-  //     if (evt.candidate) {
-  //       message.candidate = evt.candidate.candidate;
-  //       message.sdpMid = evt.candidate.sdpMid;
-  //       message.sdpMLineIndex = evt.candidate.sdpMLineIndex;
-  //     }
-  //     this.socket?.send(JSON.stringify(message));
-  //     console.log("onicecandidate", evt);
-  //   };
-  // }
 }

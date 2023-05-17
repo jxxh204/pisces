@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from "uuid";
 const ZOOM_LEVEL = 1;
 const finderStore = useFinderStore();
 const emitter = inject("emitter");
+const rtcInstance = new webRTC(uuidv4());
+
 console.log("game: ", finderStore.currentFinders["Game"]);
 const config = {
   type: Phaser.AUTO,
@@ -68,15 +70,16 @@ onMounted(() => {
       canvas.style.height = finderHeight + "px";
     }
   });
-  const rtcInstance = new webRTC(uuidv4());
+
   rtcInstance.openWebSocket();
   setTimeout(() => {
-    rtcInstance.openRTC();
     rtcInstance.dcm_msg?.send("테스트 해봐.");
-  }, 3000);
+  }, 1000);
 });
 onUnmounted(() => {
   emitter.off("finder:Game");
+  rtcInstance.sendMessage("out", rtcInstance.uuid);
+  rtcInstance.pc?.close();
 });
 </script>
 
