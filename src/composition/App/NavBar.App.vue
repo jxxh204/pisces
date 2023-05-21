@@ -37,7 +37,8 @@ onMounted(() => {});
       />
       <p
         class="hover:text-mac-white hover:bg-mac-Azul cursor-pointer h-full px-1 flex flex-col justify-center"
-        v-for="menu in menus"
+        v-for="(menu, index) in menus"
+        :key="menu.name + index"
       >
         {{ menu.name }}
       </p>

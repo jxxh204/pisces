@@ -1,34 +1,40 @@
 <script setup lang="ts">
 import { ref, inject } from "vue";
-import VueResizable from 'vue-resizable';
+import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 
 import CloseBox from "@/assets/images/Finder/closebox.svg";
 import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
-import sample from "@/assets/images/icons/game.svg";
 import FileIcon from "../Icon/File.Icon.vue";
-import GameFinder from "@/composition/Finder/Game.Finder.vue"
+import GameFinder from "@/composition/Finder/Game.Finder.vue";
+import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue";
 const finderStore = useFinderStore();
 interface Props {
-    name: FileNames;
-    zIndex:number;
+  name: FileNames;
+  zIndex: number;
 }
 const props = defineProps<Props>();
-const emitter = inject('emitter');
+const emitter = inject("emitter");
+const finderLeng = Object.keys(finderStore.currentFinders).length;
+const finderOption = {
+  top: window.innerHeight / 2 - 600 / 2 + finderLeng * 20,
+  left: window.innerWidth / 2 - 800 / 2 + finderLeng * 20,
+  width: 400,
+  height: 300,
+  minWidth: 300,
+  minHeight: 200,
+};
 
-const eHandler =(data:any) => {
-
-    // width.value = data.width;
-    // height.value = data.height;
-    // left.value = data.left;
-    // top.value = data.top;
-    // event.value = data.eventName;
-    finderStore.changeFinderState(props.name,data.width,data.height,data.top,data.left)
-    emitter.emit(`finder:${props.name}`)
-}
-const onClickClose = () => {
-  finderStore.removeFinder();
+const eHandler = (data: any) => {
+  finderStore.changeFinderState(
+    props.name,
+    data.width,
+    data.height,
+    data.top,
+    data.left
+  );
+  emitter.emit(`finder:${props.name}`);
 };
 
 // 이미지는 icon.vue를 만들어서 모두 거기서 불러오도록 하자.
@@ -37,16 +43,16 @@ const onClickClose = () => {
   <!-- :max-width=""
         :max-height="maxH | checkEmpty" -->
   <vue-resizable
-
     id="resizable"
     dragSelector=".drag-container"
     :fit-parent="true"
-    :top="200"
-    :width="400"
-    :height="300"
-    :min-width="300"
-    :min-height="200"
-    :style="'z-index:' +props.zIndex"
+    :top="finderOption.top"
+    :left="finderOption.left"
+    :width="finderOption.width"
+    :height="finderOption.height"
+    :min-width="finderOption.minWidth"
+    :min-height="finderOption.minHeight"
+    :style="'z-index:' + props.zIndex"
     @mount="eHandler"
     @resize:move="eHandler"
     @resize:start="eHandler"
@@ -66,7 +72,7 @@ const onClickClose = () => {
           class="button_hover"
         />
         <div class="barPicker"></div>
-<!--          :isClick="isClick" -->
+        <!--          :isClick="isClick" -->
         <file-icon :name="props.name" />
         <p class="">{{ props.name }}</p>
         <div class="barPicker"></div>
@@ -85,7 +91,8 @@ const onClickClose = () => {
           item
         </article>
         <article id="finder_body_content">
-            <GameFinder v-if="props.name === 'Game'" />
+          <GameFinder v-if="props.name === 'Game'" />
+          <ProjectsFinder v-if="props.name === 'Projects'" />
         </article>
       </section>
     </div>

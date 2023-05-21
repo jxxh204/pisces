@@ -2,7 +2,7 @@
 import MacFile from "@/components/Mac/File.Mac.vue";
 import FinderMacVue from "@/components/Mac/Finder.Mac.vue";
 import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
-import useFinderStore from "@/stores/finder.store"
+import useFinderStore from "@/stores/finder.store";
 
 const finderStore = useFinderStore();
 const files = ["About", "Contact", "Projects", "Game"];
@@ -13,12 +13,11 @@ const files = ["About", "Contact", "Projects", "Game"];
   <div id="app-body" class="w-full h-full">
     <section class="w-full h-full">
       <FinderMacVue
-              v-for="(finder, index) in finderStore.currentFinders"
-              @click="finderStore.clickFinder(finder.name)"
-              :key="finder.name + index"
-              :name="finder.name"
-              :zIndex="finder.zIndex"
-
+        v-for="(finder, index) in finderStore.currentFinders"
+        @click="finderStore.clickFinder(finder.name)"
+        :key="finder.name + index"
+        :name="finder.name"
+        :zIndex="finder.zIndex"
       />
       <article
         id="files"

@@ -28,17 +28,24 @@ export default class webRTC {
         {
           urls: "stun:stun.l.google.com:19302",
         },
-        {
-          urls: "turn:192.158.29.39:3478?transport=udp",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-          username: "28224511:1379330808",
-        },
-        {
-          urls: "turn:192.158.29.39:3478?transport=tcp",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-          username: "28224511:1379330808",
-        },
+        // {
+        //   urls: "turn:192.158.29.39:3478?transport=udp",
+        //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        //   username: "28224511:1379330808",
+        // },
+        // {
+        //   urls: "turn:192.158.29.39:3478?transport=tcp",
+        //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        //   username: "28224511:1379330808",
+        // },
       ],
+      // iceTransportPolicy: "all",
+      // bundlePolicy: "balanced",
+      // rtcpMuxPolicy: "require",
+      // iceCandidatePoolSize: 0,
+      // sdpSemantics: "unified-plan",
+      // extmapAllowMixed: true,
+      // "heartbeat": 5000
     };
     // this.config = {
     //   //config 설정
@@ -67,7 +74,7 @@ export default class webRTC {
       return;
     }
     //여기서 영상 실행.
-    this.createPeerConnection(); // 추가
+    // this.createPeerConnection(); // 추가
     this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "offer",
@@ -83,7 +90,7 @@ export default class webRTC {
   async handleAnswer(answer: string) {
     console.log("handleAnswer", answer);
     if (!this.pc) {
-      console.error("no peerconnection");
+      console.error("handleAnswer no peerconnection");
       return;
     }
     // 여기 문제. 두번째 유저에서. //offer가 문제일 수 있다.
@@ -97,8 +104,8 @@ export default class webRTC {
   }
 
   async handleCandidate(candidate: RTCIceCandidate) {
-    if (!this.pc || !this.pc.remoteDescription) {
-      console.error("no peerconnection");
+    if (!this.pc) {
+      console.error("handleCandidate no peerconnection");
       return;
     }
     const parseCandidate = JSON.parse(candidate);
@@ -117,7 +124,7 @@ export default class webRTC {
 
     this.socket.onopen = (evt) => {
       console.log("socket open");
-      this.openRTC();
+      this.createPeerConnection();
       this.sendMessage("id", ""); // id
     };
     this.socket.onmessage = (e) => {
@@ -180,10 +187,28 @@ export default class webRTC {
   createPeerConnection() {
     console.log("createPeerConnection");
     // 일단 이거만씀.
+
     this.pc = new RTCPeerConnection(this.config);
+
+    this.pc?.addTransceiver("video", { direction: "recvonly" });
+    this.pc?.addTransceiver("audio", { direction: "recvonly" });
+
+    this.pc.ontrack = (evt) => {
+      //sub
+      console.log("ontrack", evt.streams[0], evt.streams[0].getTracks());
+
+      if (this.remoteVideo) {
+        this.remoteVideo.srcObject = evt.streams[0];
+        this.remoteVideo.play();
+      }
+    };
 
     this.pc.oniceconnectionstatechange = () => {
       console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+      if (this.pc?.iceConnectionState === "connected") {
+        console.log("connected!");
+        // Peers connected!
+      }
     };
 
     this.pc.onicecandidate = (evt) => {
@@ -203,27 +228,6 @@ export default class webRTC {
 
       this.sendMessage("candidate", JSON.stringify(data));
     };
-    // 임시
-
-    this.pc.ontrack = (evt) => {
-      //sub
-      console.log("ontrack", evt.streams[0], evt.streams[0].getTracks());
-
-      if (this.remoteVideo) {
-        this.remoteVideo.srcObject = evt.streams[0];
-        this.remoteVideo.play();
-      }
-    };
-    // this.localStream?.getTracks().forEach((track) => {
-    //   console.log(" this.localStream", this.localStream);
-    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
-    // });
-  }
-  async openRTC() {
-    this.createPeerConnection();
-    // 잠시 비디오 제거.
-    // this.pc?.addTransceiver("video", { direction: "recvonly" });
-    // this.pc?.addTransceiver("audio", { direction: "recvonly" });
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
@@ -232,13 +236,17 @@ export default class webRTC {
         stream?.getTracks().forEach((track) => {
           if (stream) this.pc?.addTrack(track, stream);
         });
-        return this.pc?.createOffer();
-      })
-      .then((offer) => {
-        console.log("offer", offer);
-        this.pc?.setLocalDescription(offer);
-        this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
       });
+    this.pc?.createOffer().then((offer) => {
+      console.log("offer", offer);
+      this.pc?.setLocalDescription(offer);
+      this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
+    });
+    // 임시
+    // this.localStream?.getTracks().forEach((track) => {
+    //   console.log(" this.localStream", this.localStream);
+    //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
+    // });
   }
   sendMessage(key: string, data: string) {
     // 시그널 서버로의 전송
