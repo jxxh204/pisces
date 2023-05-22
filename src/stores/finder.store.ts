@@ -4,12 +4,7 @@ import { defineStore } from "pinia";
 export default defineStore("useFinderStore", () => {
   const currentFinders = ref<FinderComponentType>({});
   const finderLength = ref(10);
-  const FinderTabs: FinderTabs = [
-    "Coplay",
-    "hello-mars",
-    "blockbot",
-    "layer-after-layer",
-  ];
+
   const addFinder = (name: FileNames) => {
     if (currentFinders.value?.[name]) {
       clickFinder(name);
@@ -21,7 +16,6 @@ export default defineStore("useFinderStore", () => {
     };
     if (name === "Projects") {
       currentFinders.value[name].kind = "tab";
-      currentFinders.value[name].tabs = FinderTabs;
     } else if (name === "Contact") {
       currentFinders.value[name].kind = "list";
     } else {

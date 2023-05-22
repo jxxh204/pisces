@@ -1,6 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Tabs from "@/components/Finder/Tabs.vue";
+</script>
 <template>
-  <div></div>
+  <div><Tabs /></div>
 </template>
 
 <style scoped></style>

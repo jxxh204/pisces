@@ -1,11 +1,9 @@
 type FileNames = "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
-type FinderTab = "Coplay" | "hello-mars" | "blockbot" | "layer-after-layer";
-type FinderTabs = FinderTab[];
+
 type FinderComponentType = {
-  [name: FileNames]: FileNames;
-  About: {
-    name: FileNames;
+  [name in FileNames]: {
+    name: name;
     zIndex: number;
     kind: FinderKind;
     width?: number;
@@ -13,33 +11,22 @@ type FinderComponentType = {
     top?: number;
     left?: number;
   };
-  Contact: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
-  Projects: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    tabs?: FinderTabs;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
-  Game: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
+};
+type TabName = "Coplay" | "hello-mars" | "blockbot" | "layer-after-layer";
+type TabNames = { name: TabName; click: boolean };
+
+type Tags =
+  | "Vue3"
+  | "TypeScript"
+  | "WebRTC"
+  | "WebCodec"
+  | "Electron"
+  | "React";
+
+type TabComponentType = {
+  [name in FinderTab]: {
+    name: name;
+    tags: Tags;
   };
 };
 

@@ -2,12 +2,15 @@
 import { ref, inject } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
+import useTabStore from "@/stores/tab.store";
 
 import CloseBox from "@/assets/images/Finder/closebox.svg";
 import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
 import TabOutlineLeft from "@/assets/images/Finder/tab-outline_left.svg";
 import TabOutlineRight from "@/assets/images/Finder/tab-outline_right.svg";
+import TabOutlineLeftClick from "@/assets/images/Finder/tab-outline_left_click.svg";
+import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click.svg";
 
 import FileIcon from "../Icon/File.Icon.vue";
 import GameFinder from "@/composition/Finder/Game.Finder.vue";
@@ -17,8 +20,9 @@ interface Props {
   name: FileNames;
   zIndex: number;
   kind: FinderKind;
-  tabs?: FinderTabs;
 }
+const tabStore = useTabStore();
+
 const props = defineProps<Props>();
 const emitter = inject("emitter");
 const finderLeng = Object.keys(finderStore.currentFinders).length;
@@ -93,20 +97,30 @@ const eHandler = (data: any) => {
         <article
           v-if="props.kind === 'tab'"
           id="finder_body_nav"
-          class="overflow-x-hidden flex-row flex finder_shadow_in h-8 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
+          class="overflow-x-hidden flex-row items-end flex finder_shadow_in h-8 text-center w-full bg-mac-gray-300"
         >
           <!-- item -->
           <div
-            v-for="tab in props.tabs"
-            :key="tab"
+            v-for="tab in tabStore.TabNames"
+            :key="tab.name"
             id="finder_tab"
-            class="flex flex-row font-bold items-end text-clip object-contains"
+            class="h-6 flex flex-row font-bold items-end text-clip"
           >
-            <img :src="TabOutlineLeft" />
-            <div class="tab whitespace-nowrap">
-              {{ tab }}
+            <!-- :class="tab.click ? 'bg-mac-white' : ' '" -->
+
+            <img v-if="tab.click" :src="TabOutlineLeftClick" />
+            <img v-else="tab.click" :src="TabOutlineLeft" />
+            <div
+              @click="tabStore.onClickTab(tab.name)"
+              class="cursor-pointer whitespace-nowrap truncate border-none"
+              :class="
+                tab.click ? 'bg-mac-gray-200 tab_click' : 'bg-mac-gray-400 tab'
+              "
+            >
+              {{ tab.name }}
             </div>
-            <img :src="TabOutlineRight" />
+            <img v-if="tab.click" :src="TabOutlineRightClick" />
+            <img v-else :src="TabOutlineRight" />
           </div>
         </article>
 
@@ -143,7 +157,7 @@ const eHandler = (data: any) => {
   @apply cursor-select brightness-[0.3];
 }
 .finder_boder {
-  @apply border-2 border-mac-black;
+  @apply border-2 border-mac-black bg-mac-gray-200;
 }
 
 .tab {
@@ -151,6 +165,15 @@ const eHandler = (data: any) => {
   border-left: none;
   border-right: none;
   font-size: 13.4px;
-  transition: all 0.3s cubic-bezier(0.42, 0, 0.58, 1);
+  image-rendering: auto;
+  transition: font-size 0.3s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.tab_click {
+  border-left: none;
+  border-right: none;
+  border-top: solid 1px black;
+  font-size: 13.9px;
+  image-rendering: auto;
+  transition: font-size 0.3s cubic-bezier(0.42, 0, 0.58, 1);
 }
 </style>
