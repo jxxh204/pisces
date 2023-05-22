@@ -27,11 +27,12 @@ const finderOption = {
   left: window.innerWidth / 2 - 800 / 2 + finderLeng * 20,
   width: 400,
   height: 300,
-  minWidth: 300,
-  minHeight: 200,
+  minWidth: 200,
+  minHeight: 100,
 };
 
 const eHandler = (data: any) => {
+  console.log(data);
   finderStore.changeFinderState(
     props.name,
     data.width,
@@ -92,17 +93,19 @@ const eHandler = (data: any) => {
         <article
           v-if="props.kind === 'tab'"
           id="finder_body_nav"
-          class="flex-row flex finder_shadow_in h-8 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
+          class="overflow-x-hidden flex-row flex finder_shadow_in h-8 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
         >
           <!-- item -->
           <div
             v-for="tab in props.tabs"
             :key="tab"
             id="finder_tab"
-            class="flex flex-row font-bold items-end"
+            class="flex flex-row font-bold items-end text-clip object-contains"
           >
             <img :src="TabOutlineLeft" />
-            <div id="box">{{ tab }}</div>
+            <div class="tab whitespace-nowrap">
+              {{ tab }}
+            </div>
             <img :src="TabOutlineRight" />
           </div>
         </article>
@@ -143,7 +146,7 @@ const eHandler = (data: any) => {
   @apply border-2 border-mac-black;
 }
 
-#box {
+.tab {
   border: solid 1px black;
   border-left: none;
   border-right: none;

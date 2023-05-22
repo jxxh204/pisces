@@ -312,3 +312,5 @@
 
 - finder tab 제작
 - v0.0.0:100
+- finder tabs 크기변화시 text ... 출력
+- v0.0.0:101
