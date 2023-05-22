@@ -17,6 +17,8 @@ const files = ["About", "Contact", "Projects", "Game"];
         @click="finderStore.clickFinder(finder.name)"
         :key="finder.name + index"
         :name="finder.name"
+        :kind="finder.kind"
+        :tabs="finder.kind === 'tab' ? finder.tabs : null"
         :zIndex="finder.zIndex"
       />
       <article

@@ -6,6 +6,9 @@ import useFinderStore from "@/stores/finder.store";
 import CloseBox from "@/assets/images/Finder/closebox.svg";
 import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
+import TabOutlineLeft from "@/assets/images/Finder/tab-outline_left.svg";
+import TabOutlineRight from "@/assets/images/Finder/tab-outline_right.svg";
+
 import FileIcon from "../Icon/File.Icon.vue";
 import GameFinder from "@/composition/Finder/Game.Finder.vue";
 import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue";
@@ -13,6 +16,8 @@ const finderStore = useFinderStore();
 interface Props {
   name: FileNames;
   zIndex: number;
+  kind: FinderKind;
+  tabs?: FinderTabs;
 }
 const props = defineProps<Props>();
 const emitter = inject("emitter");
@@ -85,10 +90,30 @@ const eHandler = (data: any) => {
         class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col"
       >
         <article
+          v-if="props.kind === 'tab'"
           id="finder_body_nav"
-          class="finder_shadow_in h-6 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
+          class="flex-row flex finder_shadow_in h-8 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
         >
-          item
+          <!-- item -->
+          <div
+            v-for="tab in props.tabs"
+            :key="tab"
+            id="finder_tab"
+            class="flex flex-row font-bold items-end"
+          >
+            <img :src="TabOutlineLeft" />
+            <div id="box">{{ tab }}</div>
+            <img :src="TabOutlineRight" />
+          </div>
+        </article>
+
+        <article
+          v-else
+          id="finder_body_nav"
+          class="flex-row flex finder_shadow_in h-6 text-center w-full bg-mac-gray-400 border-2 border-mac-black border-t-0 border-x-0"
+        >
+          <!-- item -->
+          <div class="w-full">item {{ props.kind }}</div>
         </article>
         <article id="finder_body_content">
           <GameFinder v-if="props.name === 'Game'" />
@@ -116,5 +141,13 @@ const eHandler = (data: any) => {
 }
 .finder_boder {
   @apply border-2 border-mac-black;
+}
+
+#box {
+  border: solid 1px black;
+  border-left: none;
+  border-right: none;
+  font-size: 13.4px;
+  transition: all 0.3s cubic-bezier(0.42, 0, 0.58, 1);
 }
 </style>
