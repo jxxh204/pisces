@@ -16,9 +16,9 @@ type Message struct {
 var offerList []string
 var answerList []string
 
-func onOfferHandler(msg string, hub *Hub ){
+func onOfferHandler(msg string, client *Client ){
 	sendOfferData := Message{
-		Id:   currentUserId,
+		Id:   client.userID,
 		Type: "offer",
 		Data: msg,
 	}
@@ -32,9 +32,9 @@ func onOfferHandler(msg string, hub *Hub ){
 
 	// SendBroadCast(offerString, hub)
 }
-func onAnswerHandler(msg string, hub *Hub) {
+func onAnswerHandler(msg string, client *Client) {
 	answerMsg := Message{
-		Id:   currentUserId,
+		Id:   client.userID,
 		Type: "answer",
 		Data: msg,
 	}
@@ -44,11 +44,11 @@ func onAnswerHandler(msg string, hub *Hub) {
 	}
 	answerString := string(answerJSON)
 	answerList = append(answerList, answerString)
-	SendBroadCast(answerString, hub)
+	SendBroadCast(answerString,client.userID, client.hub)
 }
-func onCandidateHandler(msg string, hub *Hub) {
+func onCandidateHandler(msg string, client *Client) {
 	candidateMsg := Message{
-		Id:   currentUserId,
+		Id:   client.userID,
 		Type: "candidate",
 		Data: msg,
 	}
@@ -58,12 +58,17 @@ func onCandidateHandler(msg string, hub *Hub) {
 	}
 	candidateString := string(candidateJSON)
 
-	SendBroadCast(candidateString, hub)
+	SendBroadCast(candidateString,client.userID, client.hub)
 }
-func SendBroadCast(msg string, wsConn  *Hub) {
+func SendBroadCast(candidateString string,UserID string, hub  *Hub) {
+
+	message :=  BroadcastMessage {
+		UserID : UserID,
+		Data : []byte(candidateString),
+	}
 	time.Sleep(time.Second * 1) // 1초 뒤 실행
 	select {
-	case wsConn.broadcast <-[]byte(string(msg)):
+	case hub.broadcast <- &message:
 		// Message was sent successfully
 	default:
 		// The channel wasn't ready to receive data

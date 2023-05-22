@@ -1,5 +1,6 @@
 import type { CandidateMessageType } from "./media";
 
+type VideoState = HTMLVideoElement;
 export default class webRTC {
   //싱글톤으로 변경하자.
 
@@ -11,17 +12,15 @@ export default class webRTC {
   dcm_msg: RTCDataChannel | null;
   config: RTCConfiguration;
   localStream?: MediaStream | undefined;
-  subVideoEl: HTMLVideoElement;
-  uuid: string;
+  remoteVideo: VideoState;
+  localVideo: VideoState;
   socket: WebSocket | null;
   baseUrl: string;
 
-  constructor(
-    uuid: string,
-    localStream?: MediaStream,
-    subVideoEl?: HTMLVideoElement
-  ) {
+  constructor(remoteVideo: VideoState, localVideo: VideoState) {
     this.pc = null;
+    this.remoteVideo = remoteVideo;
+    this.localVideo = localVideo;
     this.dcm_msg = null;
     // this.localStream;
     this.config = {
@@ -29,17 +28,24 @@ export default class webRTC {
         {
           urls: "stun:stun.l.google.com:19302",
         },
-        {
-          urls: "turn:192.158.29.39:3478?transport=udp",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-          username: "28224511:1379330808",
-        },
-        {
-          urls: "turn:192.158.29.39:3478?transport=tcp",
-          credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
-          username: "28224511:1379330808",
-        },
+        // {
+        //   urls: "turn:192.158.29.39:3478?transport=udp",
+        //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        //   username: "28224511:1379330808",
+        // },
+        // {
+        //   urls: "turn:192.158.29.39:3478?transport=tcp",
+        //   credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        //   username: "28224511:1379330808",
+        // },
       ],
+      // iceTransportPolicy: "all",
+      // bundlePolicy: "balanced",
+      // rtcpMuxPolicy: "require",
+      // iceCandidatePoolSize: 0,
+      // sdpSemantics: "unified-plan",
+      // extmapAllowMixed: true,
+      // "heartbeat": 5000
     };
     // this.config = {
     //   //config 설정
@@ -59,7 +65,6 @@ export default class webRTC {
     // };
     // this.localStream = localStream;
     // this.subVideoEl = subVideoEl;
-    this.uuid = uuid;
     this.socket = null;
     this.baseUrl = "ws://localhost:3000";
   }
@@ -69,7 +74,8 @@ export default class webRTC {
       return;
     }
     //여기서 영상 실행.
-    await this.pc.setRemoteDescription(
+    // this.createPeerConnection(); // 추가
+    this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "offer",
         sdp: offer,
@@ -77,17 +83,19 @@ export default class webRTC {
     );
     //offer 받으면 바로 answer 보냄.
     const answer = await this.pc?.createAnswer();
-    await this.sendMessage("answer", answer.sdp);
     this.pc.setLocalDescription(answer);
+    this.sendMessage("answer", answer.sdp);
   }
 
   async handleAnswer(answer: string) {
     console.log("handleAnswer", answer);
     if (!this.pc) {
-      console.error("no peerconnection");
+      console.error("handleAnswer no peerconnection");
       return;
     }
-    await this.pc.setRemoteDescription(
+    // 여기 문제. 두번째 유저에서. //offer가 문제일 수 있다.
+    // 순서문제일 확률이 높다.
+    this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "answer",
         sdp: answer,
@@ -97,14 +105,15 @@ export default class webRTC {
 
   async handleCandidate(candidate: RTCIceCandidate) {
     if (!this.pc) {
-      console.error("no peerconnection");
+      console.error("handleCandidate no peerconnection");
       return;
     }
-
-    if (!candidate.candidate) {
+    const parseCandidate = JSON.parse(candidate);
+    console.log("handleCandidate", parseCandidate, this.pc.remoteDescription);
+    if (!parseCandidate.candidate) {
       await this.pc.addIceCandidate(null);
     } else {
-      await this.pc.addIceCandidate(candidate).then((e) => {
+      await this.pc.addIceCandidate(parseCandidate).then((e) => {
         console.log("addIceCandidate success");
       });
     }
@@ -115,8 +124,8 @@ export default class webRTC {
 
     this.socket.onopen = (evt) => {
       console.log("socket open");
-      this.openRTC();
-      this.sendMessage("id", this.uuid); // id
+      this.createPeerConnection();
+      this.sendMessage("id", ""); // id
     };
     this.socket.onmessage = (e) => {
       // if (!this.localStream) {
@@ -124,18 +133,14 @@ export default class webRTC {
       //   return;
       // }
       // console.log(e.data);
-      const { type, data, Id } = JSON.parse(e.data);
-      if (type === "log") {
-        return;
-      }
-      if (Id === this.uuid) {
-        console.log("내 아이디로 들어옴.");
-        return; //나의 offer혹은 answr가 오면 무시한다.
-      }
-      // console.log("onmessge", type, Id);
       console.log("onmessge", e.data);
-
       try {
+        const { type, data, Id } = JSON.parse(e.data);
+        if (type === "log") {
+          return;
+        }
+        // console.log("onmessge", type, Id);
+
         switch (type) {
           case "id": //다른 유저 입장.
             if (this.pc) {
@@ -182,10 +187,28 @@ export default class webRTC {
   createPeerConnection() {
     console.log("createPeerConnection");
     // 일단 이거만씀.
+
     this.pc = new RTCPeerConnection(this.config);
+
+    this.pc?.addTransceiver("video", { direction: "recvonly" });
+    this.pc?.addTransceiver("audio", { direction: "recvonly" });
+
+    this.pc.ontrack = (evt) => {
+      //sub
+      console.log("ontrack", evt.streams[0], evt.streams[0].getTracks());
+
+      if (this.remoteVideo) {
+        this.remoteVideo.srcObject = evt.streams[0];
+        this.remoteVideo.play();
+      }
+    };
 
     this.pc.oniceconnectionstatechange = () => {
       console.log("ICE Connection: " + this.pc?.iceConnectionState + "\n");
+      if (this.pc?.iceConnectionState === "connected") {
+        console.log("connected!");
+        // Peers connected!
+      }
     };
 
     this.pc.onicecandidate = (evt) => {
@@ -201,51 +224,37 @@ export default class webRTC {
         data.sdpMid = evt.candidate.sdpMid;
         data.sdpMLineIndex = evt.candidate.sdpMLineIndex;
       }
-      console.log("onicecandidate", evt);
+      console.log("onicecandidate", evt.candidate, data);
 
       this.sendMessage("candidate", JSON.stringify(data));
     };
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        this.localStream = stream;
+        this.localVideo.srcObject = stream;
+        stream?.getTracks().forEach((track) => {
+          if (stream) this.pc?.addTrack(track, stream);
+        });
+      });
+    this.pc?.createOffer().then((offer) => {
+      console.log("offer", offer);
+      this.pc?.setLocalDescription(offer);
+      this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
+    });
     // 임시
-
-    this.pc.ontrack = (evt) => {
-      console.log("ontrack", evt);
-      //sub
-      // console.log("ontrack", evt.streams[0], this.subVideoEl);
-      // this.subVideoEl.srcObject = evt.streams[0];
-      // console.log(this.subVideoEl.srcObject);
-      // this.subVideoEl.play();
-    };
     // this.localStream?.getTracks().forEach((track) => {
     //   console.log(" this.localStream", this.localStream);
     //   if (this.localStream) this.pc?.addTrack(track, this.localStream);
     // });
   }
-  async openRTC() {
-    this.createPeerConnection();
-    // 잠시 비디오 제거.
-    // this.pc?.addTransceiver("video", { direction: "recvonly" });
-    // this.pc?.addTransceiver("audio", { direction: "recvonly" });
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
-      .then((stream) => {
-        this.localStream = stream;
-        this.localStream?.getTracks().forEach((track) => {
-          if (this.localStream) this.pc?.addTrack(track, this.localStream);
-        });
-        return this.pc?.createOffer();
-      })
-      .then((offer) => {
-        this.pc?.setLocalDescription(offer);
-        this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
-      });
-  }
-  sendMessage(key: string, value: string) {
+  sendMessage(key: string, data: string) {
     // 시그널 서버로의 전송
     const msg = {
-      id: this.uuid,
+      id: "",
       target: "",
       type: key,
-      data: value,
+      data,
     };
     this.socket?.send(JSON.stringify(msg));
   }

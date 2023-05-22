@@ -1,29 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-import * as Phaser from "phaser";
-import Character from "./phaser/Sprites/Character";
-
 import { Icons } from "@/phaser/IconSprite/Icons";
 import { Finder } from "./phaser/Test/Finder";
 
 //안씀.
 import Welcome from "./phaser/Welcome/Welcome";
-import { DropDownTest, ModalDialog } from "./phaser/Test/Test";
-import { media } from "./media/userMedia";
-import webRTC from "./media/webRTCsample";
-import type { GetStreamSettings } from "./media/media";
-import { v4 as uuidv4 } from "uuid";
-//
 import LoadingView from "./components/Loading/App.Loading.vue";
 
 import NavBar from "./composition/App/NavBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
-
-const localStream = ref<MediaStream>();
-const pubVideoEl = ref<HTMLVideoElement>();
-const subVideoEl = ref<HTMLVideoElement>();
-const inputName = ref<HTMLInputElement>();
 
 onMounted(async () => {
   // window.addEventListener("resize", resize, false);
@@ -47,7 +33,7 @@ onMounted(async () => {
   //   // rtcInstance.openSub();
   // });
   // const onClickConnectRTC = () => {
-  //   const rtcInstance = new webRTC(localStream.value, subVideoEl.value, uuidv4());
+  //   const rtcInstance = new webRTC(localStream.value, subVideoEl.value);
   //   rtcInstance.openWebSocket();
   //   setTimeout(() => {
   //     rtcInstance.openRTC();

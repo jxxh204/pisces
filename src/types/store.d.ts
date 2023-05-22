@@ -1,37 +1,45 @@
 type FileNames = "About" | "Contact" | "Projects" | "Game";
+type FinderKind = "normal" | "tab" | "list";
+type FinderTab = "Coplay" | "hello-mars" | "blockbot" | "layer-after-layer";
+type FinderTabs = FinderTab[];
 type FinderComponentType = {
   [name: FileNames]: FileNames;
   About: {
     name: FileNames;
     zIndex: number;
-    width?:number,
-    height?:number,
-    top?:number,
-    left?:number
+    kind: FinderKind;
+    width?: number;
+    height?: number;
+    top?: number;
+    left?: number;
   };
   Contact: {
     name: FileNames;
     zIndex: number;
-    width?:number,
-    height?:number,
-    top?:number,
-    left?:number
+    kind: FinderKind;
+    width?: number;
+    height?: number;
+    top?: number;
+    left?: number;
   };
   Projects: {
     name: FileNames;
     zIndex: number;
-    width?:number,
-    height?:number,
-    top?:number,
-    left?:number
+    kind: FinderKind;
+    tabs?: FinderTabs;
+    width?: number;
+    height?: number;
+    top?: number;
+    left?: number;
   };
   Game: {
     name: FileNames;
     zIndex: number;
-    width?:number,
-    height?:number,
-    top?:number,
-    left?:number
+    kind: FinderKind;
+    width?: number;
+    height?: number;
+    top?: number;
+    left?: number;
   };
 };
 

@@ -5,6 +5,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -47,6 +49,7 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+	userID string
 }
 
 type logMessage struct {
@@ -55,7 +58,6 @@ type logMessage struct {
 	user string `json:"data"`
 }
 
-var currentUserId string
 var userList []string
 // readPump pumps messages from the websocket connection to the hub.
 //
@@ -82,17 +84,18 @@ func (c *Client) readPump() {
 		log.Printf("readPump: %s",msg.Id, msg.Type, msg.Data)
 
 
-		SendLog(msg.Type,msg.Data, c.hub)
+		SendLog(msg.Type,msg.Data, c)
 		switch msg.Type {
 		case "id":
-			currentUserId = msg.Data
-			userList = append(userList, currentUserId) //add user
+			SendBroadCast(c.userID, c.userID, c.hub)
+			// c.send([]byte(c.userID))
+			// userList = append(userList, currentUserId) //add user
 			
 			if len(c.hub.clients) > 1{
 				log.Printf("c.hub.clients: %s", c.hub.clients, len(c.hub.clients))
 				//일단 전부 던진다.
 				for i:=0; i< len(offerList); i++ {
-					SendBroadCast(offerList[i], c.hub)
+					SendBroadCast(offerList[i],c.userID, c.hub)
 				}
 				// for i:=0; i< len(answerList); i++ {
 				// 	SendBroadCast(answerList[i], c.hub)
@@ -102,15 +105,15 @@ func (c *Client) readPump() {
 		case "offer":
 			
 			// if len(userList) == 1{ // 유저가 없을 때만 offer를 보낸다.
-				onOfferHandler(msg.Data, c.hub)
+				onOfferHandler(msg.Data, c)
 			// }
 			log.Printf("offer: %s\n")
 
 		case "answer":
 			log.Printf("answer: %s\n")
-			onAnswerHandler(msg.Data, c.hub)
+			onAnswerHandler(msg.Data, c)
 		case "candidate":
-			onCandidateHandler(msg.Data, c.hub)
+			onCandidateHandler(msg.Data, c)
 		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -169,19 +172,26 @@ func (c *Client) writePump() {
 	}
 }
 
-func SendLog(logTitle string,msg string, hub  *Hub) {
+func SendLog(logTitle string,msg string, client  *Client) {
+	fmt.Printf("SendLog: %s\n",)
 	logMessage := logMessage{
-		Id:   logTitle,
+		Id:   client.userID,
 		Type: "log",
-		user: hub.clients,
+		user: "",
 	}
 	logJSON, err := json.Marshal(logMessage)
 	if err != nil {
 		fmt.Printf("error marshal JSON: %s\n", err.Error())
 	}
 	logString := string(logJSON)
+
+	message :=  BroadcastMessage {
+		UserID : client.userID,
+		Data : []byte(logString),
+	}
+
 	select {
-	case hub.broadcast <-[]byte(string(logString)):
+	case client.hub.broadcast <- &message:
 		// Message was sent successfully
 	default:
 		// The channel wasn't ready to receive data
@@ -196,17 +206,37 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		// make sure it's OK to access
 		return true
 	}
-	var err error
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID:generateRandomID(10)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()
 	go client.readPump()
+}
+
+func generateRandomID(length int) string {
+	// Determine the number of bytes needed based on the desired ID length
+	numBytes := (length * 6) / 8
+
+	// Generate random bytes
+	randomBytes := make([]byte, numBytes)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		// Handle the error
+		panic(err)
+	}
+
+	// Encode random bytes to base64 string
+	id := base64.URLEncoding.EncodeToString(randomBytes)
+
+	// Truncate or pad the string to the desired length
+	id = id[:length]
+
+	return id
 }
