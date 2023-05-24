@@ -62,6 +62,7 @@ button {
   border: 1.40909px solid #484848;
   box-shadow: inset -2.81818px 0px 0px #808080, inset 0px -2.81818px 0px #808080,
     inset 2.81818px 0px 0px #ffffff, inset 0px 2.81818px 0px #ffffff;
+  transition: all 0.5s;
 }
 button:active,
 button:hover {

@@ -316,3 +316,9 @@
 - v0.0.0:101
 - finder tab 클릭 제작
 - v0.0.0:102
+
+### 2023 5/24
+
+- projects - main image 제작
+- deepLink 대충 구현
+- v0.0.0:103

@@ -101,18 +101,18 @@ const eHandler = (data: any) => {
         >
           <!-- item -->
           <div
-            v-for="tab in tabStore.TabNames"
+            v-for="tab in tabStore.Tabs"
             :key="tab.name"
             id="finder_tab"
-            class="h-6 flex flex-row font-bold items-end text-clip"
+            class="h-6 flex flex-row font-bold items-end text-clip cursor-pointer"
+            @click="tabStore.onClickTab(tab.name)"
           >
             <!-- :class="tab.click ? 'bg-mac-white' : ' '" -->
 
             <img v-if="tab.click" :src="TabOutlineLeftClick" />
             <img v-else="tab.click" :src="TabOutlineLeft" />
             <div
-              @click="tabStore.onClickTab(tab.name)"
-              class="cursor-pointer whitespace-nowrap truncate border-none"
+              class="whitespace-nowrap truncate border-none"
               :class="
                 tab.click ? 'bg-mac-gray-200 tab_click' : 'bg-mac-gray-400 tab'
               "
@@ -132,7 +132,7 @@ const eHandler = (data: any) => {
           <!-- item -->
           <div class="w-full">item {{ props.kind }}</div>
         </article>
-        <article id="finder_body_content">
+        <article id="finder_body_content" class="w-full h-full">
           <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
         </article>

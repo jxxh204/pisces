@@ -1,3 +1,4 @@
+import { Coplay2023 } from "@/assets/images/projects/coplay2023_main.svg";
 type FileNames = "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
 
@@ -12,10 +13,14 @@ type FinderComponentType = {
     left?: number;
   };
 };
-type TabName = "Coplay" | "hello-mars" | "blockbot" | "layer-after-layer";
-type TabNames = { name: TabName; click: boolean };
+type TabName =
+  | "Coplay2023"
+  | "Coplay"
+  | "hello-mars"
+  | "blockbot"
+  | "layer-after-layer";
 
-type Tags =
+type TagName =
   | "Vue3"
   | "TypeScript"
   | "WebRTC"
@@ -24,10 +29,15 @@ type Tags =
   | "React";
 
 type TabComponentType = {
-  [name in FinderTab]: {
-    name: name;
-    tags: Tags;
-  };
+  [name in TabName]: TabComponent;
+};
+type TabComponent = {
+  name: TabName;
+  description: string;
+  image: string;
+  tags: TagName[];
+  click: boolean;
+  link: string;
 };
 
 //객체로 관리한다.
