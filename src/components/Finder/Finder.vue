@@ -92,12 +92,12 @@ const eHandler = (data: any) => {
       </section>
       <section
         id="finder_body"
-        class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col overflow-auto"
+        class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col overflow-auto mac_scroll"
       >
         <article
           v-if="props.kind === 'tab'"
           id="finder_body_nav"
-          class="overflow-x-hidden flex-row items-end flex finder_shadow_in h-8 text-center w-full bg-mac-gray-300"
+          class="overflow-x-scroll scrollhide flex-row items-end flex finder_shadow_in h-8 text-center w-full bg-mac-gray-300"
         >
           <!-- item -->
           <div
