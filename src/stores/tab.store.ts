@@ -14,15 +14,16 @@ export default defineStore("useTabStore", () => {
     Coplay2023: {
       name: "Coplay2023",
       image: Coplay2023,
-      description: "",
-      tags: ["Electron"],
+      responsibilities:
+        "실시간 영상 통신 & 로봇 통신 담당, 회사 자체 솔루션 서버를 이용하여 Pub & Sub, P2P 통신을 하는 웹을 주로 개발하고 웹과 로봇이 ble 혹은 원격 통신을 하여 로봇을 제어하는 기능을 구현하였다.",
+      tags: ["Vue3", "WebWorker", "WebCodec", "CI", "TEST"],
       click: true,
       link: "notion://forest-torta-822.notion.site/CoPlay-2023-8199f382bbf14fe096162ce9a13b23d7",
     },
     Coplay: {
       name: "Coplay",
       image: Coplay,
-      description: "",
+      responsibilities: "",
       tags: ["Electron"],
       click: false,
       link: "notion://forest-torta-822.notion.site/CoPlay-2022-01-10-07-65c540a4748e49daa5ecbd19f1245ad2",
@@ -30,7 +31,7 @@ export default defineStore("useTabStore", () => {
     "hello-mars": {
       name: "hello-mars",
       image: HelloMars,
-      description: "",
+      responsibilities: "",
       tags: ["Electron"],
       click: false,
       link: "notion://forest-torta-822.notion.site/HELLO-MARS-2021-06-2021-11-10-e28e8285196d4e538ba7a2907a1008e1",
@@ -38,7 +39,7 @@ export default defineStore("useTabStore", () => {
     blockbot: {
       name: "blockbot",
       image: Blockbot,
-      description: "",
+      responsibilities: "",
       tags: ["Electron"],
       click: false,
       link: "notion://forest-torta-822.notion.site/BlockBot-b00ec237ee51431dafed0b08377799e8",
@@ -46,7 +47,7 @@ export default defineStore("useTabStore", () => {
     "layer-after-layer": {
       name: "layer-after-layer",
       image: LAL,
-      description: "",
+      responsibilities: "",
       tags: ["Electron"],
       click: false,
       link: "https://forest-torta-822.notion.site/LAYER-after-LAYER-f28ce6c04b824aba93f766b1491d062c",

@@ -322,3 +322,10 @@
 - projects - main image 제작
 - deepLink 대충 구현
 - v0.0.0:103
+
+### 2023 5/26
+
+- projects 작업
+  - 내용 작성 중, 파인더를 줄이고 늘려도 문제없도록 제작
+  - daisy ui 적용
+  - v0.0.0:104

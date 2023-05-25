@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
+
   theme: {
     fontFamily: {
       AppleGaramond: "Apple Garamond Light",
@@ -39,5 +44,24 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    theme: false,
+    prefix: "ds-",
+    darkTheme: "light",
+    themes: [
+      {
+        mytheme: {
+          error: "#ff700f",
+          primary: "#c4b5fd",
+          accent: "#1FB2A6",
+          neutral: "#FAFAFA",
+          "base-100": "#FAFAFA",
+          warning: "#FBBD23",
+          azul: "#333399",
+          lavender: "#CCCCFF",
+        },
+      },
+    ],
+  },
 };

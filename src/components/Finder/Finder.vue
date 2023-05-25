@@ -32,7 +32,7 @@ const finderOption = {
   width: 400,
   height: 300,
   minWidth: 200,
-  minHeight: 100,
+  minHeight: 250,
 };
 
 const eHandler = (data: any) => {
@@ -92,7 +92,7 @@ const eHandler = (data: any) => {
       </section>
       <section
         id="finder_body"
-        class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col"
+        class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col overflow-auto"
       >
         <article
           v-if="props.kind === 'tab'"
@@ -132,7 +132,7 @@ const eHandler = (data: any) => {
           <!-- item -->
           <div class="w-full">item {{ props.kind }}</div>
         </article>
-        <article id="finder_body_content" class="w-full h-full">
+        <article id="finder_body_content" class="w-full h-full overflow-auto">
           <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
         </article>

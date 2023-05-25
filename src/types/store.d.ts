@@ -24,20 +24,26 @@ type TagName =
   | "Vue3"
   | "TypeScript"
   | "WebRTC"
+  | "WebWorker"
   | "WebCodec"
   | "Electron"
-  | "React";
+  | "React"
+  | "Scratch3"
+  | "CI"
+  | "TEST";
 
 type TabComponentType = {
   [name in TabName]: TabComponent;
 };
 type TabComponent = {
   name: TabName;
-  description: string;
+  responsibilities: string;
   image: string;
   tags: TagName[];
   click: boolean;
   link: string;
+  demo?: string;
+  code?: string;
 };
 
 //객체로 관리한다.

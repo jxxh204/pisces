@@ -8,7 +8,13 @@ interface Props {
 }
 const props = defineProps<Props>();
 const projeftImage = ref<HTMLElement>();
+const mainImage = ref<HTMLImageElement>();
 const isImageHover = useElementHover(projeftImage);
+
+const mouseOut = (e: MouseEvent) => {
+  const target = e.target;
+  target.style.opacity = "0";
+};
 
 // let launchAppUrl = "twitter://twitter"; // 앱 스키마
 let launchAppUrl = props.link;
@@ -47,6 +53,7 @@ const onClickHover = () => {
 };
 onMounted(() => {
   mobile_chk();
+  console.log(mainImage.value?.height);
   //   if (os == "pc") {
   //     location.href = "웹주소 입력";
   //   }
@@ -92,15 +99,16 @@ function participate() {
   <article
     id="project_image"
     ref="projeftImage"
-    class="relative h-44 w-56 border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
+    class="relative h-full w-full border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
   >
     <div
       class="project_image_tab border-t-[1px] border-mac-gray-300 w-full h-1"
     ></div>
-    <img class="h-full object-contain p-1" :src="props.image" />
-    <Transition to="fade">
+    <img ref="mainImage" class="object-cover h-full p-1" :src="props.image" />
+    <Transition>
       <div
-        class="absolute w-full h-full top-0 left-0 bg-mac-Azul mono-lg-bold bg-opacity-50 text-mac-white transition-all delay-200"
+        class="absolute w-full h-full top-0 left-0 bg-mac-Azul mono-lg-bold bg-opacity-50 text-mac-white transition_basic"
+        @mouseleave="mouseOut"
         v-if="isImageHover"
       >
         <p
