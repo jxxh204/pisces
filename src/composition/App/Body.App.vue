@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MacFile from "@/components/Mac/File.Mac.vue";
-import FinderMacVue from "@/components/Mac/Finder.Mac.vue";
+import FinderMacVue from "@/components/Finder/Finder.vue";
 import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
 import useFinderStore from "@/stores/finder.store";
 

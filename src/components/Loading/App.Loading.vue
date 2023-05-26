@@ -47,7 +47,7 @@ onMounted(async () => {
   <Transition name="fade">
     <div
       v-if="loadingType === 'initial'"
-      class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition-all"
+      class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition_basic"
     >
       <img v-if="isStartingIcon" :src="StartingIcon" class="h-[6%]" />
     </div>
@@ -58,7 +58,7 @@ onMounted(async () => {
         loadingType === 'progress' ||
         loadingType === 'button'
       "
-      class="starting loading flex flex-row justify-center items-center transition-all"
+      class="starting loading flex flex-row justify-center items-center transition_basic"
     >
       <img :src="Welcome_modal" class="h-[50%]" />
       <p

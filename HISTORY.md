@@ -314,3 +314,20 @@
 - v0.0.0:100
 - finder tabs 크기변화시 text ... 출력
 - v0.0.0:101
+- finder tab 클릭 제작
+- v0.0.0:102
+
+### 2023 5/24
+
+- projects - main image 제작
+- deepLink 대충 구현
+- v0.0.0:103
+
+### 2023 5/26
+
+- projects 작업
+  - 내용 작성 중, 파인더를 줄이고 늘려도 문제없도록 제작
+  - daisy ui 적용
+  - v0.0.0:104
+  - scrollbar 디자인 적용
+  - v0.0.0:105

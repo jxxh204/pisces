@@ -10,8 +10,11 @@ import LoadingView from "./components/Loading/App.Loading.vue";
 
 import NavBar from "./composition/App/NavBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
+import useFinderStore from "@/stores/finder.store";
 
+const finderStore = useFinderStore();
 onMounted(async () => {
+  finderStore.addFinder("About");
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";

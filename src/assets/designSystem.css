@@ -25,6 +25,18 @@
   font-size: 0.7rem /* 10px */;
   line-height: 0.75rem /* 12px */;
 }
+.chco-bold {
+  font-family: "Charcoal";
+  font-size: 0.7rem /* 10px */;
+  line-height: 0.75rem /* 12px */;
+  font-weight: 700;
+}
+.chco-lg-bold {
+  font-family: "Charcoal";
+  font-size: 0.75rem /* 10px */;
+  line-height: 0.75rem /* 12px */;
+  font-weight: 700;
+}
 .mono-light {
   font-family: "Monocraft";
   font-size: 0.625rem /* 10px */;
@@ -62,6 +74,7 @@ button {
   border: 1.40909px solid #484848;
   box-shadow: inset -2.81818px 0px 0px #808080, inset 0px -2.81818px 0px #808080,
     inset 2.81818px 0px 0px #ffffff, inset 0px 2.81818px 0px #ffffff;
+  transition: all 0.5s;
 }
 button:active,
 button:hover {

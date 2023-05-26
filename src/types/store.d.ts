@@ -1,11 +1,10 @@
+import { Coplay2023 } from "@/assets/images/projects/coplay2023_main.svg";
 type FileNames = "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
-type FinderTab = "Coplay" | "hello-mars" | "blockbot" | "layer-after-layer";
-type FinderTabs = FinderTab[];
+
 type FinderComponentType = {
-  [name: FileNames]: FileNames;
-  About: {
-    name: FileNames;
+  [name in FileNames]: {
+    name: name;
     zIndex: number;
     kind: FinderKind;
     width?: number;
@@ -13,34 +12,38 @@ type FinderComponentType = {
     top?: number;
     left?: number;
   };
-  Contact: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
-  Projects: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    tabs?: FinderTabs;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
-  Game: {
-    name: FileNames;
-    zIndex: number;
-    kind: FinderKind;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
+};
+type TabName =
+  | "Coplay2023"
+  | "Coplay"
+  | "hello-mars"
+  | "blockbot"
+  | "layer-after-layer";
+
+type TagName =
+  | "Vue3"
+  | "TypeScript"
+  | "WebRTC"
+  | "WebWorker"
+  | "WebCodec"
+  | "Electron"
+  | "React"
+  | "Scratch3"
+  | "CI"
+  | "TEST";
+
+type TabComponentType = {
+  [name in TabName]: TabComponent;
+};
+type TabComponent = {
+  name: TabName;
+  responsibilities: string;
+  image: string;
+  tags: TagName[];
+  click: boolean;
+  link: string;
+  demo?: string;
+  code?: string;
 };
 
 //객체로 관리한다.
