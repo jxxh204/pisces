@@ -15,6 +15,8 @@ import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click
 import FileIcon from "../Icon/File.Icon.vue";
 import GameFinder from "@/composition/Finder/Game.Finder.vue";
 import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue";
+import type { FileNames, FinderKind } from "@/types/store";
+import type HomeFinderVue from "@/composition/Finder/Home.Finder.vue";
 const finderStore = useFinderStore();
 interface Props {
   name: FileNames;
@@ -35,6 +37,7 @@ const finderOption = {
   minHeight: 250,
 };
 
+//파인더 크기를 sm,md, lg, xl 으로 나눠서 폰트크기 조절하기.
 const eHandler = (data: any) => {
   console.log(data);
   finderStore.changeFinderState(
@@ -135,6 +138,7 @@ const eHandler = (data: any) => {
         <article id="finder_body_content" class="w-full h-full overflow-auto">
           <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
+          <HomeFinderVue v-if="props.name === 'Home'" />
         </article>
       </section>
     </div>

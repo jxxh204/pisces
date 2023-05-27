@@ -104,7 +104,11 @@ function participate() {
     <div
       class="project_image_tab border-t-[1px] border-mac-gray-300 w-full h-1"
     ></div>
-    <img ref="mainImage" class="object-cover h-full p-1" :src="props.image" />
+    <img
+      ref="mainImage"
+      class="object-cover w-full h-full p-1"
+      :src="props.image"
+    />
     <Transition>
       <div
         class="absolute w-full h-full top-0 left-0 bg-mac-Azul mono-lg-bold bg-opacity-50 text-mac-white transition_basic"

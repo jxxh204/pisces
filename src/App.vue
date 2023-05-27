@@ -14,7 +14,7 @@ import useFinderStore from "@/stores/finder.store";
 
 const finderStore = useFinderStore();
 onMounted(async () => {
-  finderStore.addFinder("About");
+  finderStore.addFinder("Home");
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";

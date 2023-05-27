@@ -1,5 +1,5 @@
 import { Coplay2023 } from "@/assets/images/projects/coplay2023_main.svg";
-type FileNames = "About" | "Contact" | "Projects" | "Game";
+type FileNames = "Home" | "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
 
 type FinderComponentType = {
@@ -23,14 +23,21 @@ type TabName =
 type TagName =
   | "Vue3"
   | "TypeScript"
+  | "VanillaJS"
   | "WebRTC"
   | "WebWorker"
   | "WebCodec"
+  | "WebBluetooth"
   | "Electron"
-  | "React"
+  | "React & Redux"
   | "Scratch3"
   | "CI"
-  | "TEST";
+  | "TEST"
+  | "Amplify"
+  | "GraphQL"
+  | "RestAPI"
+  | "Tailwindcss"
+  | "SideProject";
 
 type TabComponentType = {
   [name in TabName]: TabComponent;

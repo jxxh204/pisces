@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import type { FinderComponentType, FileNames } from "@/types/store";
 
 export default defineStore("useFinderStore", () => {
   const currentFinders = ref<FinderComponentType>({});

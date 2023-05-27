@@ -5,7 +5,7 @@ import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
 import useFinderStore from "@/stores/finder.store";
 
 const finderStore = useFinderStore();
-const files = ["About", "Contact", "Projects", "Game"];
+const files = ["Home", "About", "Contact", "Projects", "Game"];
 </script>
 <!--아이콘은 전체 영역에 있어야하고 아이콘과 파인더는 같은 영역에 존재해야한다.-->
 

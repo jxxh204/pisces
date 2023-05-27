@@ -3,6 +3,7 @@ import { onClickOutside } from "@vueuse/core";
 import { ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
 import FileIconVue from "../Icon/File.Icon.vue";
+import type { FileNames } from "@/types/store";
 
 interface Props {
   name: FileNames;
