@@ -8,6 +8,7 @@ interface Props {
   tags: TagName;
 }
 const props = defineProps<Props>();
+const tooltip = "working...";
 </script>
 
 <template>
@@ -17,7 +18,7 @@ const props = defineProps<Props>();
         <h2 class="chco text-lg">{{ props.projectName }}</h2>
         <div
           class="ds-tooltip ds-tooltip-mac-Lavender mono-light"
-          data-tip="working..."
+          :data-tip="tooltip"
         >
           <img
             :src="aboutButton"
@@ -25,8 +26,8 @@ const props = defineProps<Props>();
           />
         </div>
       </article>
-      <article>
-        <p class="text-sm chco">{{ props.responsibilities }}</p>
+      <article class="h-full w-full">
+        <p class="text-sm chco w-full h-full">{{ props.responsibilities }}</p>
       </article>
     </section>
   </article>

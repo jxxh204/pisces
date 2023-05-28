@@ -99,7 +99,7 @@ function participate() {
   <article
     id="project_image"
     ref="projeftImage"
-    class="relative h-full w-full border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
+    class="relative w-full border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
   >
     <div
       class="project_image_tab border-t-[1px] border-mac-gray-300 w-full h-1"
