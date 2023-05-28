@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, defineAsyncComponent } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -13,10 +13,27 @@ import TabOutlineLeftClick from "@/assets/images/Finder/tab-outline_left_click.s
 import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click.svg";
 
 import FileIcon from "../Icon/File.Icon.vue";
-import GameFinder from "@/composition/Finder/Game.Finder.vue";
-import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue";
+
+const GameFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "GameFinder" */ "@/composition/Finder/Game.Finder.vue"
+    )
+);
+const ProjectsFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "ProjectsFinder" */ "@/composition/Finder/Projects.Finder.vue"
+    )
+);
+const HomeFinderVue = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "HomeFinderVue" */ "@/composition/Finder/Home.Finder.vue"
+    )
+);
+
 import type { FileNames, FinderKind } from "@/types/store";
-import type HomeFinderVue from "@/composition/Finder/Home.Finder.vue";
 const finderStore = useFinderStore();
 interface Props {
   name: FileNames;
@@ -31,8 +48,8 @@ const finderLeng = Object.keys(finderStore.currentFinders).length;
 const finderOption = {
   top: window.innerHeight / 2 - 600 / 2 + finderLeng * 20,
   left: window.innerWidth / 2 - 800 / 2 + finderLeng * 20,
-  width: 400,
-  height: 300,
+  width: 500,
+  height: 600,
   minWidth: 200,
   minHeight: 250,
 };
@@ -48,6 +65,19 @@ const eHandler = (data: any) => {
     data.left
   );
   emitter.emit(`finder:${props.name}`);
+};
+
+const selectComponent = () => {
+  switch (props.name) {
+    case "Game":
+      return GameFinder;
+    case "Projects":
+      return ProjectsFinder;
+    case "Home":
+      return HomeFinderVue;
+    default:
+      return HomeFinderVue;
+  }
 };
 
 // 이미지는 icon.vue를 만들어서 모두 거기서 불러오도록 하자.
@@ -136,9 +166,12 @@ const eHandler = (data: any) => {
           <div class="w-full">item {{ props.kind }}</div>
         </article>
         <article id="finder_body_content" class="w-full h-full overflow-auto">
-          <GameFinder v-if="props.name === 'Game'" />
+          <keep-alive>
+            <component class="relative" :is="selectComponent()"></component>
+          </keep-alive>
+          <!-- <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
-          <HomeFinderVue v-if="props.name === 'Home'" />
+          <HomeFinderVue v-if="props.name === 'Home'" /> -->
         </article>
       </section>
     </div>
