@@ -348,3 +348,5 @@
 - v0.0.0:108
 - Home 제작
 - v0.0.0:109
+- home skillset hover animation 제작
+- v0.0.0:110

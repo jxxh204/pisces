@@ -38,9 +38,9 @@ const handleIntersect = (entries: IntersectionObserverEntry[]) => {
 };
 onMounted(() => {
   const observer = new IntersectionObserver(handleIntersect, options);
-  if (mainImage.value) observer.observe(mainImage.value);
-  if (helloArticle.value) observer.observe(helloArticle.value);
-  if (skillSetRef.value) observer.observe(skillSetRef.value);
+  // if (mainImage.value) observer.observe(mainImage.value);
+  // if (helloArticle.value) observer.observe(helloArticle.value);
+  // if (skillSetRef.value) observer.observe(skillSetRef.value);
 });
 </script>
 
@@ -61,7 +61,7 @@ onMounted(() => {
     </section>
     <section
       id="home_content"
-      class="relative flex flex-row w-full justify-between"
+      class="relative flex flex-row w-full justify-between animation_upDown"
     >
       <div class="w-full h-44"></div>
       <article
@@ -92,7 +92,7 @@ onMounted(() => {
     <section
       ref="skillSetRef"
       id="home_skillSet"
-      class="flex flex-col gap-3 items-starttext-sm"
+      class="flex flex-col gap-3 items-start text-sm"
     >
       <h2 class="chco-lg-bold text-2xl">skillSet</h2>
       <article
@@ -110,7 +110,7 @@ onMounted(() => {
             <li
               v-for="skill in set"
               :key="skill"
-              class="chco-lg-bold px-2 py-1 font-semibold bg-mac-Lavender"
+              class="chco-lg-bold px-2 py-1 font-semibold bg-mac-Lavender animation_slide"
             >
               {{ skill }}
             </li>

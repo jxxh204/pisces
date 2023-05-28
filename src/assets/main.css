@@ -70,15 +70,34 @@
   /* @keyframes 뒤에 애니메이션을 대표하는 임의의 이름 move를 부여 */
   from {
     /* 애니메이션 시작 시점 */
-    top: -50px;
+    margin-top: -50px;
 
     opacity: 0;
   }
   to {
     /* 애니메이션 종료 시점 */
-    top: 0px;
+    margin-top: 0px;
 
     opacity: 1;
+  }
+}
+.slide_parents {
+  transform-style: preserve-3d;
+}
+
+.animation_slide:hover {
+  animation: slide 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  /* transform: perspective(100px) translateZ(5px); */
+}
+
+@keyframes slide {
+  from {
+    /* font-size: 10px; */
+    transform: perspective(600px) translateZ(0px);
+  }
+  to {
+    /* font-size: 14px; */
+    transform: perspective(600px) translateZ(160px);
   }
 }
 
