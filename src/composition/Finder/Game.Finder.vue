@@ -3,12 +3,12 @@ import Phaser from "phaser";
 import Welcome from "@/phaser/Welcome/Welcome";
 import { TileObject } from "@/phaser/TileObject/TileObject";
 import { Icons } from "@/phaser/IconSprite/Icons";
-import { Finder } from "@/phaser/Test/Finder";
+// import { Finder } from "@/phaser/Test/Finder";
 import Character from "@/phaser/Sprites/Character";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import { inject, onMounted, onUnmounted, ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
-import webRTC from "@/media/webRTCsample";
+// import webRTC from "@/media/webRTCsample";
 
 const ZOOM_LEVEL = 1;
 const finderStore = useFinderStore();
@@ -35,7 +35,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, TileObject, Icons, Finder, Character], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
+  scene: [Welcome, TileObject, Icons, Character], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
   physics: {
     default: "arcade",
     arcade: {
@@ -54,7 +54,7 @@ const config = {
   },
 };
 onMounted(() => {
-  rtcInstance = new webRTC(remoteVideo.value, localVideo.value);
+  // rtcInstance = new webRTC(remoteVideo.value, localVideo.value);
   const game = new Phaser.Game(config);
   const canvas = game.canvas;
 
@@ -73,25 +73,25 @@ onMounted(() => {
     }
   });
 
-  rtcInstance.openWebSocket();
-  setTimeout(() => {
-    rtcInstance?.createDataChannel();
-  }, 1000);
+  // rtcInstance.openWebSocket();
+  // setTimeout(() => {
+  //   rtcInstance?.createDataChannel();
+  // }, 1000);
 });
 onUnmounted(() => {
   emitter.off("finder:Game");
-  rtcInstance?.sendMessage("out", "");
-  rtcInstance?.pc?.close();
+  // rtcInstance?.sendMessage("out", "");
+  // rtcInstance?.pc?.close();
 });
 </script>
 
 <template>
   <div class="w-full h-full">
     <div id="phaser-wrapper" class="w-full h-full top-0 bottom-0"></div>
-    <div class="absolute flex flex-row">
+    <!-- <div class="absolute flex flex-row">
       <video ref="localVideo" autoplay class="bg-mac-black h-20 w-20"></video>
       <video ref="remoteVideo" autoplay class="bg-mac-black h-20 w-20"></video>
-    </div>
+    </div> -->
   </div>
 </template>
 

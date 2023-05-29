@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import profile from "@/assets/images/profile.jpg";
 import { onMounted, ref } from "vue";
+import MacFile from "@/components/Mac/File.Mac.vue";
 
 const mainImage = ref<HTMLElement>();
 const helloArticle = ref<HTMLElement>();
 const skillSetRef = ref<HTMLElement>();
-
+const files = ["About", "Contact"];
 let isIntersection = true;
 // 모듈화하기.
 const options = {
@@ -117,7 +118,16 @@ onMounted(() => {
           </div>
         </ul>
       </article>
-      <div class="h-14 w-full"></div>
+    </section>
+    <section
+      id="files"
+      class="flex flex-row gap-4 justify-center w-full h-full pb-14"
+    >
+      <MacFile
+        v-for="(name, index) in files"
+        :name="name"
+        :key="name + `${index}`"
+      />
     </section>
   </div>
 </template>

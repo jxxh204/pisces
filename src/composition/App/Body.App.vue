@@ -11,7 +11,7 @@ const files = ["Home", "About", "Contact", "Projects", "Game"];
 
 <template>
   <div id="app-body" class="w-full h-full">
-    <section class="w-full h-full">
+    <section class="relative w-full h-full">
       <FinderMacVue
         v-for="(finder, index) in finderStore.currentFinders"
         @click="finderStore.clickFinder(finder.name)"

@@ -350,3 +350,11 @@
 - v0.0.0:109
 - home skillset hover animation 제작
 - v0.0.0:110
+
+### 2023 5/29
+
+- Finder가 nav와 겹치지 않게 개선
+- menu absolute -> fixed로 변경
+- finder 크기 피드백 받고 개선
+- about, contact 빈공간 추가
+- v0.0.0:111

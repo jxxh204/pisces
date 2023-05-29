@@ -32,7 +32,18 @@ const HomeFinderVue = defineAsyncComponent(
       /* webpackChunkName: "HomeFinderVue" */ "@/composition/Finder/Home.Finder.vue"
     )
 );
-
+const AboutFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "AboutFinder" */ "@/composition/Finder/About.Finder.vue"
+    )
+);
+const ContactFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "ContactFinder" */ "@/composition/Finder/Contact.Finder.vue"
+    )
+);
 import type { FileNames, FinderKind } from "@/types/store";
 const finderStore = useFinderStore();
 interface Props {
@@ -46,10 +57,10 @@ const props = defineProps<Props>();
 const emitter = inject("emitter");
 const finderLeng = Object.keys(finderStore.currentFinders).length;
 const finderOption = {
-  top: window.innerHeight / 2 - 600 / 2 + finderLeng * 20,
-  left: window.innerWidth / 2 - 800 / 2 + finderLeng * 20,
-  width: 500,
-  height: 600,
+  top: window.innerHeight / 2 - 800 / 2 + finderLeng * 30,
+  left: finderLeng * 30,
+  width: 600,
+  height: 700,
   minWidth: 200,
   minHeight: 250,
 };
@@ -73,6 +84,10 @@ const selectComponent = () => {
       return GameFinder;
     case "Projects":
       return ProjectsFinder;
+    case "Contact":
+      return ContactFinder;
+    case "About":
+      return AboutFinder;
     case "Home":
       return HomeFinderVue;
     default:
