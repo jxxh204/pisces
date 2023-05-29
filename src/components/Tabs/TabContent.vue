@@ -8,16 +8,17 @@ interface Props {
   tags: TagName;
 }
 const props = defineProps<Props>();
+const tooltip = "working...";
 </script>
 
 <template>
   <article class="w-full h-full">
     <section class="w-full h-full flex flex-col gap-2">
       <article class="flex flex-row justify-between">
-        <h2 class="chco text-base">{{ props.projectName }}</h2>
+        <h2 class="chco text-lg">{{ props.projectName }}</h2>
         <div
           class="ds-tooltip ds-tooltip-mac-Lavender mono-light"
-          data-tip="working..."
+          :data-tip="tooltip"
         >
           <img
             :src="aboutButton"
@@ -25,15 +26,8 @@ const props = defineProps<Props>();
           />
         </div>
       </article>
-      <article>
-        <p class="text-xs chco">{{ props.responsibilities }}</p>
-      </article>
-      <article class="">
-        <div v-for="tag in props.tags" :key="tag">
-          <div class="chco-lg-bold bg-mac-Lavender px-2 py-1 font-semibold">
-            {{ tag }}
-          </div>
-        </div>
+      <article class="h-full w-full">
+        <p class="text-sm chco w-full h-full">{{ props.responsibilities }}</p>
       </article>
     </section>
   </article>

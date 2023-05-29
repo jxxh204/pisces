@@ -3,7 +3,9 @@ import { ref } from "vue";
 import About from "@/assets/images/icons/about.svg";
 import Contact from "@/assets/images/icons/contact.svg";
 import Projects from "@/assets/images/icons/projects.svg";
-import Game from "@/assets/images/icons/game.svg";
+import Game from "@/assets/images/icons/CD.svg";
+import Home from "@/assets/images/icons/apple.svg";
+import type { FileNames } from "@/types/store";
 
 interface Props {
   name: FileNames;
@@ -15,6 +17,7 @@ const images = {
   Contact,
   Projects,
   Game,
+  Home,
 };
 </script>
 

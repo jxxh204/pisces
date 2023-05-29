@@ -3,6 +3,7 @@ import { onClickOutside } from "@vueuse/core";
 import { ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
 import FileIconVue from "../Icon/File.Icon.vue";
+import type { FileNames } from "@/types/store";
 
 interface Props {
   name: FileNames;
@@ -16,9 +17,6 @@ onClickOutside(macIcon, () => (isClick.value = false));
 const onClickFile = () => {
   isClick.value = true;
 };
-const onDblClick = (name: FileNames) => {
-  finderStore.addFinder(name);
-};
 </script>
 
 <template>
@@ -26,7 +24,8 @@ const onDblClick = (name: FileNames) => {
     id="macIcon"
     ref="macIcon"
     @click="onClickFile"
-    @dblclick="onDblClick(props.name)"
+    @dblclick="finderStore.addFinder(props.name)"
+    @touchstart="finderStore.addFinder(props.name)"
     class="flex flex-col justify-center items-center gap-1"
   >
     <!-- <div class="w-full h-full absolute bg-mac-black"></div> -->

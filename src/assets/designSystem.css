@@ -10,14 +10,27 @@
   font-family: "Monocraft";
   src: url("./fonts/Monocraft.ttf");
 }
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
 .mono-lg-bold {
   font-family: "Monocraft";
   font-size: 1.5rem /* 24px */;
+  font-weight: 700;
   line-height: 2rem /* 32px */;
 }
 .mono-lg-light {
   font-family: "Monocraft";
   font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+}
+.mono-bold {
+  font-family: "Monocraft";
+  font-weight: 700;
   line-height: 1rem /* 16px */;
 }
 .chco {
@@ -43,12 +56,6 @@
   line-height: 0.75rem /* 12px */;
 }
 /* Monocraft bold */
-.mono-bold {
-  font-family: "Monocraft";
-  font-size: 0.625rem /* 10px */;
-  line-height: 0.75rem /* 12px */;
-  font-weight: 700;
-}
 .italic {
   font-style: italic;
 }

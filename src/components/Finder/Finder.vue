@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, defineAsyncComponent } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -13,8 +13,38 @@ import TabOutlineLeftClick from "@/assets/images/Finder/tab-outline_left_click.s
 import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click.svg";
 
 import FileIcon from "../Icon/File.Icon.vue";
-import GameFinder from "@/composition/Finder/Game.Finder.vue";
-import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue";
+
+const GameFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "GameFinder" */ "@/composition/Finder/Game.Finder.vue"
+    )
+);
+const ProjectsFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "ProjectsFinder" */ "@/composition/Finder/Projects.Finder.vue"
+    )
+);
+const HomeFinderVue = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "HomeFinderVue" */ "@/composition/Finder/Home.Finder.vue"
+    )
+);
+const AboutFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "AboutFinder" */ "@/composition/Finder/About.Finder.vue"
+    )
+);
+const ContactFinder = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "ContactFinder" */ "@/composition/Finder/Contact.Finder.vue"
+    )
+);
+import type { FileNames, FinderKind } from "@/types/store";
 const finderStore = useFinderStore();
 interface Props {
   name: FileNames;
@@ -27,14 +57,15 @@ const props = defineProps<Props>();
 const emitter = inject("emitter");
 const finderLeng = Object.keys(finderStore.currentFinders).length;
 const finderOption = {
-  top: window.innerHeight / 2 - 600 / 2 + finderLeng * 20,
-  left: window.innerWidth / 2 - 800 / 2 + finderLeng * 20,
-  width: 400,
-  height: 300,
+  top: window.innerHeight / 2 - 800 / 2 + finderLeng * 30,
+  left: finderLeng * 30,
+  width: 600,
+  height: 700,
   minWidth: 200,
   minHeight: 250,
 };
 
+//파인더 크기를 sm,md, lg, xl 으로 나눠서 폰트크기 조절하기.
 const eHandler = (data: any) => {
   console.log(data);
   finderStore.changeFinderState(
@@ -45,6 +76,23 @@ const eHandler = (data: any) => {
     data.left
   );
   emitter.emit(`finder:${props.name}`);
+};
+
+const selectComponent = () => {
+  switch (props.name) {
+    case "Game":
+      return GameFinder;
+    case "Projects":
+      return ProjectsFinder;
+    case "Contact":
+      return ContactFinder;
+    case "About":
+      return AboutFinder;
+    case "Home":
+      return HomeFinderVue;
+    default:
+      return HomeFinderVue;
+  }
 };
 
 // 이미지는 icon.vue를 만들어서 모두 거기서 불러오도록 하자.
@@ -133,8 +181,12 @@ const eHandler = (data: any) => {
           <div class="w-full">item {{ props.kind }}</div>
         </article>
         <article id="finder_body_content" class="w-full h-full overflow-auto">
-          <GameFinder v-if="props.name === 'Game'" />
+          <keep-alive>
+            <component class="relative" :is="selectComponent()"></component>
+          </keep-alive>
+          <!-- <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
+          <HomeFinderVue v-if="props.name === 'Home'" /> -->
         </article>
       </section>
     </div>
