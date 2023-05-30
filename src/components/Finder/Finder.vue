@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  ref,
-  inject,
-  defineAsyncComponent,
-  onMounted,
-  getCurrentInstance,
-  type ComponentInternalInstance,
-} from "vue";
+import { ref, inject, defineAsyncComponent } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -67,14 +60,13 @@ const tabStore = useTabStore();
 
 const props = defineProps<Props>();
 const emitter = inject("emitter");
-const { proxy } = getCurrentInstance();
 const finderLeng = Object.keys(finderStore.currentFinders).length;
 
 let finderOption = {
   top: finderLeng * 30,
   left: finderLeng * 30,
   width: 760,
-  height: window.innerHeight - 100,
+  height: window.innerHeight - 200,
   minWidth: 200,
   minHeight: 250,
 };
@@ -82,7 +74,7 @@ let oldFinderOption = {
   top: finderLeng * 30,
   left: finderLeng * 30,
   width: 760,
-  height: window.innerHeight - 100,
+  height: window.innerHeight - 200,
   minWidth: 200,
   minHeight: 250,
 };
@@ -98,7 +90,7 @@ const onClickFullScreen = () => {
     const bodyHeight = document.getElementById("app-body")?.clientHeight;
     finderOption.top = 0;
     finderOption.left = 0;
-    if (bodyHeight) finderOption.height = bodyHeight - 20;
+    if (bodyHeight) finderOption.height = bodyHeight;
     finderOption.width = document.body.clientWidth;
   }
   isFullScreen = !isFullScreen;

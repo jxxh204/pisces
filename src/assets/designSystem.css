@@ -59,6 +59,13 @@
 .italic {
   font-style: italic;
 }
+.mac_border {
+  border-width: 4px;
+  border-radius: 0.5rem /* 8px */;
+  border-style: dashed;
+  --tw-border-opacity: 1;
+  border-color: rgb(204 204 255 / var(--tw-border-opacity));
+}
 
 button {
   box-sizing: border-box;

@@ -46,35 +46,12 @@ onMounted(async () => {
 
 <template>
   <div
-    class="w-screen h-screen fixed cursor-default bg-default-pattern bg-cover bg-center"
+    class="w-screen h-screen fixed cursor-default bg-default-pattern bg-cover bg-center flex flex-col"
   >
     <!-- <LoadingView /> -->
 
     <NavBar />
     <Body />
-
-    <!-- webRTC -->
-    <!-- <section class="rtc-modal bg-mac-white rounded-lg p-10">
-      webRTC
-      <article>
-        pub
-        <video id="pubVideo" ref="pubVideoEl" class="bg-mac-black h-20"></video>
-        <div class="border border-black p-2 rounded-lg">
-          <button @click="onClickConnectRTC" class="buttons">접속</button>
-        </div>
-      </article>
-
-      <article>
-        sub
-        <video
-          id="subVideo"
-          ref="subVideoEl"
-          class="bg-mac-black h-20"
-          autoplay
-        ></video>
-      </article>
-    </section> -->
-    <!-- webRTC -->
   </div>
   <!-- <RouterView /> -->
 </template>

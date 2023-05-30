@@ -96,9 +96,7 @@ onMounted(() => {
       class="flex flex-col gap-3 items-start text-sm"
     >
       <h2 class="chco-lg-bold text-2xl">skillSet</h2>
-      <article
-        class="border-4 rounded-lg border-dashed border-mac-Lavender text-base p-4 flex flex-col gap-3"
-      >
+      <article class="mac_border text-base p-4 flex flex-col gap-3">
         <ul
           v-for="(set, key) in skillset"
           :key="set"

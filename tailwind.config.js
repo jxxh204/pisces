@@ -11,7 +11,7 @@ module.exports = {
       AppleGaramond: "Apple Garamond Light",
       charcoal: "charcoal",
       Monocraft: "Monocraft",
-      Pretendard: "Pretendard",
+      Pretendard: "Pretendard-Regular",
     },
     extend: {
       cursor: {

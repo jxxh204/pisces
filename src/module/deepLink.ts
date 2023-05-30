@@ -40,7 +40,7 @@ function participate(url: string, appName: string) {
   // 인터벌 마다 동작할 기능
   function intervalSch() {
     // 매 인터벌 마다 웹뷰가 활성화 인지 체크
-    if (document.webkitHidden || document.hidden) {
+    if (document.hidden) {
       // 웹뷰 비활성화
       clearTimer(); // 앱이 설치되어있을 경우 타이머 제거
     } else {

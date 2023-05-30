@@ -12,7 +12,7 @@ const finderStore = useFinderStore();
 </script>
 
 <template>
-  <div class="flex flex-row fixed left-0 bottom-0 h-9">
+  <div class="flex flex-row absolute left-0 bottom-0 h-9">
     <img :src="FirstButton" class="h-full" />
     <img :src="LeftButton" class="h-full" />
     <div
