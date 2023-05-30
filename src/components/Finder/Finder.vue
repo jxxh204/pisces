@@ -73,7 +73,7 @@ const finderLeng = Object.keys(finderStore.currentFinders).length;
 let finderOption = {
   top: finderLeng * 30,
   left: finderLeng * 30,
-  width: 600,
+  width: 760,
   height: window.innerHeight - 100,
   minWidth: 200,
   minHeight: 250,
@@ -81,7 +81,7 @@ let finderOption = {
 let oldFinderOption = {
   top: finderLeng * 30,
   left: finderLeng * 30,
-  width: 600,
+  width: 760,
   height: window.innerHeight - 100,
   minWidth: 200,
   minHeight: 250,
@@ -98,7 +98,7 @@ const onClickFullScreen = () => {
     const bodyHeight = document.getElementById("app-body")?.clientHeight;
     finderOption.top = 0;
     finderOption.left = 0;
-    if (bodyHeight) finderOption.height = bodyHeight;
+    if (bodyHeight) finderOption.height = bodyHeight - 20;
     finderOption.width = document.body.clientWidth;
   }
   isFullScreen = !isFullScreen;
@@ -113,7 +113,7 @@ const eHandler = (data: any) => {
     data.top,
     data.left
   );
-  emitter.emit(`finder:${props.name}`);
+  emitter.emit(`finder:${props.name}`, data);
 };
 
 const selectComponent = () => {
