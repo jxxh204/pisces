@@ -13,6 +13,7 @@ import TabOutlineLeftClick from "@/assets/images/Finder/tab-outline_left_click.s
 import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click.svg";
 
 import FileIcon from "../Icon/File.Icon.vue";
+import Tooltip from "../Tooltip.vue";
 
 const GameFinder = defineAsyncComponent(
   () =>
@@ -57,10 +58,10 @@ const props = defineProps<Props>();
 const emitter = inject("emitter");
 const finderLeng = Object.keys(finderStore.currentFinders).length;
 const finderOption = {
-  top: window.innerHeight / 2 - 800 / 2 + finderLeng * 30,
+  top: finderLeng * 30,
   left: finderLeng * 30,
   width: 600,
-  height: 700,
+  height: window.innerHeight - 100,
   minWidth: 200,
   minHeight: 250,
 };
@@ -124,19 +125,32 @@ const selectComponent = () => {
         id="finder_header"
         class="drag-container h-5 flex flex-row items-center gap-2"
       >
-        <img
-          :src="CloseBox"
-          @click="finderStore.removeFinder(props.name)"
-          class="button_hover"
-        />
+        <Tooltip name="close" class="basis-16 h-full">
+          <template v-slot:tooltip>
+            <img
+              :src="CloseBox"
+              @click="finderStore.removeFinder(props.name)"
+              class="button_hover transition_basic"
+            />
+          </template>
+        </Tooltip>
         <div class="barPicker"></div>
         <!--          :isClick="isClick" -->
         <file-icon :name="props.name" />
         <p class="">{{ props.name }}</p>
         <div class="barPicker"></div>
 
-        <img :src="ZoomBox" class="button_hover" />
-        <img :src="Collapsebox" class="button_hover" />
+        <Tooltip name="fullScreen" class="basis-16 h-full">
+          <template v-slot:tooltip>
+            <img :src="ZoomBox" class="button_hover transition_basic" />
+          </template>
+        </Tooltip>
+
+        <Tooltip name="collapsebox" class="basis-16 h-full">
+          <template v-slot:tooltip>
+            <img :src="Collapsebox" class="button_hover transition_basic" />
+          </template>
+        </Tooltip>
       </section>
       <section
         id="finder_body"

@@ -111,7 +111,7 @@ onMounted(() => {
             <li
               v-for="skill in set"
               :key="skill"
-              class="chco-lg-bold px-2 py-1 font-semibold bg-mac-Lavender animation_slide"
+              class="chco-lg-bold px-2 py-1 font-semibold bg-mac-Lavender animation_slide cursor-pointer"
             >
               {{ skill }}
             </li>
