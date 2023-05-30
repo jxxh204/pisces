@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { ref, inject, defineAsyncComponent } from "vue";
+import {
+  ref,
+  inject,
+  defineAsyncComponent,
+  onMounted,
+  getCurrentInstance,
+  type ComponentInternalInstance,
+} from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -14,6 +21,7 @@ import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click
 
 import FileIcon from "../Icon/File.Icon.vue";
 import Tooltip from "../Tooltip.vue";
+import _ from "lodash";
 
 const GameFinder = defineAsyncComponent(
   () =>
@@ -46,18 +54,23 @@ const ContactFinder = defineAsyncComponent(
     )
 );
 import type { FileNames, FinderKind } from "@/types/store";
-const finderStore = useFinderStore();
+// import _ from 'lodash';
+
 interface Props {
   name: FileNames;
   zIndex: number;
   kind: FinderKind;
 }
+
+const finderStore = useFinderStore();
 const tabStore = useTabStore();
 
 const props = defineProps<Props>();
 const emitter = inject("emitter");
+const { proxy } = getCurrentInstance();
 const finderLeng = Object.keys(finderStore.currentFinders).length;
-const finderOption = {
+
+let finderOption = {
   top: finderLeng * 30,
   left: finderLeng * 30,
   width: 600,
@@ -65,10 +78,34 @@ const finderOption = {
   minWidth: 200,
   minHeight: 250,
 };
+let oldFinderOption = {
+  top: finderLeng * 30,
+  left: finderLeng * 30,
+  width: 600,
+  height: window.innerHeight - 100,
+  minWidth: 200,
+  minHeight: 250,
+};
+let isFullScreen = false;
+
+const onClickFullScreen = () => {
+  console.log(isFullScreen, oldFinderOption);
+  if (isFullScreen) {
+    finderOption = oldFinderOption;
+  } else {
+    oldFinderOption = _.cloneDeep(finderOption);
+
+    const bodyHeight = document.getElementById("app-body")?.clientHeight;
+    finderOption.top = 0;
+    finderOption.left = 0;
+    if (bodyHeight) finderOption.height = bodyHeight;
+    finderOption.width = document.body.clientWidth;
+  }
+  isFullScreen = !isFullScreen;
+};
 
 //파인더 크기를 sm,md, lg, xl 으로 나눠서 폰트크기 조절하기.
 const eHandler = (data: any) => {
-  console.log(data);
   finderStore.changeFinderState(
     props.name,
     data.width,
@@ -142,7 +179,11 @@ const selectComponent = () => {
 
         <Tooltip name="fullScreen" class="basis-16 h-full">
           <template v-slot:tooltip>
-            <img :src="ZoomBox" class="button_hover transition_basic" />
+            <img
+              :src="ZoomBox"
+              @click="onClickFullScreen"
+              class="button_hover transition_basic"
+            />
           </template>
         </Tooltip>
 
