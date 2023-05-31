@@ -26,7 +26,7 @@ function onError(reason: string) {
 }
 const onClickNotion = () => {
   const url =
-    "notion://forest-torta-822.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167";
+    "https://forest-torta-822.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167";
   //   window.open(props.link, "_blank");
   deepLink.participate(url, "notion");
 };

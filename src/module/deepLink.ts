@@ -31,6 +31,8 @@ function mobile_chk() {
 }
 
 function participate(url: string, appName: string) {
+  const appUrl = url.replace("https", appName);
+
   // 인터벌, 타이머 삭제
   function clearTimer() {
     clearInterval(schInterval);
@@ -50,24 +52,25 @@ function participate(url: string, appName: string) {
   }
 
   // 앱 실행(iOS인 경우)
-  console.log(url);
-  location.href = url;
+  location.href = appUrl;
 
   // 앱이 설치 되어있는지 체크
   schInterval = setInterval(intervalSch, 500);
 
   // 앱이 없을 경우
-  const openNewWindow = window.open("about:blank");
   timer = setTimeout(function () {
-    if (isAndroid) {
-      // 스토어 유도
-      // location.href = `https://play.google.com/store/apps/details?id=com.${appName}.android&hl=ko`;
-      if (openNewWindow) openNewWindow.location.href = url;
-    } else if (isIOS) {
-      // 스토어 유도
-      // location.href = `https://apps.apple.com/kr/app/${appName}/id1482454543`;
-      if (openNewWindow) openNewWindow.location.href = url;
-    }
+    //자동으로감.
+    window.open(url);
+
+    // if (isAndroid) {
+    //   // 스토어 유도
+    // location.href = url;
+    //   if (openNewWindow) openNewWindow.location.href = url;
+    // } else if (isIOS) {
+    //   // 스토어 유도
+    // location.href = url;
+    //   if (openNewWindow) openNewWindow.location.href = url;
+    // }
     clearInterval(schInterval);
   }, 2000);
 }

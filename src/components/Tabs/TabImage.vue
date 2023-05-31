@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useElementHover } from "@vueuse/core";
 import { ref, onMounted } from "vue";
-import deepLink from "../../module/deepLink";
+import deepLink from "@/module/deepLink";
 
 interface Props {
   image: string;

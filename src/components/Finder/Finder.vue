@@ -187,7 +187,7 @@ const selectComponent = () => {
       </section>
       <section
         id="finder_body"
-        class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col overflow-auto mac_scroll"
+        class="finder_shadow_out bg-mac-white w-full h-full finder_border flex flex-col overflow-auto mac_scroll"
       >
         <!-- tab -->
         <article
@@ -219,22 +219,7 @@ const selectComponent = () => {
             <img v-else :src="TabOutlineRight" />
           </div>
         </article>
-        <!-- List -->
-        <article
-          v-else-if="props.kind === 'list'"
-          id="finder_body_nav"
-          class="flex-row flex h-6 text-center w-full"
-        >
-          <!-- item -->
-          <div class="list_nav finder_shadow_in basis-4/12">Name</div>
-          <div class="list_nav finder_shadow_in basis-4/12">Link</div>
-          <div class="list_nav finder_shadow_in basis-1/12">Size</div>
-          <div
-            class="finder_shadow_in basis-3/12 bg-mac-gray-400 border-2 border-mac-black border-t-0 w-full; border-x-0"
-          >
-            Kind
-          </div>
-        </article>
+
         <!-- normal -->
         <article
           v-else
@@ -261,7 +246,7 @@ const selectComponent = () => {
   position: absolute;
 }
 .resizable-content {
-  @apply w-full h-full bg-mac-gray-400 finder_boder p-1 flex flex-col gap-1 justify-start;
+  @apply w-full h-full bg-mac-gray-400 finder_border p-1 flex flex-col gap-1 justify-start;
 }
 #finder_header img {
   @apply h-full;
@@ -272,11 +257,8 @@ const selectComponent = () => {
 .button_hover:hover {
   @apply cursor-select brightness-[0.3];
 }
-.finder_boder {
+.finder_border {
   @apply border-2 border-mac-black bg-mac-gray-200;
-}
-.list_nav {
-  @apply bg-mac-gray-400 border-2 border-mac-black border-t-0 border-l-0 w-full;
 }
 
 .tab {
