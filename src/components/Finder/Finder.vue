@@ -189,6 +189,7 @@ const selectComponent = () => {
         id="finder_body"
         class="finder_shadow_out bg-mac-white w-full h-full finder_boder flex flex-col overflow-auto mac_scroll"
       >
+        <!-- tab -->
         <article
           v-if="props.kind === 'tab'"
           id="finder_body_nav"
@@ -218,7 +219,23 @@ const selectComponent = () => {
             <img v-else :src="TabOutlineRight" />
           </div>
         </article>
-
+        <!-- List -->
+        <article
+          v-else-if="props.kind === 'list'"
+          id="finder_body_nav"
+          class="flex-row flex h-6 text-center w-full"
+        >
+          <!-- item -->
+          <div class="list_nav finder_shadow_in basis-4/12">Name</div>
+          <div class="list_nav finder_shadow_in basis-4/12">Link</div>
+          <div class="list_nav finder_shadow_in basis-1/12">Size</div>
+          <div
+            class="finder_shadow_in basis-3/12 bg-mac-gray-400 border-2 border-mac-black border-t-0 w-full; border-x-0"
+          >
+            Kind
+          </div>
+        </article>
+        <!-- normal -->
         <article
           v-else
           id="finder_body_nav"
@@ -257,6 +274,9 @@ const selectComponent = () => {
 }
 .finder_boder {
   @apply border-2 border-mac-black bg-mac-gray-200;
+}
+.list_nav {
+  @apply bg-mac-gray-400 border-2 border-mac-black border-t-0 border-l-0 w-full;
 }
 
 .tab {

@@ -10,6 +10,7 @@ const { pdf, pages, info } = usePDF(resumePDF, {
 });
 const page = ref(1);
 const progress = ref(0);
+const vuePDFEl = ref();
 
 type progressType = {
   loaded: number;
@@ -28,6 +29,34 @@ const onClickNotion = () => {
     "notion://forest-torta-822.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167";
   //   window.open(props.link, "_blank");
   deepLink.participate(url, "notion");
+};
+const onClickPrev = () => {
+  if (page.value > 1) {
+    page.value = page.value - 1;
+    vuePDFEl.value.classList.add("animation_slide_right");
+
+    vuePDFEl.value.addEventListener(
+      "animationend",
+      function () {
+        vuePDFEl.value.classList.remove("animation_slide_right");
+      },
+      { once: true }
+    );
+  }
+};
+const onClickNext = () => {
+  if (page.value < pages.value) {
+    page.value = page.value + 1;
+    vuePDFEl.value.classList.add("animation_slide_left");
+
+    vuePDFEl.value.addEventListener(
+      "animationend",
+      function () {
+        vuePDFEl.value.classList.remove("animation_slide_left");
+      },
+      { once: true }
+    );
+  }
 };
 onMounted(() => {
   deepLink.mobile_chk();
@@ -94,15 +123,11 @@ onMounted(() => {
     <section
       class="flex flex-row gap-2 items-center justify-center mono-lg-bold"
     >
-      <btn class="ds-btn" @click="page = page > 1 ? page - 1 : page">
-        Prev
-      </btn>
+      <btn class="ds-btn" @click="onClickPrev"> Prev </btn>
       <span>{{ page }} / {{ pages }}</span>
-      <btn class="ds-btn" @click="page = page < pages ? page + 1 : page">
-        Next
-      </btn>
+      <btn class="ds-btn" @click="onClickNext"> Next </btn>
     </section>
-    <section class="h-full w-full flex flex-row justify-center">
+    <section class="h-full w-full flex flex-row justify-center" ref="vuePDFEl">
       <VuePDF :pdf="pdf" :scale="1" :page="page">
         <div style="text-align: center">Loading...</div>
       </VuePDF>

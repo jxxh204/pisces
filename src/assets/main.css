@@ -85,12 +85,12 @@
   transform-style: preserve-3d;
 }
 
-.animation_slide:hover {
-  animation: slide 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+.animation_enlargement:hover {
+  animation: enlargement 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   /* transform: perspective(100px) translateZ(5px); */
 }
 
-@keyframes slide {
+@keyframes enlargement {
   from {
     /* font-size: 10px; */
     transform: perspective(600px) translateZ(0px);
@@ -100,7 +100,42 @@
     transform: perspective(600px) translateZ(90px);
   }
 }
+/* slide */
+.animation_slide_left {
+  animation: slide_left 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  /* transform: perspective(100px) translateZ(5px); */
+}
 
+@keyframes slide_left {
+  from {
+    /* font-size: 10px; */
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  to {
+    /* font-size: 14px; */
+    opacity: 0;
+    transform: translateX(-400px);
+  }
+}
+
+.animation_slide_right {
+  animation: slide_right 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  /* transform: perspective(100px) translateZ(5px); */
+}
+
+@keyframes slide_right {
+  from {
+    /* font-size: 10px; */
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  to {
+    /* font-size: 14px; */
+    opacity: 0;
+    transform: translateX(400px);
+  }
+}
 /* scroll */
 .scrollhide::-webkit-scrollbar {
   display: none;
