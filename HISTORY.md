@@ -387,3 +387,7 @@
 
 - tsconfig 제대로 잡음
 - v0.0.0:121
+- phaserJS type 잡음
+- v0.0.0:122
+- type error 다 잡음
+- v0.0.0:123

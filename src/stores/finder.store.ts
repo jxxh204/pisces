@@ -1,9 +1,9 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { FinderComponentType, FileNames } from "@/types/store";
+import type { FinderComponentType, FileNames } from "@/types/finder";
 
 export default defineStore("useFinderStore", () => {
-  const currentFinders = ref<FinderComponentType>();
+  const currentFinders = ref({} as FinderComponentType);
   const finderLength = ref(10);
 
   const addFinder = (name: FileNames) => {
@@ -11,6 +11,7 @@ export default defineStore("useFinderStore", () => {
       clickFinder(name);
       return;
     }
+
     if (currentFinders.value) {
       currentFinders.value[name] = {
         name,
@@ -46,12 +47,12 @@ export default defineStore("useFinderStore", () => {
     top: number,
     left: number
   ) => {
-    if (currentFinders.value) {
-      currentFinders.value[name].width = width;
-      currentFinders.value[name].height = height;
-      currentFinders.value[name].top = top;
-      currentFinders.value[name].left = left;
-    }
+    // if (currentFinders.value) {
+    currentFinders.value[name].width = width;
+    currentFinders.value[name].height = height;
+    currentFinders.value[name].top = top;
+    currentFinders.value[name].left = left;
+    // }
   };
 
   return {

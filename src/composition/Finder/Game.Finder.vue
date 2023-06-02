@@ -8,11 +8,11 @@ import Character from "@/phaser/Sprites/Character";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import { inject, onMounted, onUnmounted, ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
-// import webRTC from "@/media/webRTCsample";
+import type webRTC from "@/media/webRTCsample";
 
 const ZOOM_LEVEL = 1;
 const finderStore = useFinderStore();
-const emitter = inject("emitter");
+const emitter: any = inject("emitter");
 const remoteVideo = ref<HTMLVideoElement>();
 const localVideo = ref<HTMLVideoElement>();
 let rtcInstance: webRTC | null = null;
@@ -59,9 +59,15 @@ onMounted(() => {
   const canvas = game.canvas;
 
   emitter.on("finder:Game", () => {
-    const gameRatio = game.config.width / game.config.height;
-    const finderWidth = finderStore.currentFinders["Game"].width - 16;
-    const finderHeight = finderStore.currentFinders["Game"].height - 64;
+    const config = game.config;
+    const gameWidth = Number(config.width);
+    const gameHeight = Number(config.height);
+    const GameFinderWidth = Number(finderStore.currentFinders["Game"].width);
+    const GameFinderHeight = Number(finderStore.currentFinders["Game"].height);
+
+    const gameRatio = gameWidth / gameHeight;
+    const finderWidth = GameFinderWidth - 16;
+    const finderHeight = GameFinderHeight - 64;
     const finderRatio = finderWidth / finderHeight;
 
     if (finderRatio < gameRatio) {

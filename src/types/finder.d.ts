@@ -1,17 +1,17 @@
 import { Coplay2023 } from "@/assets/images/projects/coplay2023_main.svg";
 type FileNames = "Home" | "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
-
+type FinderComponents = {
+  name: name;
+  zIndex: number;
+  kind?: FinderKind;
+  width?: number;
+  height?: number;
+  top?: number;
+  left?: number;
+};
 type FinderComponentType = {
-  [name in FileNames]: {
-    name: FileNames;
-    zIndex: number;
-    kind?: FinderKind;
-    width?: number;
-    height?: number;
-    top?: number;
-    left?: number;
-  };
+  [name in FileNames]: FinderComponents;
 };
 type TabName =
   | "Coplay2023"

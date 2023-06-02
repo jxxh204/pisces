@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import MacFile from "@/components/Mac/File.Mac.vue";
-import FinderMacVue from "@/components/Finder/Finder.vue";
+import FinderVue from "@/components/Finder/Finder.vue";
 import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
 import useFinderStore from "@/stores/finder.store";
+import type { FinderKind } from "@/types/finder";
 
 const finderStore = useFinderStore();
 const files = ["Home", "About", "Contact", "Projects", "Game"];
@@ -12,13 +13,12 @@ const files = ["Home", "About", "Contact", "Projects", "Game"];
 <template>
   <div id="app-body" class="w-full h-full">
     <section class="relative w-full h-full">
-      <FinderMacVue
+      <FinderVue
         v-for="(finder, index) in finderStore.currentFinders"
         @click="finderStore.clickFinder(finder.name)"
         :key="finder.name + index"
         :name="finder.name"
-        :kind="finder.kind"
-        :tabs="finder.kind === 'tab' ? finder.tabs : null"
+        :kind="(finder.kind as FinderKind)"
         :zIndex="finder.zIndex"
       />
       <article

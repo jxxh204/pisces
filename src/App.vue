@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-import { Icons } from "@/phaser/IconSprite/Icons";
-import { Finder } from "./phaser/Test/Finder";
-
-//안씀.
-import Welcome from "./phaser/Welcome/Welcome";
 import LoadingView from "./components/Loading/App.Loading.vue";
 
 import NavBar from "./composition/App/NavBar.App.vue";

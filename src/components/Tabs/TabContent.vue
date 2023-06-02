@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import aboutButton from "@/assets/images/button/Icon Button.svg";
-import type { TagName, FileNames } from "@/types/store";
+import type { TabName } from "@/types/finder";
 import Tooltip from "../Tooltip.vue";
 
 interface Props {
-  projectName: FileNames;
+  projectName: TabName;
   responsibilities: string;
-  tags: TagName;
 }
 const props = defineProps<Props>();
 </script>

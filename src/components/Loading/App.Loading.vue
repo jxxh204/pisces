@@ -28,7 +28,7 @@ onMounted(async () => {
   await promiseTimeout(1200);
   if (ready.value) {
     loadingType.value = "progress";
-    progressInterval.value = setInterval(() => {
+    progressInterval.value = window.setInterval(() => {
       progressPercent.value++;
       console.log(
         "🚀 ~ file: LoadingView.vue:39 ~ progressInterval.value=setInterval ~ progressPercent.value",

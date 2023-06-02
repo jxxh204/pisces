@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, defineAsyncComponent } from "vue";
+import { ref, inject, defineAsyncComponent, provide } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -15,6 +15,7 @@ import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click
 import FileIcon from "../Icon/File.Icon.vue";
 import Tooltip from "../Tooltip.vue";
 import _ from "lodash";
+import type { FileNames, FinderKind } from "@/types/finder";
 
 const GameFinder = defineAsyncComponent(
   () =>
@@ -46,9 +47,7 @@ const ContactFinder = defineAsyncComponent(
       /* webpackChunkName: "ContactFinder" */ "@/composition/Finder/Contact.Finder.vue"
     )
 );
-import type { FileNames, FinderKind } from "@/types/store";
 // import _ from 'lodash';
-
 interface Props {
   name: FileNames;
   zIndex: number;
@@ -59,8 +58,12 @@ const finderStore = useFinderStore();
 const tabStore = useTabStore();
 
 const props = defineProps<Props>();
-const emitter = inject("emitter");
-const finderLeng = Object.keys(finderStore.currentFinders).length;
+
+const emitter: any = inject("emitter");
+const finders = finderStore.currentFinders;
+const finderLeng = Object.keys(finders).length;
+
+console.log("finder vue");
 
 let finderOption = {
   top: finderLeng * 30,
@@ -109,6 +112,7 @@ const eHandler = (data: any) => {
 };
 
 const selectComponent = () => {
+  console.log(props.name);
   switch (props.name) {
     case "Game":
       return GameFinder;

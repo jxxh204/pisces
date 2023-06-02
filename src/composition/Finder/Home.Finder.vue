@@ -99,7 +99,7 @@ onMounted(() => {
       <article class="mac_border text-base p-4 flex flex-col gap-3">
         <ul
           v-for="(set, key) in skillset"
-          :key="set"
+          :key="set + key"
           class="flex flex-col gap-3 mono-bold"
         >
           {{

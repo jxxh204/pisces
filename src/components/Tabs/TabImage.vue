@@ -13,7 +13,7 @@ const mainImage = ref<HTMLImageElement>();
 const isImageHover = useElementHover(projeftImage);
 
 const mouseOut = (e: MouseEvent) => {
-  const target = e.target;
+  const target = e.target as HTMLDivElement;
   target.style.opacity = "0";
 };
 

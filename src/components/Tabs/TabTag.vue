@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TagName } from "@/types/store";
+import type { TagName } from "@/types/finder";
 
 interface Props {
   tags: TagName[];
