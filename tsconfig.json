@@ -1,14 +1,27 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.vitest.json"
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/*.ts", "src/*.vue"],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node", "Phaser"],
+    "typeRoots": ["./src/types", "./node_modules/phaser/types"],
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true, //JS 같이사용
+    "checkJs": false, //JS 같이사용
+    "sourceMap": true,
+    "experimentalDecorators": true, //vscode의 es7 Decorator 오류 제거
+    "skipLibCheck": true, // library type check 제거.
+    "esModuleInterop": true, // typescript import error 제거
+    "allowSyntheticDefaultImports": true, //불러오려는 모듈에 default export가 없을 때도 import as * XXX가 아닌 import XXX를 사용할 수 있도록 하는 설정이다.
+    "forceConsistentCasingInFileNames": true, //사용할 파일의 이름을 대소문자까지 정확하게 작성하도록 강제하는 설정이다.
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "component/*": ["./src/components/*"]
     }
-  ]
+  },
+  "typeRoots": ["./node_modules/phaser/types"],
+  "types": ["Phaser"]
 }

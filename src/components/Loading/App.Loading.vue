@@ -119,8 +119,8 @@ img {
   transform: translate(-50%, -50%);
   @apply cursor-watch;
 }
-.starting {
+/* .starting {
   background-image: url("@/assets/images/bg/background.png");
   background-size: cover;
-}
+} */
 </style>

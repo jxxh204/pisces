@@ -40,8 +40,7 @@ const list = {
 };
 
 const onClickContact = (url: string, appName: string) => {
-  if (appName === "gmail") {
-    alert("copy");
+  if (appName === "gmail" || appName === "internet") {
     return;
   }
   deepLink.participate(url, appName);
@@ -77,7 +76,7 @@ onMounted(() => {
         @click="onClickContact(mail.url, mail.id)"
       >
         <template v-slot:tooltip>
-          <li class="bg-mac-gray-300 basis-4/12 pl-6 h-full liStyle gap-2">
+          <li class="bg-mac-gray-300 basis-4/12 pl-6 h-full liStyle gap-1">
             <img
               :src="mail.image"
               class="h-14 bg-mac-white"
