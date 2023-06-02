@@ -32,7 +32,7 @@ const tabStore = useTabStore();
       <div v-if="tabStore.currentTab.demo" class="py-2">
         <a
           :href="tabStore.currentTab.demo"
-          class="text-mac-black cursor-pointer mono-bold text-xl"
+          class="text-mac-black cursor-select mono-bold text-xl"
           target="_blank"
           >Demo</a
         >

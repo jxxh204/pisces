@@ -4,6 +4,7 @@ import Welcome_modal from "@/assets/images/Welcome_modal.png";
 import { onMounted, ref } from "vue";
 import { promiseTimeout, useTimeout } from "@vueuse/core";
 import ProgressBar from "@/assets/images/ProgressBar.png";
+import useFinderStore from "@/stores/finder.store";
 
 // const start = useTimeout(1000); // 1초뒤 true
 // const isStartingIcon = useTimeout(1000);
@@ -15,7 +16,12 @@ const loadingType = ref<LoadingTypes>("initial");
 const isStartingIcon = ref(true);
 const progressPercent = ref(0);
 const progressInterval = ref<number>(0);
+const finderStore = useFinderStore();
 
+const onClickStart = () => {
+  loadingType.value = "none";
+  finderStore.addFinder("Home");
+};
 onMounted(async () => {
   await promiseTimeout(1200);
   if (ready.value) {
@@ -47,7 +53,7 @@ onMounted(async () => {
   <Transition name="fade">
     <div
       v-if="loadingType === 'initial'"
-      class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition_basic"
+      class="loading bg-mac-gray-700 flex flex-row justify-center items-center transition_basic ㅋ-"
     >
       <img v-if="isStartingIcon" :src="StartingIcon" class="h-[6%]" />
     </div>
@@ -88,7 +94,7 @@ onMounted(async () => {
         class="font-[Charcoal] fixed top-[69%] left-1/2 -translate-x-1/2 -translate-y-1/2"
       >
         <button
-          @click="() => (loadingType = 'none')"
+          @click="onClickStart"
           class="mono-lg-light flex flex-row justify-center items-center"
         >
           Start
@@ -110,7 +116,7 @@ img {
 }
 .loading {
   margin: 0;
-  z-index: 10;
+  z-index: 9999;
   position: fixed;
   width: 100%;
   height: 100%;

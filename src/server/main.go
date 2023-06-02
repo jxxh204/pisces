@@ -10,7 +10,7 @@ var addr = flag.String("addr", ":3000", "http service address")
 // chat
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	r.Header.Set("Content-Type", "text/html")
+	r.Header.Set("Content-Type", "text/plain")
 	http.ServeFile(w, r, "./client/index.html")
 
 	if r.URL.Path != "/" {

@@ -72,7 +72,7 @@ onMounted(() => {
     <ul v-for="(mail, key) in list" :key="mail.kind">
       <Tooltip
         :name="'click! ' + key"
-        class="w-full h-14 flex flex-row items-center cursor-pointer text-xs"
+        class="w-full h-14 flex flex-row items-center cursor-select text-xs"
         @click="onClickContact(mail.url, mail.id)"
       >
         <template v-slot:tooltip>

@@ -46,7 +46,7 @@ onMounted(() => {
         v-if="isImageHover"
       >
         <p
-          class="cursor-pointer w-full h-full flex flex-col justify-center items-center"
+          class="cursor-select w-full h-full flex flex-col justify-center items-center"
           @click="onClickImage"
         >
           <span class="animate-bounce mb-9 absolute">↓</span>More

@@ -1,4 +1,3 @@
-import { Coplay2023 } from "@/assets/images/projects/coplay2023_main.svg";
 type FileNames = "Home" | "About" | "Contact" | "Projects" | "Game";
 type FinderKind = "normal" | "tab" | "list";
 type FinderComponents = {

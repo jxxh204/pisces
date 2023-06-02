@@ -1,10 +1,10 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-import Coplay2023 from "@/assets/images/projects/coplay2023_main.svg";
-import Coplay from "@/assets/images/projects/coplay_main.svg";
-import HelloMars from "@/assets/images/projects/HelloMars.svg";
-import Blockbot from "@/assets/images/projects/blockbot.svg";
+import Coplay2023 from "@/assets/images/projects/coplay2023_main.jpg";
+import Coplay from "@/assets/images/projects/coplay_main.jpg";
+import HelloMars from "@/assets/images/projects/HelloMars.jpg";
+import Blockbot from "@/assets/images/projects/blockbot.jpg";
 import LAL from "@/assets/images/projects/LAL.svg";
 
 import type { TabComponent, TabComponentType, TabName } from "@/types/finder";

@@ -108,7 +108,7 @@ onMounted(() => {
       class="flex flex-col justify-center items-center text-mac-white mono-lg-bold gap-2"
     >
       <h4
-        class="buttonStyle cursor-pointer text-mac-Lavender"
+        class="buttonStyle cursor-select text-mac-Lavender"
         @click="onClickNotion"
       >
         Notion

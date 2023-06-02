@@ -393,3 +393,7 @@
 - v0.0.0:123
 - go server에서 client 폴더 index.html 띄움
 - v0.0.0:124
+- 이미지 용량 체크 후 용량 개선
+- cursor-selector 적용
+- loading 개선
+- v0.0.0:125

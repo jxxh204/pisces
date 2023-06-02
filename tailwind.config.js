@@ -16,12 +16,11 @@ module.exports = {
     extend: {
       cursor: {
         watch: "url(src/assets/images/cursor/Watch.png),pointer",
-        cat: "url(src/assets/images/cursor/cat_cursor32x32.gif), pointer",
-        select: "url(src/assets/images/cursor/Select.svg), pointer",
-        default: "url(src/assets/images/cursor/Arrow.svg), pointer",
+        select: "url(src/assets/images/cursor/Select.png), pointer",
+        default: "url(src/assets/images/cursor/Arrow.png), pointer",
       },
       backgroundImage: {
-        "default-pattern": "url(src/assets/images/bg/default.svg)",
+        "default-pattern": "url(src/assets/images/bg/default.png)",
         "finder-pattern": "url(src/assets/images/bg/finder.svg)",
         "blueDalmation-pattern": "url(src/assets/images/bg/blueDalmation.svg)",
         barPicker: "url(src/assets/images/Finder/barpicker.svg)",

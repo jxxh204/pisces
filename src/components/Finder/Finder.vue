@@ -4,8 +4,8 @@ import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
 
-import CloseBox from "@/assets/images/Finder/closebox.svg";
-import Collapsebox from "@/assets/images/Finder/collapsebox.svg";
+import CloseBox from "@/assets/images/Finder/closebox.png";
+import Collapsebox from "@/assets/images/Finder/collapsebox.png";
 import ZoomBox from "@/assets/images/Finder/zoombox.svg";
 import TabOutlineLeft from "@/assets/images/Finder/tab-outline_left.svg";
 import TabOutlineRight from "@/assets/images/Finder/tab-outline_right.svg";
@@ -204,7 +204,7 @@ const selectComponent = () => {
             v-for="tab in tabStore.Tabs"
             :key="tab.name"
             id="finder_tab"
-            class="h-6 flex flex-row font-bold items-end text-clip cursor-pointer"
+            class="h-6 flex flex-row font-bold items-end text-clip cursor-select"
             @click="tabStore.onClickTab(tab.name)"
           >
             <!-- :class="tab.click ? 'bg-mac-white' : ' '" -->

@@ -9,7 +9,6 @@ import useFinderStore from "@/stores/finder.store";
 
 const finderStore = useFinderStore();
 onMounted(async () => {
-  finderStore.addFinder("Home");
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";
@@ -41,9 +40,9 @@ onMounted(async () => {
 
 <template>
   <div
-    class="w-screen h-screen fixed cursor-default bg-default-pattern bg-cover bg-center flex flex-col"
+    class="w-screen h-screen fixed cursor-default bg-default-pattern bg-center flex flex-col"
   >
-    <!-- <LoadingView /> -->
+    <LoadingView />
 
     <NavBar />
     <Body />

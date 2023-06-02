@@ -19,7 +19,7 @@ const props = defineProps<Props>();
           <template v-slot:tooltip>
             <img
               :src="aboutButton"
-              class="cursor-pointer h-5 hover:brightness-50 transition_basic"
+              class="cursor-select h-5 hover:brightness-50 transition_basic"
             />
           </template>
         </Tooltip>

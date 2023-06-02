@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import AppleLogo from "@/assets/images/icons/apple-logo.png";
-import NavBarResize from "@/assets/images/icons/Menu-bar-resizer.png";
-import FinderIcon from "@/assets/images/icons/Finder.png";
+import NavBarResize from "@/assets/images/icons/Menu-bar-resizer.svg";
+import FinderIcon from "@/assets/images/icons/finder.svg";
 const menus = [
   { name: "File" },
   { name: "Edit" },
@@ -36,7 +36,7 @@ onMounted(() => {});
         class="h-4 hover:text-mac-white hover:bg-mac-Azul px-1"
       />
       <p
-        class="hover:text-mac-white hover:bg-mac-Azul cursor-pointer h-full px-1 flex flex-col justify-center"
+        class="hover:text-mac-white hover:bg-mac-Azul cursor-select h-full px-1 flex flex-col justify-center"
         v-for="(menu, index) in menus"
         :key="menu.name + index"
       >
