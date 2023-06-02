@@ -11,7 +11,7 @@ interface permissionStatus {
 }
 interface optionState {
   el: HTMLSelectElement;
-  input: string;
+  input: SettingDeviceOption;
 }
 /**
  * user의 미디어를 가져오는 클래스
@@ -178,7 +178,7 @@ const onRemoveDeviceChanger = () => {
   // removeEventListener("devicechange", deviceChanger);
 };
 class GetStream {
-  private static instance: GetStream;
+  private static instance: GetStream | undefined;
   private constraints: MediaStreamConstraints;
   private audioStream: MediaStream | null;
   private elementKind: "video" | "canvas";
@@ -218,7 +218,8 @@ class GetStream {
   }
 
   private draw() {
-    const ctx = this.outputElement.getContext("2d");
+    const canvas = this.outputElement as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.drawImage(
       this.canvasInputVideo,
@@ -298,12 +299,13 @@ class GetStream {
     }
   }
   initInstance() {
-    this.instance = undefined;
+    // this.instance = undefined;
     this.constraints = {
       audio: false,
       video: false,
     };
-    this.outputElement.srcObject = null;
+    const video = this.outputElement as HTMLVideoElement;
+    video.srcObject = null;
     // 왜 굳이 audio만 담아서 없애줄까??
     if (this.audioStream) {
       this.audioStream.getAudioTracks()[0].stop();

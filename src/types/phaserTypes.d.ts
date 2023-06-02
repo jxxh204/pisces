@@ -1,3 +1,6 @@
+//finder address
+type AddressType = "webRTC" | "audio" | "";
+
 type FinderType = {
   // x,y,texture는 형식상 넣는것.
   scene: Phaser.Scene;

@@ -2,7 +2,10 @@ interface Mushrooms {
   [key: string]: string;
   idle: string;
   jump: string;
-  run: string;
+  right: string;
+  left: string;
+  run_left: string;
+  run_right: string;
 }
 type MotionStatus =
   | "up"

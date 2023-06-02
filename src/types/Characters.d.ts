@@ -1,11 +1,17 @@
 import type Level1 from "../phaser/Sprites/Character";
+type PlayerLocationType = {
+  w: number;
+  h: number;
+  currentY: number;
+};
+
 type ColliderType = {
   floor: boolean;
   activeCount: boolean[];
   timer: NodeJS.Timeout;
 };
 type ScenesType = {
-  level1: Phaser.Scene | Level1 | null;
+  level1: Phaser.Scene | Level1 | any;
 };
 
 type ImageOptionType = {

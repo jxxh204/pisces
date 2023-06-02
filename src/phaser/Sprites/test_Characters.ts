@@ -5,6 +5,12 @@ import M_right from "@/assets/Mushroom-Forrest/Right.png";
 import M_left from "@/assets/Mushroom-Forrest/Left.png";
 import M_run_right from "@/assets/Mushroom-Forrest/Run_Right.png";
 import M_run_left from "@/assets/Mushroom-Forrest/Run_Left.png";
+import type {
+  MotionSpeedTypes,
+  ScenesType,
+  ColliderType,
+  PlayerLocationType,
+} from "@/types/Characters";
 //모든 캐릭터를 출력
 //캐릭터 제작 클래스는 따로 만들어야함.
 const Mushrooms: Mushrooms = {
@@ -19,11 +25,13 @@ const Mushrooms: Mushrooms = {
 export class Characters extends Phaser.Scene {
   player: any;
   playerState: "jump" | "idle" | "walk" | "run" | "running";
-  playerLocation: object;
+  playerLocation: PlayerLocationType;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   colliders: ColliderType;
   sprite: any;
   scenes: ScenesType;
+  isBehavior: boolean;
+  motionSpeed: MotionSpeedTypes;
   constructor() {
     super({
       key: "Characters",
@@ -48,6 +56,12 @@ export class Characters extends Phaser.Scene {
     };
     this.scenes = {
       level1: null,
+    };
+    this.isBehavior = false;
+    this.motionSpeed = {
+      walk: 200,
+      run: 100,
+      jump: 900,
     };
   }
   loadOtherScene() {
@@ -152,18 +166,19 @@ export class Characters extends Phaser.Scene {
       c: Phaser.Types.Physics.Arcade.GameObjectWithBody
     ) => {
       // console.log("🚀 ~ file: Level1.ts:174 ~ Level1 ~ setCollider ~ c", c);
-      this.scenes.level1.colliders.floor = c.active;
+      const level1 = this.scenes.level1;
+      level1.colliders.floor = c.active;
       if (this.colliders.timer) clearTimeout(this.colliders.timer);
       this.colliders.timer = setTimeout(() => {
-        this.scenes.level1.colliders.floor = false;
+        level1.colliders.floor = false;
       }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
     };
     //충돌감지 // update에 적용
     this.physics.add.collider(this.player, this.sprite.floor, (c) =>
       setOnCollideFloor(c)
     );
-
-    this.scenes.level1.sprite.floor.setCollisionByProperty({ collides: true });
+    const level1 = this.scenes.level1;
+    level1.sprite.floor.setCollisionByProperty({ collides: true });
     // var M = Phaser.Physics.Matter.MatterPhysics
   }
 

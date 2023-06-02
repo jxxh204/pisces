@@ -47,7 +47,7 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.scene.load.image("pc1TileSetName", computerImg);
   }
   setLocation() {
-    const Charactercene = this.scene.scene.get("Character");
+    const Charactercene: any = this.scene.scene.get("Character");
     if (this.finderSprite) {
       Phaser.Display.Align.In.Center(
         this.finderSprite,
@@ -75,29 +75,29 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     });
     this.exitButton?.addListener("pointerdown", (e: MouseEvent) => {});
   }
-  setObserver() {
-    const observer = Observer.getInstance();
-    //파인더 열릴 경우 캐릭터 위치 이동
-    const observer_event = {
-      id: "finder_address",
-      func: (address: AddressType) => {
-        if (!address) {
-          this.finderSprite?.setVisible(false);
-          this.exitButton?.setVisible(false);
-          this.computer1?.setVisible(false);
-          this.computer2?.setVisible(false);
-          return;
-        }
-        if (this.address === address) {
-          this.finderSprite?.setVisible(true);
-          this.exitButton?.setVisible(true);
-          this.computer1?.setVisible(true);
-          this.computer2?.setVisible(true);
-        }
-      },
-    };
-    observer.addObserver(observer_event);
-  }
+  // setObserver() {
+  //   const observer = Observer.getInstance();
+  //   //파인더 열릴 경우 캐릭터 위치 이동
+  //   const observer_event = {
+  //     id: "finder_address",
+  //     func: (address: AddressType) => {
+  //       if (!address) {
+  //         this.finderSprite?.setVisible(false);
+  //         this.exitButton?.setVisible(false);
+  //         this.computer1?.setVisible(false);
+  //         this.computer2?.setVisible(false);
+  //         return;
+  //       }
+  //       if (this.address === address) {
+  //         this.finderSprite?.setVisible(true);
+  //         this.exitButton?.setVisible(true);
+  //         this.computer1?.setVisible(true);
+  //         this.computer2?.setVisible(true);
+  //       }
+  //     },
+  //   };
+  //   observer.addObserver(observer_event);
+  // }
   create() {
     this.finderSprite = this.scene.physics.add.staticSprite(
       0,
@@ -136,7 +136,7 @@ export class CreateFinder extends Phaser.GameObjects.Sprite {
     this.exitButton?.setVisible(false);
     this.computer1?.setVisible(false);
     this.computer2?.setVisible(false);
-    this.setObserver();
+    // this.setObserver();
   }
   update() {}
 }

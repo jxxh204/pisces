@@ -6,7 +6,7 @@ import FileIconVue from "../Icon/File.Icon.vue";
 import type { FileNames } from "@/types/store";
 
 interface Props {
-  name: FileNames;
+  name: FileNames | string;
 }
 const props = defineProps<Props>();
 const finderStore = useFinderStore();

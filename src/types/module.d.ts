@@ -1,6 +1,6 @@
 interface ObserverState {
   // notify: void;
-  notify: (message: string) => void;
+  notify: (message: string, argument?: any) => void;
 }
 
 type ObEventList = ObEventState[];

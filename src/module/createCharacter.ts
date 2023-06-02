@@ -7,7 +7,7 @@ import type {
 
 export default class CreateCharacter {
   private static instance: CreateCharacter;
-  phaser: Phaser.Scene;
+  phaser: Phaser.Scene | any; // type 진짜 쉣이네
   name: string;
   image: string;
   imageOption: ImageOptionType;
@@ -152,7 +152,6 @@ export default class CreateCharacter {
         }
       }
     };
-
     if (this.currentAction === "jump") {
       if (this.phaser.colliders.floor) {
         this.phaser.colliders.activeCount.push(true);

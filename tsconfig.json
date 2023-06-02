@@ -1,6 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/*.ts", "src/*.vue"],
+  "exclude": ["./src/phaser/Test", "./src/*/__tests__/*", "node_modules"],
   "compilerOptions": {
     "composite": true,
     "types": ["node", "Phaser"],
@@ -17,6 +18,7 @@
     "allowSyntheticDefaultImports": true, //불러오려는 모듈에 default export가 없을 때도 import as * XXX가 아닌 import XXX를 사용할 수 있도록 하는 설정이다.
     "forceConsistentCasingInFileNames": true, //사용할 파일의 이름을 대소문자까지 정확하게 작성하도록 강제하는 설정이다.
     "noEmit": true,
+    "strict": true,
     "paths": {
       "@/*": ["./src/*"],
       "component/*": ["./src/components/*"]

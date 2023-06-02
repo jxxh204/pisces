@@ -3,9 +3,10 @@ import type { Scene } from "phaser";
 export default class Handler extends Phaser.Scene {
   // Vars
   sceneRunning = null;
-
+  gameScene: Scene;
   constructor() {
     super("handler");
+    this.gameScene = {} as Scene;
   }
 
   create() {

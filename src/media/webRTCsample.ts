@@ -9,7 +9,7 @@ export default class webRTC {
   // 	{ urls: 'stun:stun.l.google.com:19302' }
   // ]
   pc: RTCPeerConnection | null;
-  dcm_msg: RTCDataChannel | null;
+  dcm_msg: RTCDataChannel | undefined;
   config: RTCConfiguration;
   localStream?: MediaStream | undefined;
   remoteVideo: VideoState;
@@ -21,7 +21,7 @@ export default class webRTC {
     this.pc = null;
     this.remoteVideo = remoteVideo;
     this.localVideo = localVideo;
-    this.dcm_msg = null;
+    this.dcm_msg = undefined;
     // this.localStream;
     this.config = {
       iceServers: [
@@ -68,23 +68,25 @@ export default class webRTC {
     this.socket = null;
     this.baseUrl = "ws://localhost:3000";
   }
-  async handleOffer(offer: RTCOfferOptions) {
+  async handleOffer(offer: string) {
+    //RTCOfferOptions JSON으로 묶어서옴.
     if (!this.pc) {
       console.error("existing peerconnection");
       return;
     }
     //여기서 영상 실행.
     // this.createPeerConnection(); // 추가
+    const parseOffer = JSON.parse(offer);
     this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "offer",
-        sdp: offer,
+        sdp: parseOffer,
       })
     );
     //offer 받으면 바로 answer 보냄.
     const answer = await this.pc?.createAnswer();
     this.pc.setLocalDescription(answer);
-    this.sendMessage("answer", answer.sdp);
+    this.sendMessage("answer", JSON.stringify(answer.sdp));
   }
 
   async handleAnswer(answer: string) {
@@ -95,15 +97,17 @@ export default class webRTC {
     }
     // 여기 문제. 두번째 유저에서. //offer가 문제일 수 있다.
     // 순서문제일 확률이 높다.
+    const parseAnswer = JSON.parse(answer);
     this.pc.setRemoteDescription(
       new RTCSessionDescription({
         type: "answer",
-        sdp: answer,
+        sdp: parseAnswer,
       })
     );
   }
 
-  async handleCandidate(candidate: RTCIceCandidate) {
+  async handleCandidate(candidate: string) {
+    // type : RTCIceCandidate
     if (!this.pc) {
       console.error("handleCandidate no peerconnection");
       return;
@@ -111,7 +115,7 @@ export default class webRTC {
     const parseCandidate = JSON.parse(candidate);
     console.log("handleCandidate", parseCandidate, this.pc.remoteDescription);
     if (!parseCandidate.candidate) {
-      await this.pc.addIceCandidate(null);
+      await this.pc.addIceCandidate(undefined);
     } else {
       await this.pc.addIceCandidate(parseCandidate).then((e) => {
         console.log("addIceCandidate success");
@@ -147,7 +151,7 @@ export default class webRTC {
               console.log("already in call, ignoring");
               return;
             }
-            this.openRTC(); // peer가 없을 경우.
+            // this.openRTC(); // peer가 없을 경우.
             break;
           case "offer":
             this.handleOffer(data);
@@ -221,8 +225,8 @@ export default class webRTC {
 
       if (evt.candidate) {
         data.candidate = evt.candidate.candidate;
-        data.sdpMid = evt.candidate.sdpMid;
-        data.sdpMLineIndex = evt.candidate.sdpMLineIndex;
+        data.sdpMid = evt.candidate.sdpMid as string;
+        data.sdpMLineIndex = evt.candidate.sdpMLineIndex as number;
       }
       console.log("onicecandidate", evt.candidate, data);
 
@@ -240,7 +244,8 @@ export default class webRTC {
     this.pc?.createOffer().then((offer) => {
       console.log("offer", offer);
       this.pc?.setLocalDescription(offer);
-      this.sendMessage("offer", offer.sdp); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
+      //JSON.stringify 추가
+      this.sendMessage("offer", JSON.stringify(offer.sdp)); //오퍼를 보낸다. 보낸사람은 answer를 받아야한다.
     });
     // 임시
     // this.localStream?.getTracks().forEach((track) => {

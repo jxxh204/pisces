@@ -2,12 +2,14 @@ import * as Phaser from "phaser";
 import { DropDownList } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import { CreateSystemIcon } from "@/module/createSystemIcon";
 import system_webRTCImg from "@/assets/images/system/webRTC.png";
+import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
 const COLOR_DARK = 0x260e04;
 
 export class DropDownTest extends Phaser.Scene {
+  rexUI: RexUIPlugin;
   x: number;
   y: number;
   name: string;
@@ -15,9 +17,6 @@ export class DropDownTest extends Phaser.Scene {
     super({
       key: "Test",
       active: true,
-      x,
-      y,
-      name,
     });
     this.x = x;
     this.y = y;
@@ -264,9 +263,6 @@ export class ModalDialog extends Phaser.Scene {
     super({
       key: "modalDialog",
       active: true,
-      x,
-      y,
-      name,
     });
     this.x = x;
     this.y = y;

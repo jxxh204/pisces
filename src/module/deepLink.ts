@@ -55,10 +55,10 @@ function participate(url: string, appName: string) {
   location.href = appUrl;
 
   // 앱이 설치 되어있는지 체크
-  schInterval = setInterval(intervalSch, 500);
+  schInterval = window.setInterval(intervalSch, 500);
 
   // 앱이 없을 경우
-  timer = setTimeout(function () {
+  timer = window.setTimeout(function () {
     //자동으로감.
     window.open(url);
 

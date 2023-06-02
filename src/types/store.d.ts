@@ -4,9 +4,9 @@ type FinderKind = "normal" | "tab" | "list";
 
 type FinderComponentType = {
   [name in FileNames]: {
-    name: name;
+    name: FileNames;
     zIndex: number;
-    kind: FinderKind;
+    kind?: FinderKind;
     width?: number;
     height?: number;
     top?: number;
