@@ -10,9 +10,9 @@ var addr = flag.String("addr", ":3000", "http service address")
 // chat
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./index.html")
+	r.Header.Set("Content-Type", "text/html")
+	http.ServeFile(w, r, "./client/index.html")
 
-	log.Println(r.URL)
 	if r.URL.Path != "/" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
@@ -43,7 +43,10 @@ func main() {
 	go hub.run()
 	log.Printf("Server started on port %s", *addr)
 	
-	http.HandleFunc("/", serveHome)
+	fs := http.FileServer(http.Dir("./client"))
+	http.Handle("/", fs )
+
+	http.HandleFunc("/home", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})

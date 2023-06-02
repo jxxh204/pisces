@@ -391,3 +391,5 @@
 - v0.0.0:122
 - type error 다 잡음
 - v0.0.0:123
+- go server에서 client 폴더 index.html 띄움
+- v0.0.0:124

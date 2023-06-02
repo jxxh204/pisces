@@ -35,6 +35,6 @@ export default defineConfig({
     ],
   },
   build: {
-    outDir: "./src/server/web",
+    outDir: "./src/server/client",
   },
 });
