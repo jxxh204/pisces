@@ -7,6 +7,9 @@ import Tooltip from "@/components/Tooltip.vue";
 
 import deepLink from "@/module/deepLink";
 import { onMounted } from "vue";
+import useAlertStore from "@/stores/alert.store";
+
+const alertStore = useAlertStore();
 
 const list = {
   Email: {
@@ -40,7 +43,13 @@ const list = {
 };
 
 const onClickContact = (url: string, appName: string) => {
-  if (appName === "gmail" || appName === "internet") {
+  if (appName === "gmail") {
+    window.navigator.clipboard.writeText(url).then(() => {
+      alertStore.onAlert("copy Email");
+    });
+    return;
+  } else if (appName === "internet") {
+    alertStore.onAlert("Dead Browser");
     return;
   }
   deepLink.participate(url, appName);
@@ -76,14 +85,19 @@ onMounted(() => {
         @click="onClickContact(mail.url, mail.id)"
       >
         <template v-slot:tooltip>
-          <li class="bg-mac-gray-300 basis-4/12 pl-6 h-full liStyle gap-1">
+          <li
+            class="md:bg-mac-gray-300 basis-4/12 md:pl-6 h-full liStyle gap-1 flex flex-row"
+          >
             <img
               :src="mail.image"
               class="h-14 bg-mac-white"
               :class="key === 'Email' ? 'p-2' : ''"
-            />{{ key }}
+            />
+            <p class="hidden md:block">
+              {{ key }}
+            </p>
           </li>
-          <li class="bg-mac-gray-200 basis-4/12 liStyle pl-2 truncate">
+          <li class="bg-mac-gray-200 basis-4/12 liStyle md:pl-2 truncate">
             {{ mail.url }}
           </li>
           <li class="basis-1/12 text-center">{{ mail.size }}</li>

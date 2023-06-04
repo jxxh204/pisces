@@ -1,14 +1,20 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 // import type { FinderComponentType, FileNames } from "@/types/finder";
+import useAlertStore from "@/stores/alert.store";
 
 export default defineStore("useFinderStore", () => {
   const currentFinders = ref({} as FinderComponentType);
   const finderLength = ref(10);
 
   const addFinder = (name: FileNames) => {
+    const alertStore = useAlertStore();
     if (currentFinders.value?.[name]) {
       clickFinder(name);
+      return;
+    }
+    if (name === "Game") {
+      alertStore.onAlert("제작 중...");
       return;
     }
 

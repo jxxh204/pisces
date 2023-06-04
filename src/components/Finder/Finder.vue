@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, defineAsyncComponent, provide } from "vue";
+import { ref, inject, defineAsyncComponent, provide, onBeforeMount } from "vue";
 import VueResizable from "vue-resizable";
 import useFinderStore from "@/stores/finder.store";
 import useTabStore from "@/stores/tab.store";
@@ -72,6 +72,8 @@ let finderOption = {
   height: window.innerHeight - 200,
   minWidth: 200,
   minHeight: 250,
+  maxWidth: document.body.clientWidth,
+  maxheight: document.getElementById("app-body")?.clientHeight,
 };
 let oldFinderOption = {
   top: finderLeng * 30,
@@ -80,7 +82,18 @@ let oldFinderOption = {
   height: window.innerHeight - 200,
   minWidth: 200,
   minHeight: 250,
+  maxWidth: document.body.clientWidth,
+  maxheight: document.getElementById("app-body")?.clientHeight,
 };
+
+onBeforeMount(() => {
+  if (document.body.clientWidth < 769) {
+    finderOption.left = 0;
+    // mobile
+    // finderOption.width =
+  }
+});
+
 let isFullScreen = false;
 
 const onClickFullScreen = () => {
@@ -144,6 +157,8 @@ const selectComponent = () => {
     :height="finderOption.height"
     :min-width="finderOption.minWidth"
     :min-height="finderOption.minHeight"
+    :max-width="finderOption.maxWidth"
+    :max-height="finderOption.maxheight"
     :style="'z-index:' + props.zIndex"
     @mount="eHandler"
     @resize:move="eHandler"

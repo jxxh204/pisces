@@ -36,7 +36,7 @@ onMounted(() => {});
         class="h-4 hover:text-mac-white hover:bg-mac-Azul px-1"
       />
       <p
-        class="hover:text-mac-white hover:bg-mac-Azul cursor-select h-full px-1 flex flex-col justify-center"
+        class="hover:text-mac-white hover:bg-mac-Azul cursor-select h-full px-1 flex-col justify-center hidden md:flex"
         v-for="(menu, index) in menus"
         :key="menu.name + index"
       >

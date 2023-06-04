@@ -403,3 +403,6 @@
 - type error 제거
 - build 문제로 인한 Url 경로 변경
 - v0.0.0:126
+- mobile 대응 - pdf, finder, navbar, contact
+- alert 추가, game 막음.
+- v0.0.0:127

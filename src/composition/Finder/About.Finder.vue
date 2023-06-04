@@ -11,14 +11,20 @@ const { pdf, pages, info } = usePDF(resumePDF, {
 const page = ref(1);
 const progress = ref(0);
 const vuePDFEl = ref();
+const pdfScale = ref(1);
+const isOverflow = ref(true);
 
 type progressType = {
   loaded: number;
   total: number;
 };
+
 function onProgress({ loaded, total }: progressType) {
   console.log(`${(loaded / total) * 100}% Loaded`);
   progress.value = (loaded / total) * 100;
+  if (progress.value >= 99) {
+    isOverflow.value = false;
+  }
 }
 
 function onError(reason: string) {
@@ -60,11 +66,17 @@ const onClickNext = () => {
 };
 onMounted(() => {
   deepLink.mobile_chk();
+  if (document.body.clientWidth < 769) {
+    pdfScale.value = 0.5;
+  }
 });
 </script>
 
 <template>
-  <div class="w-full h-full text-left flex flex-col gap-2">
+  <div
+    class="w-full h-full text-left flex flex-col gap-2"
+    :class="isOverflow ? 'overflow-hidden' : ''"
+  >
     <Transition name="fade">
       <section
         v-if="progress < 100"
@@ -128,9 +140,7 @@ onMounted(() => {
       <btn class="ds-btn" @click="onClickNext"> Next </btn>
     </section>
     <section class="h-full w-full flex flex-row justify-center" ref="vuePDFEl">
-      <VuePDF :pdf="pdf" :scale="1" :page="page">
-        <div style="text-align: center">Loading...</div>
-      </VuePDF>
+      <VuePDF :pdf="pdf" :scale="pdfScale" :page="page"> </VuePDF>
     </section>
   </div>
 </template>
