@@ -5,7 +5,7 @@ import Contact from "@/assets/images/icons/contact.svg";
 import Projects from "@/assets/images/icons/projects.svg";
 import Game from "@/assets/images/icons/CD.svg";
 import Home from "@/assets/images/icons/apple.svg";
-import type { FileNames } from "@/types/finder";
+// import type { FileNames } from "@/types/finder";
 
 interface Props {
   name: FileNames;

@@ -397,3 +397,9 @@
 - cursor-selector 적용
 - loading 개선
 - v0.0.0:125
+
+### 2023 6/4
+
+- type error 제거
+- build 문제로 인한 Url 경로 변경
+- v0.0.0:126

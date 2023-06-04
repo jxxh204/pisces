@@ -3,7 +3,7 @@ import MacFile from "@/components/Mac/File.Mac.vue";
 import FinderVue from "@/components/Finder/Finder.vue";
 import MenuMacVue from "@/components/Mac/Menu.Mac.vue";
 import useFinderStore from "@/stores/finder.store";
-import type { FinderKind } from "@/types/finder";
+// import type { FinderKind } from "@/types/finder";
 
 const finderStore = useFinderStore();
 const files = ["Home", "About", "Contact", "Projects", "Game"];

@@ -7,7 +7,7 @@ import HelloMars from "@/assets/images/projects/HelloMars.jpg";
 import Blockbot from "@/assets/images/projects/blockbot.jpg";
 import LAL from "@/assets/images/projects/LAL.svg";
 
-import type { TabComponent, TabComponentType, TabName } from "@/types/finder";
+// import type { TabComponent, TabComponentType, TabName } from "@/types/finder";
 
 export default defineStore("useTabStore", () => {
   const Tabs = ref<TabComponentType>({

@@ -15,7 +15,7 @@ import TabOutlineRightClick from "@/assets/images/Finder/tab-outline_right_click
 import FileIcon from "../Icon/File.Icon.vue";
 import Tooltip from "../Tooltip.vue";
 import _ from "lodash";
-import type { FileNames, FinderKind } from "@/types/finder";
+// import type { FileNames, FinderKind } from "@/types/finder";
 
 const GameFinder = defineAsyncComponent(
   () =>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import aboutButton from "@/assets/images/button/Icon Button.svg";
-import type { TabName } from "@/types/finder";
+// import type { TabName } from "@/types/finder";
 import Tooltip from "../Tooltip.vue";
 
 interface Props {

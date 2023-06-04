@@ -15,15 +15,15 @@ module.exports = {
     },
     extend: {
       cursor: {
-        watch: "url(src/assets/images/cursor/Watch.png),pointer",
-        select: "url(src/assets/images/cursor/Select.png), pointer",
-        default: "url(src/assets/images/cursor/Arrow.png), pointer",
+        watch: "url(/src/assets/images/cursor/Watch.png),pointer",
+        select: "url(/src/assets/images/cursor/Select.png), pointer",
+        default: "url(/src/assets/images/cursor/Arrow.png), pointer",
       },
       backgroundImage: {
-        "default-pattern": "url(src/assets/images/bg/default.png)",
-        "finder-pattern": "url(src/assets/images/bg/finder.svg)",
-        "blueDalmation-pattern": "url(src/assets/images/bg/blueDalmation.svg)",
-        barPicker: "url(src/assets/images/Finder/barpicker.svg)",
+        "default-pattern": "url(/src/assets/images/bg/default.png)",
+        "finder-pattern": "url(/src/assets/images/bg/finder.svg)",
+        "blueDalmation-pattern": "url(/src/assets/images/bg/blueDalmation.svg)",
+        barPicker: "url(/src/assets/images/Finder/barpicker.svg)",
       },
     },
     colors: {
