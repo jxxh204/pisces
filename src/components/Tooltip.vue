@@ -8,7 +8,7 @@ const props = defineProps<Props>();
 
 <template>
   <div
-    class="ds-tooltip ds-tooltip-open ds-tooltip-mac-Lavender mono-light"
+    class="ds-tooltip ds-tooltip-mac-Lavender mono-light"
     :class="`ds-tooltip-${props.direction}`"
     :data-tip="props.name"
   >

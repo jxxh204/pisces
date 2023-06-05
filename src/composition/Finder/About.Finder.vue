@@ -23,7 +23,9 @@ function onProgress({ loaded, total }: progressType) {
   console.log(`${(loaded / total) * 100}% Loaded`);
   progress.value = (loaded / total) * 100;
   if (progress.value >= 99) {
-    isOverflow.value = false;
+    setTimeout(() => {
+      isOverflow.value = false;
+    }, 500);
   }
 }
 
@@ -31,7 +33,8 @@ function onError(reason: string) {
   console.error(`PDF loading error: ${reason}`);
 }
 const onClickNotion = () => {
-  const url = "https://bit.ly/3Ce82xY";
+  const url =
+    "https://jamkim.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167";
   //   window.open(props.link, "_blank");
   deepLink.participate(url, "notion");
 };

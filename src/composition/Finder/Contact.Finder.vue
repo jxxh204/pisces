@@ -41,15 +41,41 @@ const list = {
     kind: "notion portfolio page",
   },
 };
+const copyText = (url: string) => {
+  if (navigator.clipboard !== undefined) {
+    navigator.clipboard //https만 사용가능.
+      .writeText(`복사할 텍스트`)
+      .then(() => {
+        alertStore.onAlert("copy Email");
+      });
+  } else {
+    //http
+    // execCommand 사용
+    const textArea = document.createElement("textarea");
+    textArea.value = url;
+    document.body.appendChild(textArea);
+    textArea.select();
+    textArea.setSelectionRange(0, 99999);
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      console.error("복사 실패", err);
+    }
+    textArea.setSelectionRange(0, 0);
+    document.body.removeChild(textArea);
+    alertStore.onAlert("copy Email");
+  }
+};
 
 const onClickContact = (url: string, appName: string) => {
   if (appName === "gmail") {
-    window.navigator.clipboard.writeText(url).then(() => {
-      alertStore.onAlert("copy Email");
-    });
+    copyText(url);
     return;
   } else if (appName === "internet") {
     alertStore.onAlert("Dead Browser");
+    return;
+  } else if (appName === "github") {
+    window.open(url);
     return;
   }
   deepLink.participate(url, appName);

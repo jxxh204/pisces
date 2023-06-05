@@ -6,8 +6,12 @@ import LoadingView from "./components/Loading/App.Loading.vue";
 import NavBar from "./composition/App/NavBar.App.vue";
 import Body from "./composition/App/Body.App.vue";
 import AlertVue from "./components/Alert/Alert.vue";
+import deepLink from "@/module/deepLink";
 
 onMounted(async () => {
+  console.log(deepLink.mobile_chk());
+  //여기서 한번만 검사하고 사용하기.
+
   // window.addEventListener("resize", resize, false);
   //webRTC 렉때매 잠시 끔.
   //   let videoId = "";
@@ -41,7 +45,7 @@ onMounted(async () => {
   <div
     class="w-screen h-screen fixed cursor-default bg-default-pattern bg-center flex flex-col"
   >
-    <!-- <LoadingView /> -->
+    <LoadingView />
     <NavBar />
     <AlertVue />
     <Body />

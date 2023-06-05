@@ -17,6 +17,12 @@ import Tooltip from "../Tooltip.vue";
 import _ from "lodash";
 // import type { FileNames, FinderKind } from "@/types/finder";
 
+// import AboutFinder from "@/composition/Finder/About.Finder.vue"
+// import GameFinder from "@/composition/Finder/Game.Finder.vue"
+// import ProjectsFinder from "@/composition/Finder/Projects.Finder.vue"
+// import HomeFinderVue from "@/composition/Finder/Home.Finder.vue"
+// import ContactFinder from "@/composition/Finder/Contact.Finder.vue"
+
 const GameFinder = defineAsyncComponent(
   () =>
     import(
@@ -89,6 +95,7 @@ let oldFinderOption = {
 onBeforeMount(() => {
   if (document.body.clientWidth < 769) {
     finderOption.left = 0;
+    oldFinderOption.left = 0;
     // mobile
     // finderOption.width =
   }
@@ -254,7 +261,9 @@ const selectComponent = () => {
           </keep-alive>
           <!-- <GameFinder v-if="props.name === 'Game'" />
           <ProjectsFinder v-if="props.name === 'Projects'" />
-          <HomeFinderVue v-if="props.name === 'Home'" /> -->
+          <HomeFinderVue v-if="props.name === 'Home'" />
+          <AboutFinder v-if="props.name === 'About'" />
+          <ContactFinder v-if="props.name === 'Contact'" /> -->
         </article>
       </section>
     </div>

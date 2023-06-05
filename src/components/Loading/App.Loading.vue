@@ -36,11 +36,6 @@ onMounted(async () => {
     loadingType.value = "progress";
     progressInterval.value = window.setInterval(() => {
       progressPercent.value++;
-      console.log(
-        "🚀 ~ file: LoadingView.vue:39 ~ progressInterval.value=setInterval ~ progressPercent.value",
-        progressPercent.value
-      );
-
       if (progressPercent.value > 99) {
         clearInterval(progressInterval.value);
         loadingType.value = "button";
@@ -65,6 +60,7 @@ onMounted(async () => {
         loadingType === 'button'
       "
       class="starting loading flex flex-row justify-center items-center transition_basic"
+      :class="loadingType === 'button' ? 'cursor-select' : 'cursor-watch'"
     >
       <img :src="Welcome_modal" class="h-[50%]" />
       <p
@@ -123,7 +119,6 @@ img {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  @apply cursor-watch;
 }
 /* .starting {
   background-image: url("@/assets/images/bg/background.png");

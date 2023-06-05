@@ -41,8 +41,6 @@ onBeforeMount(() => {
 
 //AM, PM
 const meridiem = new Date().getHours() >= 12 ? "PM" : "AM";
-
-onMounted(() => {});
 </script>
 
 <template>
