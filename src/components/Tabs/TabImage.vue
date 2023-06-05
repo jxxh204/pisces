@@ -49,7 +49,7 @@ onMounted(() => {
           class="cursor-select w-full h-full flex flex-col justify-center items-center"
           @click="onClickImage"
         >
-          <span class="animate-bounce mb-9 absolute">↓</span>More
+          <span class="animate-bounce mb-9 absolute">↓</span>Click More!
         </p>
       </div>
     </Transition>
