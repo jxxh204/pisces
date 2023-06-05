@@ -8,7 +8,7 @@ let isIOS = !isAndroid && /iphone|ipad|ipod/i.test(userAgent);
 let os = "";
 
 function mobile_chk() {
-  var mobile = /iphone|ipad|ipod|android/i.test(
+  let mobile = /iphone|ipad|ipod|android/i.test(
     navigator.userAgent.toLowerCase()
   );
 
@@ -31,14 +31,16 @@ function mobile_chk() {
 }
 
 function participate(url: string, appName: string) {
+  if (os === "pc") {
+    window.open(url);
+    return;
+  }
   const appUrl = url.replace("https", appName);
-
   // 인터벌, 타이머 삭제
   function clearTimer() {
     clearInterval(schInterval);
     clearTimeout(timer);
   }
-
   // 인터벌 마다 동작할 기능
   function intervalSch() {
     // 매 인터벌 마다 웹뷰가 활성화 인지 체크
@@ -50,27 +52,14 @@ function participate(url: string, appName: string) {
       console.log("타이머 동작");
     }
   }
-
   // 앱 실행(iOS인 경우)
   location.href = appUrl;
-
   // 앱이 설치 되어있는지 체크
   schInterval = window.setInterval(intervalSch, 500);
-
   // 앱이 없을 경우
   timer = window.setTimeout(function () {
     //자동으로감.
     window.open(url);
-
-    // if (isAndroid) {
-    //   // 스토어 유도
-    // location.href = url;
-    //   if (openNewWindow) openNewWindow.location.href = url;
-    // } else if (isIOS) {
-    //   // 스토어 유도
-    // location.href = url;
-    //   if (openNewWindow) openNewWindow.location.href = url;
-    // }
     clearInterval(schInterval);
   }, 2000);
 }

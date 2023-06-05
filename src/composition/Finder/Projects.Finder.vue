@@ -39,6 +39,16 @@ const tabStore = useTabStore();
         <div class="bg-mac-Lavender h-2 w-full"></div>
         <div class="h-5"></div>
       </div>
+      <div v-else-if="tabStore.currentTab.reference" class="py-2">
+        <a
+          :href="tabStore.currentTab.reference"
+          class="text-mac-black cursor-select mono-bold text-xl"
+          target="_blank"
+          >reference</a
+        >
+        <div class="bg-mac-Lavender h-2 w-full"></div>
+        <div class="h-5"></div>
+      </div>
       <article v-else="tabStore.currentTab.demo" class="w-full h-full">
         <div class="h-10"></div>
       </article>

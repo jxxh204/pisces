@@ -34,3 +34,4 @@ test-results/
 playwright-report/
 
 s3-deploy.sh
+.env

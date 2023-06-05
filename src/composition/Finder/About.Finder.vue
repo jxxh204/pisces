@@ -2,7 +2,7 @@
 import resumePDF from "@/assets/resume.pdf";
 import { ref, onMounted, inject } from "vue";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
-import deepLink from "../../module/deepLink";
+import deepLink from "@/module/deepLink";
 
 const { pdf, pages, info } = usePDF(resumePDF, {
   onProgress,
@@ -31,8 +31,7 @@ function onError(reason: string) {
   console.error(`PDF loading error: ${reason}`);
 }
 const onClickNotion = () => {
-  const url =
-    "https://forest-torta-822.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167";
+  const url = "https://bit.ly/3Ce82xY";
   //   window.open(props.link, "_blank");
   deepLink.participate(url, "notion");
 };
@@ -126,7 +125,7 @@ onMounted(() => {
         Notion
       </h4>
       <h4 class="buttonStyle">
-        <a :href="resumePDF" target="_blank">
+        <a :href="resumePDF" target="_blank" download="resume(JaeHwan)">
           Resume (<span class="text-mac-Lavender">Downlaod</span>)</a
         >
       </h4>

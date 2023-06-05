@@ -50,6 +50,7 @@ type TabComponent = {
   link: string;
   demo?: string;
   code?: string;
+  reference?: string;
 };
 
 //객체로 관리한다.

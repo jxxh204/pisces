@@ -29,7 +29,7 @@ const list = {
   Notion: {
     image: notionImg,
     id: "notion",
-    url: "https://forest-torta-822.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167",
+    url: "https://bit.ly/3Ce82xY",
     size: "15M",
     kind: "notion portfolio page",
   },

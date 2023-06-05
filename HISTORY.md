@@ -406,3 +406,8 @@
 - mobile 대응 - pdf, finder, navbar, contact
 - alert 추가, game 막음.
 - v0.0.0:127
+
+### 2023 6/5
+
+- link 길이 줄이기. pc는 Deep link 제거
+- v0.0.0:128
