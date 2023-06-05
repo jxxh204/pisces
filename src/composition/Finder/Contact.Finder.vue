@@ -29,7 +29,7 @@ const list = {
   Notion: {
     image: notionImg,
     id: "notion",
-    url: "https://bit.ly/3Ce82xY",
+    url: "https://jamkim.notion.site/JaeHwan-Kim-1ea77cba02054688854dc9b7c177a167",
     size: "15M",
     kind: "notion portfolio page",
   },
@@ -98,7 +98,7 @@ onMounted(() => {
             </p>
           </li>
           <li class="bg-mac-gray-200 basis-4/12 liStyle md:pl-2 truncate">
-            {{ mail.url }}
+            {{ mail.id === "notion" ? "notion://JH.portfolio" : mail.url }}
           </li>
           <li class="basis-1/12 text-center">{{ mail.size }}</li>
           <li class="pl-2 truncate">{{ mail.kind }}</li>
