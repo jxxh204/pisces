@@ -9,11 +9,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc -p tsconfig.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "prod-all": "sh s3-deploy.sh prod",
-    "build": "run-p type-check && vite build",
-    "clear": "aws s3 rm s3://hwajae.kr/ --recursive --exclude '*' --include '*' --profile=jaehwan ",
-    "deploy": "aws s3 sync ./server/client s3://hwajae.kr --profile=jaehwan ",
-    "invalid": "aws --profile jaehwan --region ap-northeast-2 cloudfront create-invalidation --distribution-id E3CXY0YN3X829V --paths '/*'"
+    "build": "run-p type-check && vite build --mode production"
   },
   "dependencies": {
     "@tato30/vue-pdf": "^1.3.5",

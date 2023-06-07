@@ -23,6 +23,10 @@ const onClickStart = () => {
   finderStore.addFinder("Home");
 };
 onMounted(async () => {
+  if (!import.meta.env.PROD) {
+    loadingType.value = "none";
+    return;
+  }
   await promiseTimeout(1200);
   if (ready.value) {
     isStartingIcon.value = false;

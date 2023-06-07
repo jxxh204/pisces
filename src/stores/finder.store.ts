@@ -13,7 +13,7 @@ export default defineStore("useFinderStore", () => {
       clickFinder(name);
       return;
     }
-    if (name === "Game") {
+    if (name === "Game" && import.meta.env.PROD) {
       alertStore.onAlert("제작 중...");
       return;
     }

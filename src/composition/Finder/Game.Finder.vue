@@ -10,7 +10,7 @@ import { inject, onMounted, onUnmounted, ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
 import type webRTC from "@/media/webRTCsample";
 
-const ZOOM_LEVEL = 1;
+const ZOOM_LEVEL = 1.2;
 const finderStore = useFinderStore();
 const emitter: any = inject("emitter");
 const remoteVideo = ref<HTMLVideoElement>();
@@ -26,8 +26,8 @@ const config = {
   //   autoCenter: Phaser.Scale.CENTER_BOTH,
   // },
   parent: "phaser-wrapper", //canvas id
-  width: 384, // -16
-  height: 236, // -64
+  width: Number(finderStore.currentFinders["Game"].width), // -16
+  height: Number(finderStore.currentFinders["Game"].height), // -64
   autoCenter: Phaser.Scale.CENTER_BOTH, // 화면을 자동으로 센터에 맞추어줌.
   dom: {
     createContainer: true,
@@ -35,7 +35,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Welcome, TileObject, Icons, Character], //Level1 Welcome,systemIcons,DropDownTest 만들기. //
+  scene: [TileObject, Character], //Level1 Welcome,systemIcons,DropDownTest, Icons 만들기. //
   physics: {
     default: "arcade",
     arcade: {
@@ -57,27 +57,26 @@ onMounted(() => {
   // rtcInstance = new webRTC(remoteVideo.value, localVideo.value);
   const game = new Phaser.Game(config);
   const canvas = game.canvas;
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
 
-  emitter.on("finder:Game", () => {
-    const config = game.config;
-    const gameWidth = Number(config.width);
-    const gameHeight = Number(config.height);
-    const GameFinderWidth = Number(finderStore.currentFinders["Game"].width);
-    const GameFinderHeight = Number(finderStore.currentFinders["Game"].height);
+  // emitter.on("finder:Game", () => {
+  //   const config = game.config;
+  //   const gameWidth = Number(config.width);
+  //   const gameHeight = Number(config.height);
+  //   const GameFinderWidth = Number(finderStore.currentFinders["Game"].width);
+  //   const GameFinderHeight = Number(finderStore.currentFinders["Game"].height);
 
-    const gameRatio = gameWidth / gameHeight;
-    const finderWidth = GameFinderWidth - 16;
-    const finderHeight = GameFinderHeight - 64;
-    const finderRatio = finderWidth / finderHeight;
+  //   const gameRatio = gameWidth / gameHeight;
+  //   const finderWidth = GameFinderWidth - 16;
+  //   const finderHeight = GameFinderHeight - 64;
+  //   const finderRatio = finderWidth / finderHeight;
 
-    if (finderRatio < gameRatio) {
-      canvas.style.width = finderWidth + "px";
-      canvas.style.height = finderWidth / gameRatio + "px";
-    } else {
-      canvas.style.width = finderHeight * gameRatio + "px";
-      canvas.style.height = finderHeight + "px";
-    }
-  });
+  //   if (finderRatio < gameRatio) {
+  //     canvas.style.width = finderWidth + "px";
+  //     canvas.style.height = finderWidth / gameRatio + "px";
+  //   }
+  // });
 
   // rtcInstance.openWebSocket();
   // setTimeout(() => {
@@ -92,8 +91,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full">
-    <div id="phaser-wrapper" class="w-full h-full top-0 bottom-0"></div>
+  <div class="w-full h-full overflow-hidden">
+    <div id="phaser-wrapper" class="w-full h-full"></div>
     <!-- <div class="absolute flex flex-row">
       <video ref="localVideo" autoplay class="bg-mac-black h-20 w-20"></video>
       <video ref="remoteVideo" autoplay class="bg-mac-black h-20 w-20"></video>

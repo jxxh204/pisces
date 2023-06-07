@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
-import pcImg from "@/assets/images/computer.gif";
-import mac_backgroundImg from "@/assets/images/bg/finder.svg";
+import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
+import background from "@/phaser/TiledProject/Background/Background.png";
 
 export class TileObject extends Phaser.Scene {
   map: Phaser.Tilemaps.Tilemap | null;
@@ -15,26 +15,27 @@ export class TileObject extends Phaser.Scene {
     // 배경타일 생성
     if (get === "load") {
       // 배경
-      this.load.image("macBackgroundImg", mac_backgroundImg);
-      this.load.tilemapTiledJSON(
-        "macTileSetImage",
-        "src/phaser/Test/mac_tileset.json"
-      ); //무조건 주소 자체를 넣어야함.
+      this.load.image("tilesImage", tiles);
+      this.load.image("backgroundImage", background);
+      this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game.json"); //무조건 주소 자체를 넣어야함.
     } else {
       this.map = this.make.tilemap({
-        key: "macTileSetImage",
+        key: "Game",
       });
 
-      const macBackgroundTileSet = this.map.addTilesetImage(
-        "mac_background",
-        "macBackgroundImg"
+      const tileSet = this.map.addTilesetImage("Tiles", "tilesImage");
+      const backgroundSet = this.map.addTilesetImage(
+        "Background",
+        "backgroundImage"
       );
-      const background = this.map.createLayer(
-        "mac_background",
-        macBackgroundTileSet,
-        0,
-        0
-      );
+      this.map.createLayer("floor", tileSet, 0, 0);
+      this.map.createLayer("background", backgroundSet, 0, 0);
+      // const background = this.map.createLayer(
+      //   "mac_background",
+      //   macBackgroundTileSet,
+      //   0,
+      //   0
+      // );
     }
   }
   preload() {

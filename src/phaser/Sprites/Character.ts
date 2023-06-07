@@ -11,11 +11,12 @@ import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 import Observer from "@/module/observer";
 import type { GetStreamSettings } from "@/media/media";
+import { M } from "@/server/client/assets/vendor.78bfdc31";
 
 type ColliderType = {
   floor: boolean;
   activeCount: boolean[];
-  timer: NodeJS.Timeout;
+  timer: number;
 };
 type OverlapType = {
   mac: boolean;
@@ -37,6 +38,10 @@ export default class Character extends Phaser.Scene {
     height: number;
     tileWidth: number;
   };
+  tileSize: {
+    width: number;
+    height: number;
+  };
   inGameLoading: any;
   sprite: any;
   colliders: ColliderType;
@@ -46,7 +51,7 @@ export default class Character extends Phaser.Scene {
   isBehavior: boolean;
   // motionState: Motions;
   motionSpeed: MotionSpeedTypes;
-  sameTimeMotionInterval: NodeJS.Timeout;
+  sameTimeMotionInterval: 0;
   video: any;
   main_char: any;
 
@@ -62,6 +67,10 @@ export default class Character extends Phaser.Scene {
       height: 0,
       tileWidth: 1800,
     };
+    this.tileSize = {
+      width: 800,
+      height: 600,
+    };
     this.inGameLoading = {} as any;
     this.sprite = {
       floor: {},
@@ -70,7 +79,7 @@ export default class Character extends Phaser.Scene {
     this.colliders = {
       floor: false,
       activeCount: [],
-      timer: {} as NodeJS.Timer,
+      timer: 0,
     };
     this.overLap = {
       mac: false,
@@ -87,7 +96,7 @@ export default class Character extends Phaser.Scene {
 
     this.video = {};
 
-    this.sameTimeMotionInterval = {} as NodeJS.Timeout;
+    this.sameTimeMotionInterval = 0;
 
     this.main_char = null;
     this.scene_finder = null;
@@ -123,32 +132,26 @@ export default class Character extends Phaser.Scene {
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
     const bottom = this.bg.height;
-    this.physics.world.setBounds(
-      0, // 타일의 처음 지점.
-      bottom,
-      this.bg.width, //타일의 끝지점으로.
-      bottom
+
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.tileSize.width,
+      this.tileSize.height,
+      true
     );
+    // this.physics.world.setBounds(0, -1200, 3392, 0);
     // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
     // canvas.style.cursor = "none";
     // this.add.existing();
-    // cam.pan(400, this.bg.height - 200, 1000);
+    // cam.pan(400, -this.tileSize.height, 1000);
     //w:400, h:??, 2000초동안 이동.
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
-    cam.setBounds(
-      0, // 타일의 처음 지점.
-      bottom,
-      this.bg.width, //타일의 끝지점으로.
-      bottom
-    );
+
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
-    cam.centerOn(this.bg.width / 2, this.bg.height - 150);
-    cam.startFollow(this.main_char.character); //카메라 따라다님
-    console.log(
-      "🚀 ~ file: Character.ts:148 ~ Character ~ createCamera ~ this.main_char.character",
-      this.main_char.character
-    );
+    // cam.centerOn(0, 0);
+    cam.startFollow(this.main_char.character, true); //카메라 따라다님
     // cam.followOffset.set(-300, 0);
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
@@ -357,7 +360,6 @@ export default class Character extends Phaser.Scene {
   preload() {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
-
     this.loadC2();
   }
   create() {
@@ -378,7 +380,9 @@ export default class Character extends Phaser.Scene {
     // this.playerLocation.currentY = this.player.y
     // this.playerLocation.currentY = 424;
 
-    this.main_char.character.setDepth(10);
+    // this.main_char.character.setDepth(10);
+    // depth
+
     // const observer = Observer.getInstance();
     // //파인더 열릴 경우 캐릭터 위치 이동
     // const observer_event = {
@@ -426,13 +430,5 @@ export default class Character extends Phaser.Scene {
   update() {
     this.setCollider();
     this.main_char.updateAnimations();
-    if (!this.scene_finder) {
-      const finderScene = this.scene.get("Finder") as Finder;
-      this.scene_finder = finderScene.finderClass[0].finderSprite;
-      console.log(
-        "🚀 ~ file: Character.ts:366 ~ Test ~ create ~ this.scene_finder ",
-        this.scene_finder
-      );
-    }
   }
 }
