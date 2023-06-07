@@ -1,3 +1,4 @@
+import { TileObject } from "./../TileObject/TileObject";
 import type { Finder } from "./../Test/Finder";
 import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
@@ -12,6 +13,9 @@ import type { AnimationsType } from "@/types/Characters";
 import Observer from "@/module/observer";
 import type { GetStreamSettings } from "@/media/media";
 import { M } from "@/server/client/assets/vendor.78bfdc31";
+
+import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
+import background from "@/phaser/TiledProject/Background/Background.png";
 
 type ColliderType = {
   floor: boolean;
@@ -57,6 +61,7 @@ export default class Character extends Phaser.Scene {
 
   scene_finder: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
 
+  map: Phaser.Tilemaps.Tilemap | null;
   constructor() {
     super({
       key: "Character", // 여러 scene을 사용할려면 키입력해야함.
@@ -100,48 +105,52 @@ export default class Character extends Phaser.Scene {
 
     this.main_char = null;
     this.scene_finder = null;
+    this.map = null;
   }
+  setBackground(get: "load" | "create") {
+    // 배경타일 생성
+    if (get === "load") {
+      // 배경
+      this.load.image("tilesImage", tiles);
+      this.load.image("backgroundImage", background);
+      this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game.json"); //무조건 주소 자체를 넣어야함.
+    } else {
+      this.map = this.make.tilemap({
+        key: "Game",
+      });
 
-  // loadInGameLoading() {
-  //   //위치 바꾸기
-  //   this.load.spritesheet("inGameLoading", inGameLoading, {
-  //     frameWidth: 32,
-  //     frameHeight: 32,
-  //   });
-  // }
-  // createInGameLoading() {
-  //   this.inGameLoading = this.physics.add.staticSprite(
-  //     345,
-  //     this.bg.height + 60,
-  //     `inGameLoading`
-  //   );
-  //   console.log(this.sprite.mac, this.game.scale.baseSize.height);
-  //   this.anims.create({
-  //     key: "loading",
-  //     frames: this.anims.generateFrameNames("inGameLoading", {
-  //       start: 0,
-  //       end: 20,
-  //     }),
-  //     frameRate: 5,
-  //     repeat: -1,
-  //   });
-  //   this.inGameLoading.play("loading", true);
-  // }
+      const tileSet = this.map.addTilesetImage("Tiles", "tilesImage");
+      const backgroundSet = this.map.addTilesetImage(
+        "Background",
+        "backgroundImage"
+      );
+      const floor = this.map.createLayer("floor2", tileSet, 0, 0);
+      this.map.createLayer("background", backgroundSet, 0, 0);
+
+      floor.setCollisionByProperty({ collides: true });
+      floor.setDepth(1);
+    }
+  }
   createCamera() {
     //내부 코드 정리하기.
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
     const bottom = this.bg.height;
 
-    this.cameras.main.setBounds(
-      0,
-      0,
-      this.tileSize.width,
-      this.tileSize.height,
-      true
-    );
-    // this.physics.world.setBounds(0, -1200, 3392, 0);
-    // 걸을 수 있는 거리가 1000이다. World를 제한 하는 코드
+    // this.cameras.main.setBounds(0, 0, 3392, bottom);
+    // this.physics.world.setBounds(0, 0, 3392, 0);
+
+    this.cameras.main.setBounds(0, 0, this.bg.width, bottom);
+    // this.physics.world.setBounds(0, 0, 3392, 240);
+    cam.startFollow(this.main_char.character, true); //카메라 따라다님
+    cam.setZoom(3);
+    //       this.cameras.main.setBounds(
+    //         0, // 타일의 처음 지점.
+    //         this.bg.height,
+    //         this.bg.width, //타일의 끝지점으로.
+    //         this.bg.height
+    //       );
+
     // canvas.style.cursor = "none";
     // this.add.existing();
     // cam.pan(400, -this.tileSize.height, 1000);
@@ -151,7 +160,7 @@ export default class Character extends Phaser.Scene {
 
     // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     // cam.centerOn(0, 0);
-    cam.startFollow(this.main_char.character, true); //카메라 따라다님
+    // cam.startFollow(this.main_char.character, true); //카메라 따라다님
     // cam.followOffset.set(-300, 0);
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
@@ -211,6 +220,7 @@ export default class Character extends Phaser.Scene {
     }
   }
   setOverLap() {
+    // 안씀.
     this.physics.add.overlap(
       this.main_char.character,
       this.sprite.mac,
@@ -360,9 +370,11 @@ export default class Character extends Phaser.Scene {
   preload() {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
+    this.setBackground("load");
     this.loadC2();
   }
   create() {
+    this.setBackground("create");
     this.createC2();
     this.createCamera();
 

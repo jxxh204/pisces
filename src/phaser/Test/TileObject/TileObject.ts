@@ -28,8 +28,11 @@ export class TileObject extends Phaser.Scene {
         "Background",
         "backgroundImage"
       );
-      this.map.createLayer("floor", tileSet, 0, 0);
+      const floor = this.map.createLayer("floor2", tileSet, 0, 0);
       this.map.createLayer("background", backgroundSet, 0, 0);
+
+      floor.setCollisionByProperty({ collides: true });
+      floor.setDepth(1); // floor zindex 1
       // const background = this.map.createLayer(
       //   "mac_background",
       //   macBackgroundTileSet,
