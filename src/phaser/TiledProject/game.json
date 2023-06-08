@@ -168,6 +168,12 @@
          "id":8,
          "name":"grass",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collides",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -366,10 +372,55 @@
          "tileheight":16,
          "tiles":[
                 {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":1,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":2,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":3,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":4,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":25,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -378,7 +429,7 @@
                  "id":26,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -387,7 +438,7 @@
                  "id":27,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -396,7 +447,7 @@
                  "id":28,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -405,7 +456,7 @@
                  "id":29,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -414,7 +465,7 @@
                  "id":50,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -423,7 +474,7 @@
                  "id":51,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -432,7 +483,7 @@
                  "id":52,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -441,7 +492,7 @@
                  "id":53,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -450,7 +501,7 @@
                  "id":54,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -459,7 +510,7 @@
                  "id":75,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -468,7 +519,7 @@
                  "id":76,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -477,7 +528,7 @@
                  "id":77,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -486,7 +537,7 @@
                  "id":78,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -495,7 +546,7 @@
                  "id":79,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -504,7 +555,7 @@
                  "id":100,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -513,7 +564,7 @@
                  "id":101,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -522,7 +573,7 @@
                  "id":102,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -531,7 +582,7 @@
                  "id":103,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -540,7 +591,7 @@
                  "id":104,
                  "properties":[
                         {
-                         "name":"coliders",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]

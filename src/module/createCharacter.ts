@@ -83,10 +83,10 @@ export default class CreateCharacter {
   setAnimations(options: AnimationsType[]) {
     this.animations = options;
   }
-  setMotionSpeed(walk: number, run: number, jump: number) {
+  setMotionSpeed(walk: number, run: number, jump?: number) {
     this.motionSpeed.walk = walk;
     this.motionSpeed.run = run;
-    this.motionSpeed.jump = jump;
+    if (jump) this.motionSpeed.jump = jump;
   }
 
   getAnimations() {

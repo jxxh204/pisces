@@ -8,9 +8,7 @@ import Swordsman from "@/assets/characters/swordsman-Sheet.png";
 
 import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
-import Observer from "@/module/observer";
 import type { GetStreamSettings } from "@/media/media";
-import { M } from "@/server/client/assets/vendor.78bfdc31";
 
 import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
 import background from "@/phaser/TiledProject/Background/Background.png";
@@ -40,6 +38,7 @@ export default class Character extends Phaser.Scene {
     height: number;
     tileWidth: number;
   };
+  backgroundObjects: BackgroundObjectsTypes;
   tileSize: {
     width: number;
     height: number;
@@ -55,7 +54,7 @@ export default class Character extends Phaser.Scene {
   motionSpeed: MotionSpeedTypes;
   sameTimeMotionInterval: 0;
   video: any;
-  main_char: any;
+  main_char: CreateCharacter | null;
 
   scene_finder: Phaser.Types.Physics.Arcade.SpriteWithStaticBody | null;
 
@@ -69,6 +68,12 @@ export default class Character extends Phaser.Scene {
       width: 0,
       height: 0,
       tileWidth: 1800,
+    };
+    this.backgroundObjects = {
+      background: null,
+      floor: null,
+      grass: null,
+      stairs: null,
     };
     this.tileSize = {
       width: 800,
@@ -123,12 +128,30 @@ export default class Character extends Phaser.Scene {
         "backgroundImage"
       );
       //createLayer 순서대로 zindex가 잡힌다
-      const bacground = this.map.createLayer("background", backgroundSet, 0, 0);
-      const floor = this.map.createLayer("floor2", tileSet, 0, 0);
-      const grass = this.map.createLayer("grass", tileSet, 0, 0);
-      const stairs = this.map.createLayer("stairs", tileSet, 0, 0);
-
-      floor.setCollisionByProperty({ collides: true });
+      this.backgroundObjects.background = this.map.createLayer(
+        "background",
+        backgroundSet,
+        0,
+        0
+      );
+      this.backgroundObjects.floor = this.map.createLayer(
+        "floor2",
+        tileSet,
+        0,
+        0
+      );
+      this.backgroundObjects.grass = this.map.createLayer(
+        "grass",
+        tileSet,
+        0,
+        0
+      );
+      this.backgroundObjects.stairs = this.map.createLayer(
+        "stairs",
+        tileSet,
+        0,
+        0
+      );
     }
   }
   createCamera() {
@@ -142,7 +165,7 @@ export default class Character extends Phaser.Scene {
 
     this.cameras.main.setBounds(0, 0, this.bg.width, bottom);
     // this.physics.world.setBounds(0, 0, 3392, 240);
-    cam.startFollow(this.main_char.character, true); //카메라 따라다님
+    if (this.main_char) cam.startFollow(this.main_char.character, true); //카메라 따라다님
     cam.setZoom(3);
     //       this.cameras.main.setBounds(
     //         0, // 타일의 처음 지점.
@@ -166,6 +189,19 @@ export default class Character extends Phaser.Scene {
   }
   setCollider() {
     this.colliders.floor = true;
+    if (this.backgroundObjects.floor && this.backgroundObjects.grass) {
+      if (this.main_char)
+        this.physics.add.collider(
+          this.main_char.character,
+          this.backgroundObjects.grass
+        );
+      // this.physics.add.collider(
+      //   this.main_char.character,
+      //   this.backgroundObjects.floor
+      // );
+      // this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
+      this.backgroundObjects.grass.setCollisionByProperty({ collides: true });
+    }
     // const setOnCollideFloor = (
     //   c: Phaser.Types.Physics.Arcade.GameObjectWithBody
     // ) => {
@@ -204,37 +240,40 @@ export default class Character extends Phaser.Scene {
 
       mediaInstance.settings(streamSetting);
       mediaInstance.getVideoStream();
+      if (this.main_char) {
+        const element = this.add.dom(
+          250,
+          this.main_char.character.y - 100,
+          video
+        );
 
-      const element = this.add.dom(
-        250,
-        this.main_char.character.y - 100,
-        video
-      );
-      // var domElement = scene.add.dom(x, y, el, style, innerText);
-      // element.setDepth();
-      video.addEventListener("ended", (event) => {
-        element.setVisible(false);
-        console.log("비디오 끝");
-        this.overLap.mac = false;
-      });
+        // var domElement = scene.add.dom(x, y, el, style, innerText);
+        // element.setDepth();
+        video.addEventListener("ended", (event) => {
+          element.setVisible(false);
+          console.log("비디오 끝");
+          this.overLap.mac = false;
+        });
+      }
     }
   }
   setOverLap() {
     // 안씀.
-    this.physics.add.overlap(
-      this.main_char.character,
-      this.sprite.mac,
-      (a, mac) => {
-        // @ts-ignore
-        const index = mac.index;
-        if (Math.sign(index) === 1) {
-          //컴퓨터 닿음.
-          if (!this.overLap.mac) this.getCameraStream();
+    if (this.main_char)
+      this.physics.add.overlap(
+        this.main_char.character,
+        this.sprite.mac,
+        (a, mac) => {
+          // @ts-ignore
+          const index = mac.index;
+          if (Math.sign(index) === 1) {
+            //컴퓨터 닿음.
+            if (!this.overLap.mac) this.getCameraStream();
 
-          this.overLap.mac = true;
+            this.overLap.mac = true;
+          }
         }
-      }
-    );
+      );
   }
 
   loadC1() {
@@ -257,8 +296,8 @@ export default class Character extends Phaser.Scene {
     this.main_char.loadImage();
   }
   createC1() {
-    this.main_char.create();
-    this.main_char.setMotionSpeed(100, 200);
+    this.main_char?.create();
+    this.main_char?.setMotionSpeed(100, 200);
     const options = [
       {
         key: "right_idle",
@@ -302,8 +341,8 @@ export default class Character extends Phaser.Scene {
         repeat: 0,
       },
     ] as AnimationsType[];
-    this.main_char.setAnimations(options);
-    this.main_char.getAnimations();
+    this.main_char?.setAnimations(options);
+    this.main_char?.getAnimations();
   }
   loadC2() {
     const location = {
@@ -325,8 +364,8 @@ export default class Character extends Phaser.Scene {
     this.main_char.loadImage();
   }
   createC2() {
-    this.main_char.create();
-    this.main_char.setMotionSpeed(300, 0, 900);
+    this.main_char?.create();
+    this.main_char?.setMotionSpeed(300, 0, 1500);
     const options = [
       {
         key: "left_idle",
@@ -364,8 +403,8 @@ export default class Character extends Phaser.Scene {
         repeat: 0,
       },
     ] as AnimationsType[];
-    this.main_char.setAnimations(options);
-    this.main_char.getAnimations();
+    this.main_char?.setAnimations(options);
+    this.main_char?.getAnimations();
   }
   preload() {
     this.bg.width = this.scale.width;
@@ -441,6 +480,6 @@ export default class Character extends Phaser.Scene {
   }
   update() {
     this.setCollider();
-    this.main_char.updateAnimations();
+    this.main_char?.updateAnimations();
   }
 }

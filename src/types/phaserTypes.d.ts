@@ -12,3 +12,9 @@ type FinderType = {
   texture: "";
   address: AddressType;
 };
+type BackgroundObjectsTypes = {
+  background: null | Phaser.Tilemaps.TilemapLayer;
+  floor: null | Phaser.Tilemaps.TilemapLayer;
+  grass: null | Phaser.Tilemaps.TilemapLayer;
+  stairs: nul | Phaser.Tilemaps.TilemapLayer;
+};
