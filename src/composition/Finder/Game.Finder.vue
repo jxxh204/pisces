@@ -59,6 +59,7 @@ onMounted(() => {
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.objectFit = "contain";
+  canvas.style.padding = "2rem 0";
 });
 onUnmounted(() => {
   // rtcInstance?.sendMessage("out", "");
@@ -68,7 +69,7 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full h-full overflow-hidden">
-    <div id="phaser-wrapper" class="w-full h-full"></div>
+    <div id="phaser-wrapper" class="w-full h-full rounded-xl"></div>
     <!-- <div class="absolute flex flex-row">
       <video ref="localVideo" autoplay class="bg-mac-black h-20 w-20"></video>
       <video ref="remoteVideo" autoplay class="bg-mac-black h-20 w-20"></video>

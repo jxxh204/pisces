@@ -1,5 +1,3 @@
-import { TileObject } from "./../TileObject/TileObject";
-import type { Finder } from "./../Test/Finder";
 import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
