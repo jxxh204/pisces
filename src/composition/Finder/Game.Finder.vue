@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import Welcome from "@/phaser/Welcome/Welcome";
 import { Icons } from "@/phaser/IconSprite/Icons";
 // import { Finder } from "@/phaser/Test/Finder";
-import Character from "@/phaser/Sprites/Character";
+import Game1 from "@/phaser/Scene/Game1";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import { inject, onMounted, onUnmounted, ref } from "vue";
 import useFinderStore from "@/stores/finder.store";
@@ -34,7 +34,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Character], //Level1 Welcome,systemIcons,DropDownTest, Icons 만들기. //
+  scene: [Game1], //Level1 Welcome,systemIcons,DropDownTest, Icons 만들기. //
   physics: {
     default: "arcade",
     arcade: {

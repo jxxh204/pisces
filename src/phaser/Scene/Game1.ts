@@ -122,11 +122,13 @@ export default class Character extends Phaser.Scene {
         "Background",
         "backgroundImage"
       );
+      //createLayer 순서대로 zindex가 잡힌다
+      const bacground = this.map.createLayer("background", backgroundSet, 0, 0);
       const floor = this.map.createLayer("floor2", tileSet, 0, 0);
-      this.map.createLayer("background", backgroundSet, 0, 0);
+      const grass = this.map.createLayer("grass", tileSet, 0, 0);
+      const stairs = this.map.createLayer("stairs", tileSet, 0, 0);
 
       floor.setCollisionByProperty({ collides: true });
-      floor.setDepth(1);
     }
   }
   createCamera() {
