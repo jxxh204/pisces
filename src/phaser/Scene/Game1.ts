@@ -72,7 +72,9 @@ export default class Character extends Phaser.Scene {
     this.backgroundObjects = {
       background: null,
       floor: null,
-      grass: null,
+      trees: null,
+      grass_forth: null,
+      grass_back: null,
       stairs: null,
     };
     this.tileSize = {
@@ -140,8 +142,20 @@ export default class Character extends Phaser.Scene {
         0,
         0
       );
-      this.backgroundObjects.grass = this.map.createLayer(
-        "grass",
+      this.backgroundObjects.grass_forth = this.map.createLayer(
+        "grass_forth",
+        tileSet,
+        0,
+        0
+      );
+      this.backgroundObjects.grass_back = this.map.createLayer(
+        "grass_back",
+        tileSet,
+        0,
+        0
+      );
+      this.backgroundObjects.trees = this.map.createLayer(
+        "trees",
         tileSet,
         0,
         0
@@ -187,20 +201,26 @@ export default class Character extends Phaser.Scene {
     // cam.followOffset.set(-300, 0);
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
+  setDepth() {
+    this.backgroundObjects.grass_back?.setDepth(0);
+    this.backgroundObjects.floor?.setDepth(1);
+    //character : 2
+    this.backgroundObjects.grass_forth?.setDepth(3);
+  }
   setCollider() {
     this.colliders.floor = true;
-    if (this.backgroundObjects.floor && this.backgroundObjects.grass) {
+    if (this.backgroundObjects.floor && this.backgroundObjects.stairs) {
       if (this.main_char)
         this.physics.add.collider(
           this.main_char.character,
-          this.backgroundObjects.grass
+          this.backgroundObjects.stairs
         );
       // this.physics.add.collider(
       //   this.main_char.character,
       //   this.backgroundObjects.floor
       // );
       // this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
-      this.backgroundObjects.grass.setCollisionByProperty({ collides: true });
+      this.backgroundObjects.stairs.setCollisionByProperty({ collides: true });
     }
     // const setOnCollideFloor = (
     //   c: Phaser.Types.Physics.Arcade.GameObjectWithBody
@@ -416,67 +436,7 @@ export default class Character extends Phaser.Scene {
     this.setBackground("create");
     this.createC2();
     this.createCamera();
-
-    // this.bg = this.add.image(400, 300, 'background');
-    // this.platforms = this.physics.add.staticGroup();
-
-    // this.player.setAngle(90) - 각도 바꿈.
-
-    // this.physics.add.collider(stars, platforms); // 충돌감지
-
-    // this.physics.add.overlap(player, stars, this.collectStar, null, this); // 닿으면 사라지게? this.aaa.disableBody
-
-    // 애니메이션
-
-    // this.playerLocation.currentY = this.player.y
-    // this.playerLocation.currentY = 424;
-
-    // this.main_char.character.setDepth(10);
-    // depth
-
-    // const observer = Observer.getInstance();
-    // //파인더 열릴 경우 캐릭터 위치 이동
-    // const observer_event = {
-    //   id: "finder_address",
-    //   func: (address: AddressType) => {
-    //     if (!address) {
-    //       console.log(
-    //         "🚀 ~ file: Character.ts:411 ~ Test ~ create ~ address",
-    //         address
-    //       );
-    //       this.cameras.main.setBounds(
-    //         0, // 타일의 처음 지점.
-    //         this.bg.height,
-    //         this.bg.width, //타일의 끝지점으로.
-    //         this.bg.height
-    //       );
-    //       // this.cameras.main.setZoom(1);
-    //       // this.cameras.main.zoomTo(1, 1000);
-    //       return;
-    //     }
-    //     if (address === "webRTC") {
-    //       this.cameras.main.setBounds(
-    //         -430, // 타일의 처음 지점.
-    //         this.bg.height,
-    //         900, //타일의 끝지점으로.
-    //         1200
-    //       );
-    //       this.cameras.main.centerOn(this.bg.width / 2, this.bg.height - 150);
-    //       this.physics.world.setBounds(
-    //         0, // 타일의 처음 지점.
-    //         this.bg.height,
-    //         900, //타일의 끝지점으로.
-    //         this.bg.height
-    //       );
-    //       // this.cameras.main.pan(400, 1000, 1000);
-    //       // w:400, h:??, 2000초동안 이동.
-    //       // this.cameras.main.setZoom(2);
-    //       // this.cameras.main.zoomTo(2, 1000);
-    //       // this.physics.world
-    //     }
-    //   },
-    // };
-    // observer.addObserver(observer_event);
+    this.setDepth();
   }
   update() {
     this.setCollider();
