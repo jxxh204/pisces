@@ -105,35 +105,6 @@ export default class CreateCharacter {
       });
     });
     this.character.play(`${this.direction}_idle`, true); // idle 모션 실행.
-    //키보드
-
-    // this.phaser.anims.create({
-    //   key: "jump",
-    //   frames: this.phaser.anims.generateFrameNames("player_jump", {
-    //     start: 0,
-    //     end: 7,
-    //   }),
-    //   // frameRate: 16,
-    //   frameRate: 5,
-    // });
-    // this.phaser.anims.create({
-    //   key: "left",
-    //   frames: this.phaser.anims.generateFrameNames("player_left", {
-    //     start: 0,
-    //     end: 3,
-    //   }),
-    //   frameRate: 8,
-    //   repeat: 0,
-    // });
-    // this.phaser.anims.create({
-    //   key: "right",
-    //   frames: this.phaser.anims.generateFrameNames("player_right", {
-    //     start: 0,
-    //     end: 3,
-    //   }),
-    //   frameRate: 8,
-    //   repeat: 0,
-    // });
   }
   updateAnimations() {
     //리팩터링하기.

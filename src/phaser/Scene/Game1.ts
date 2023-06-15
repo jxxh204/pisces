@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
 import Swordsman from "@/assets/characters/swordsman-Sheet.png";
-
+import Nomalman from "@/assets/characters/normalMan/normalMan.png";
 // inGameLoading
 // import inGameLoading from "./inGameLoading.png";
 
@@ -210,16 +210,17 @@ export default class Character extends Phaser.Scene {
   setCollider() {
     this.colliders.floor = true;
     if (this.backgroundObjects.floor && this.backgroundObjects.stairs) {
-      if (this.main_char)
+      if (this.main_char) {
         this.physics.add.collider(
           this.main_char.character,
           this.backgroundObjects.stairs
         );
-      // this.physics.add.collider(
-      //   this.main_char.character,
-      //   this.backgroundObjects.floor
-      // );
-      // this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
+        this.physics.add.collider(
+          this.main_char.character,
+          this.backgroundObjects.floor
+        );
+      }
+      this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
       this.backgroundObjects.stairs.setCollisionByProperty({ collides: true });
     }
     // const setOnCollideFloor = (
@@ -364,7 +365,7 @@ export default class Character extends Phaser.Scene {
     this.main_char?.setAnimations(options);
     this.main_char?.getAnimations();
   }
-  loadC2() {
+  loadSwordMan() {
     const location = {
       x: 100,
       y: this.bg.height,
@@ -383,7 +384,7 @@ export default class Character extends Phaser.Scene {
     );
     this.main_char.loadImage();
   }
-  createC2() {
+  createSwordMan() {
     this.main_char?.create();
     this.main_char?.setMotionSpeed(300, 0, 1500);
     const options = [
@@ -426,15 +427,51 @@ export default class Character extends Phaser.Scene {
     this.main_char?.setAnimations(options);
     this.main_char?.getAnimations();
   }
+  loadNormalMan() {
+    const location = {
+      x: 100,
+      y: this.bg.height - 100,
+      currentY: 0,
+    };
+    this.main_char = new CreateCharacter(
+      this,
+      "Nomalman",
+      Nomalman,
+      {
+        frameWidth: 48,
+        frameHeight: 48,
+      },
+      location,
+      2
+    );
+    this.main_char.loadImage();
+  }
+  createNormalMan() {
+    this.main_char?.create();
+    this.main_char?.setMotionSpeed(300, 0, 1500);
+    const options = [
+      {
+        key: "right_idle",
+        start: 0,
+        end: 9,
+        frameRate: 8,
+        repeat: -1,
+      },
+    ] as AnimationsType[];
+    this.main_char?.setAnimations(options);
+    this.main_char?.getAnimations();
+  }
   preload() {
     this.bg.width = this.scale.width;
     this.bg.height = this.scale.height;
     this.setBackground("load");
-    this.loadC2();
+    // this.loadSwordMan();
+    this.loadNormalMan();
   }
   create() {
     this.setBackground("create");
-    this.createC2();
+    // this.createSwordMan();
+    this.createNormalMan();
     this.createCamera();
     this.setDepth();
   }
