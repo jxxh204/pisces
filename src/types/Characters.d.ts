@@ -25,14 +25,10 @@ type CharacterLocationType = {
   currentY: number;
 };
 type ActionKeyType =
-  | "left_idle"
-  | "right_idle"
-  | "left_walk"
-  | "right_walk"
-  | "right_run"
-  | "left_run"
-  | "right_jump"
-  | "left_jump"
+  | "idle"
+  | "walk"
+  | "run"
+  | "jump"
   | "running";
 type AnimationsType = {
   key: ActionKeyType;

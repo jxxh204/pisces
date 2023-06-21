@@ -41,7 +41,7 @@ export default class CreateCharacter {
 
     this.animations = [];
     this.direction = "right";
-    this.currentAction = `${this.direction}_idle`;
+    this.currentAction = `idle`;
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
     this.isBehavior = false;
@@ -104,14 +104,14 @@ export default class CreateCharacter {
         repeat: animation.repeat,
       });
     });
-    this.character.play(`${this.direction}_idle`, true); // idle 모션 실행.
+    this.character.play(`idle`, true); // idle 모션 실행.
   }
   updateAnimations() {
     //리팩터링하기.
     const onRunPlayer = () => {
-      this.currentAction = `${this.direction}_run`;
-      if (this.currentAction === `${this.direction}_run`) {
-        this.character.anims.play(`${this.direction}_run`, true); //처음 한번만 모션 발동.
+      this.currentAction = `run`;
+      if (this.currentAction === `run`) {
+        this.character.anims.play(`run`, true); //처음 한번만 모션 발동.
         this.currentAction = "running";
       }
       if (this.currentAction === "running") {
@@ -123,46 +123,19 @@ export default class CreateCharacter {
         }
       }
     };
-    // if (this.currentAction === "jump") {
-    //   if (this.phaser.colliders.floor) {
-    //     this.phaser.colliders.activeCount.push(true);
-    //     if (this.phaser.colliders.activeCount.length > 15) {
-    //       //점프가 끝났음.
-    //       //점프하고 this.phaser.colliders.floor가 10번정도 들어와서 그것을 방지하고 점프했다는 것을 알기위해.
-    //       this.phaser.colliders.activeCount = [];
-    //       this.isBehavior = false; // idle로 변함
-    //       this.currentAction = `${this.direction}_idle`;
-    //       // console.log("바닥에 닿음");
-    //     }
-    //   }
-    // }
-    // if (this.phaser.colliders.floor) {
-    //   // 땅에 닿았을 경우에만 점프 가능.
-    //   if (this.cursors.space.isDown) {
-    //     //스페이스바를 눌렀을 때 점프
-    //     this.currentAction = "jump";
-    //     this.character.setVelocityY(this.motionSpeed.jump);
-    //     this.character.anims.duration = 1000;
-    //     console.log(
-    //       "🚀 ~ file: createCharacter.ts:175 ~ CreateCharacter ~ updateAnimations ~ this.character.anims.duration",
-    //       this.character.anims.duration
-    //     );
-    //     this.character.anims.play("jump");
-    //     this.isBehavior = true;
-    //   }
-    // }
     if (this.cursors.space.isDown) { //점프
-      if(!this.character.body.onFloor()) return; // 바닥에 닿지 않은경우
+      // if(!this.character.body.onFloor()) return; // 바닥에 닿지 않은경우
         //스페이스바를 눌렀을 때 점프
-        this.currentAction = `${this.direction}_jump`;
+        this.currentAction = `jump`;
         this.character.setVelocityY(this.motionSpeed.jump);
         this.character.anims.duration = 1000;
 
-        this.character.anims.play(`${this.direction}_jump`);
+        this.character.anims.play(`jump`);
         this.isBehavior = true;
     }
     if (this.cursors.left.isDown) {
       this.direction = "left";
+      this.character.setFlipX(false);
       //왼쪽
       if (this.cursors.shift.isDown) {
         // 달리기. this.cursors.shift.isUp
@@ -172,12 +145,14 @@ export default class CreateCharacter {
         this.character.setVelocityX(-this.motionSpeed.walk);
           if (this.character.body.onFloor()) {
             //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = `${this.direction}_walk`;
+            this.currentAction = `walk`;
             this.character.anims.play(this.currentAction, true);
           }
       }
     } else if (this.cursors.right.isDown) {
       this.direction = "right";
+      // this.character.toggleFlipX();
+      this.character.setFlipX(true);
       // 오른쪽
       if (this.cursors.shift.isDown) {
         // 달리기. this.cursors.shift.isUp
@@ -186,7 +161,7 @@ export default class CreateCharacter {
         this.character.setVelocityX(this.motionSpeed.walk);
           if (this.character.body.onFloor()) {
             //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = `${this.direction}_walk`;
+            this.currentAction = `walk`;
             this.character.anims.play(this.currentAction, true);
           }
       }
@@ -194,7 +169,7 @@ export default class CreateCharacter {
       // 기본상태.
         if (this.character.body.onFloor()) {
           this.character.setVelocityX(0);
-          this.currentAction = `${this.direction}_idle`;
+          this.currentAction = `idle`;
           this.character.anims.play(this.currentAction, true);
           this.isBehavior = false;
         }
