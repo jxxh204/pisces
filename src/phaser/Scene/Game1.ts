@@ -208,7 +208,6 @@ export default class Character extends Phaser.Scene {
     this.backgroundObjects.grass_forth?.setDepth(3);
   }
   setCollider() {
-    this.colliders.floor = true;
     if (this.backgroundObjects.floor && this.backgroundObjects.stairs) {
       if (this.main_char) {
         this.physics.add.collider(
@@ -219,27 +218,12 @@ export default class Character extends Phaser.Scene {
           this.main_char.character,
           this.backgroundObjects.floor
         );
+
       }
       this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
       this.backgroundObjects.stairs.setCollisionByProperty({ collides: true });
     }
-    // const setOnCollideFloor = (
-    //   c: Phaser.Types.Physics.Arcade.GameObjectWithBody
-    // ) => {
-    //   this.colliders.floor = c.active;
-    //   if (this.colliders.timer) clearTimeout(this.colliders.timer);
-    //   this.colliders.timer = setTimeout(() => {
-    //     this.colliders.floor = false;
-    //   }, 100); // 점프가 끝나면 callback 호출이 없어지기 때문에 0.1초뒤에 false가 된다.
-    // };
-    // //충돌감지 // update에 적용
-    // this.physics.add.collider(
-    //   this.main_char.character,
-    //   this.sprite.floor,
-    //   (c) => setOnCollideFloor(c)
-    // );
-    // this.sprite.floor.setCollisionByProperty({ collides: true });
-    // var M = Phaser.Physics.Matter.MatterPhysics
+
   }
   async getCameraStream() {
     const mediaInstance = media.GetStream.getInstance();
@@ -430,7 +414,7 @@ export default class Character extends Phaser.Scene {
   loadNormalMan() {
     const location = {
       x: 100,
-      y: this.bg.height - 100,
+      y: this.bg.height-100,
       currentY: 0,
     };
     this.main_char = new CreateCharacter(
@@ -448,7 +432,7 @@ export default class Character extends Phaser.Scene {
   }
   createNormalMan() {
     this.main_char?.create();
-    this.main_char?.setMotionSpeed(300, 0, 1500);
+    this.main_char?.setMotionSpeed(60, 200, -200);
     const options = [
       {
         key: "right_idle",
@@ -456,6 +440,55 @@ export default class Character extends Phaser.Scene {
         end: 9,
         frameRate: 8,
         repeat: -1,
+      },
+      {
+        key: "left_idle",
+        start: 10,
+        end: 19,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "right_walk",
+        start: 20,
+        end: 27,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "left_walk",
+        start: 30,
+        end: 37,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "right_run",
+        start: 40,
+        end: 47,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "left_run",
+        start: 50,
+        end: 57,
+        frameRate: 8,
+        repeat: -1,
+      },
+      {
+        key: "left_jump",
+        start: 60,
+        end: 62,
+        frameRate: 16,
+        repeat: 1,
+      },
+      {
+        key: "right_jump",
+        start: 63,
+        end: 66,
+        frameRate: 16,
+        repeat: 1,
       },
     ] as AnimationsType[];
     this.main_char?.setAnimations(options);

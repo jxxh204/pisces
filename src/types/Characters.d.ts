@@ -29,8 +29,10 @@ type ActionKeyType =
   | "right_idle"
   | "left_walk"
   | "right_walk"
-  | "run"
-  | "jump"
+  | "right_run"
+  | "left_run"
+  | "right_jump"
+  | "left_jump"
   | "running";
 type AnimationsType = {
   key: ActionKeyType;
