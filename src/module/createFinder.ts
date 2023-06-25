@@ -1,7 +1,5 @@
 import finder_exit_idle from "@/assets/images/Finder/finder_exit_idle.png";
 import computerImg from "@/assets/images/computer.gif";
-import Observer from "@/module/observer";
-import type Character from "../phaser/Sprites/Character";
 
 export class CreateFinder extends Phaser.GameObjects.Sprite {
   scene: Phaser.Scene;

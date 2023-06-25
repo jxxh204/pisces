@@ -29,14 +29,14 @@ onMounted(() => {
   <article
     id="project_image"
     ref="projeftImage"
-    class="relative w-full border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
+    class="relative w-full lg:max-w-2xl border-[1px] border-mac-black flex flex-col items-center bg-default-pattern shadow-lg"
   >
     <div
       class="project_image_tab border-t-[1px] border-mac-gray-300 w-full h-1"
     ></div>
     <img
       ref="mainImage"
-      class="object-cover w-full h-full p-1"
+      class="object-cover w-full h-full p-2"
       :src="props.image"
     />
     <Transition>

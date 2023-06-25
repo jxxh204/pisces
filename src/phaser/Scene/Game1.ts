@@ -369,47 +369,10 @@ export default class Character extends Phaser.Scene {
     this.main_char.loadImage();
   }
   createSwordMan() {
-    this.main_char?.create();
-    this.main_char?.setMotionSpeed(300, 0, 1500);
-    const options = [
-      {
-        key: "left_idle",
-        start: 0,
-        end: 7,
-        frameRate: 8,
-        repeat: -1,
-      },
-      {
-        key: "right_idle",
-        start: 10,
-        end: 17,
-        frameRate: 8,
-        repeat: -1,
-      },
-      {
-        key: "left_walk",
-        start: 60,
-        end: 67,
-        frameRate: 16,
-        repeat: 0,
-      },
-      {
-        key: "right_walk",
-        start: 70,
-        end: 77,
-        frameRate: 16,
-        repeat: 0,
-      },
-      {
-        key: "jump",
-        frames: [50, 53, 54, 55, 56, 59],
-        zeroPad: 2,
-        frameRate: 4,
-        repeat: 0,
-      },
-    ] as AnimationsType[];
-    this.main_char?.setAnimations(options);
-    this.main_char?.getAnimations();
+    // this.main_char?.create();
+    // this.main_char?.setMotionSpeed(300, 0, 1500);
+    // this.main_char?.setAnimations(options);
+    // this.main_char?.getAnimations();
   }
   loadNormalMan() {
     const location = {
