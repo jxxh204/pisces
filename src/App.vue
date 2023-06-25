@@ -10,34 +10,6 @@ import deepLink from "@/module/deepLink";
 
 onMounted(async () => {
   console.log(deepLink.mobile_chk());
-  //여기서 한번만 검사하고 사용하기.
-
-  // window.addEventListener("resize", resize, false);
-  //webRTC 렉때매 잠시 끔.
-  //   let videoId = "";
-  //   const mediaList = await media.searchDeviceList();
-  //   mediaList?.map((media) => {
-  //     if (media.kind === "videoinput") {
-  //       videoId = media.deviceId;
-  //     }
-  //   });
-  //   const instance = media.GetStream.getInstance();
-  //   const option = {
-  //     video: true,
-  //     audio: false,
-  //     elementKind: "video",
-  //     outputElement: pubVideoEl.value,
-  //   } as GetStreamSettings;
-  //   instance.settings(option);
-  //   localStream.value = await instance.getVideoStream(videoId, 1280, 800);
-  //   // rtcInstance.openSub();
-  // });
-  // const onClickConnectRTC = () => {
-  //   const rtcInstance = new webRTC(localStream.value, subVideoEl.value);
-  //   rtcInstance.openWebSocket();
-  //   setTimeout(() => {
-  //     rtcInstance.openRTC();
-  //   }, 1000);
 });
 </script>
 

@@ -18,7 +18,6 @@ export default class CreateCharacter {
   animations: AnimationsType[];
   currentAction: ActionKeyType;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  isBehavior: boolean;
 
   motionSpeed: MotionSpeedTypes;
   direction: "left" | "right";
@@ -44,7 +43,6 @@ export default class CreateCharacter {
     this.currentAction = `idle`;
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
-    this.isBehavior = false;
 
     this.motionSpeed = {
       walk: 200,
@@ -124,14 +122,13 @@ export default class CreateCharacter {
       }
     };
     if (this.cursors.space.isDown) { //점프
-      // if(!this.character.body.onFloor()) return; // 바닥에 닿지 않은경우
+      if(this.character.body.onFloor()){// 바닥에 닿은 경우
         //스페이스바를 눌렀을 때 점프
         this.currentAction = `jump`;
         this.character.setVelocityY(this.motionSpeed.jump);
         this.character.anims.duration = 1000;
-
         this.character.anims.play(`jump`);
-        this.isBehavior = true;
+      }
     }
     if (this.cursors.left.isDown) {
       this.direction = "left";
@@ -171,7 +168,13 @@ export default class CreateCharacter {
           this.character.setVelocityX(0);
           this.currentAction = `idle`;
           this.character.anims.play(this.currentAction, true);
-          this.isBehavior = false;
+        } else { //바닥에 닿지 않았는데 점프가 아닐 경우 강제 변경.
+          // if(this.currentAction !== 'jump'){
+          // this.currentAction = 'jump';
+          // this.character.setVelocityY(this.motionSpeed.jump);
+          // this.character.anims.duration = 1000;
+          // this.character.anims.play('jump');
+          // }
         }
     }
   }

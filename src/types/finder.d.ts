@@ -17,6 +17,7 @@ type TabName =
   | "Coplay"
   | "hello-mars"
   | "blockbot"
+  | "Developic"
   | "layer-after-layer";
 
 type TagName =
@@ -29,6 +30,10 @@ type TagName =
   | "WebBluetooth"
   | "Electron"
   | "React & Redux"
+  | "React & Recoil"
+  | "yarn berry(pnp)"
+  | "playwright"
+  | "StyledComponent"
   | "Scratch3"
   | "CI"
   | "TEST"
