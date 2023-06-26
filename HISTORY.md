@@ -462,3 +462,9 @@
 - v0.0.1:141
 - project 이미지 최대 크기 조정
 - v0.0.1:142
+
+### 2023 6/26
+-  SEO : vue-meta, vite-plugin-pages-sitemap, robot.txt 적용
+- v0.0.1:143
+- sitemap 생성
+- v0.0.1:144
