@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import CreateCharacter from "@/module/createCharacter";
 import Mushroom from "@/assets/characters/Mushroom.png";
 import Swordsman from "@/assets/characters/swordsman-Sheet.png";
-import Nomalman from "@/assets/characters/normalMan/normalMan.png";
+import NormalMan from "@/assets/characters/normalMan/normalMan.png";
 // inGameLoading
 // import inGameLoading from "./inGameLoading.png";
 
@@ -175,9 +175,10 @@ export default class Character extends Phaser.Scene {
     const bottom = this.bg.height;
 
     // this.cameras.main.setBounds(0, 0, 3392, bottom);
-    // this.physics.world.setBounds(0, 0, 3392, 0);
 
     this.cameras.main.setBounds(0, 0, this.bg.width, bottom);
+    // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
+
     // this.physics.world.setBounds(0, 0, 3392, 240);
     if (this.main_char) cam.startFollow(this.main_char.character, true); //카메라 따라다님
     cam.setZoom(3);
@@ -195,9 +196,7 @@ export default class Character extends Phaser.Scene {
     // cam.zoomTo(2, 1000);
     //1초동안 줌2로 변경
 
-    // setBounds 내가 활동할 수 있는 공간은 제한 시키는 메소드. cam을 제한하는 코드
     // cam.centerOn(0, 0);
-    // cam.startFollow(this.main_char.character, true); //카메라 따라다님
     // cam.followOffset.set(-300, 0);
     // this.cameras.main.setPosition(-window.innerWidth / 2, 0);
   }
@@ -382,8 +381,8 @@ export default class Character extends Phaser.Scene {
     };
     this.main_char = new CreateCharacter(
       this,
-      "Nomalman",
-      Nomalman,
+      "NormalMan",
+      NormalMan,
       {
         frameWidth: 48,
         frameHeight: 48,
@@ -428,6 +427,9 @@ export default class Character extends Phaser.Scene {
     ] as AnimationsType[];
     this.main_char?.setAnimations(options);
     this.main_char?.getAnimations();
+
+    this.main_char?.character.setSize(30,30) 
+    //캐릭터 이미지에 빈공간이 있어 바닥에 닿지 않아 크기 조절
   }
   preload() {
     this.bg.width = this.scale.width;

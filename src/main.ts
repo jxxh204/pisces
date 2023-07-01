@@ -7,7 +7,9 @@ import App from "./App.vue";
 import "./assets/main.css";
 import "webrtc-adapter";
 import mitt from "mitt"; // Import mitt
+import VueMeta from 'vue-meta'
 
+// Vue.use(VueMeta)
 const emitter = mitt(); // Initialize mitt
 
 // import io from 'socket.io';
@@ -15,6 +17,7 @@ const emitter = mitt(); // Initialize mitt
 
 const app = createApp(App);
 app.use(createPinia());
+
 app.provide("emitter", emitter); // ✅ Provide as `emitter`
 // app.use(router);
 
