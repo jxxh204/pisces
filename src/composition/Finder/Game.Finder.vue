@@ -15,7 +15,7 @@ const emitter: any = inject("emitter");
 const remoteVideo = ref<HTMLVideoElement>();
 const localVideo = ref<HTMLVideoElement>();
 let rtcInstance: webRTC | null = null;
-let game = null;
+let game:null | Phaser.Game = null;
 
 console.log("game: ", finderStore.currentFinders["Game"]);
 const config = {
@@ -56,6 +56,7 @@ const config = {
 onMounted(() => {
   // rtcInstance = new webRTC(remoteVideo.value, localVideo.value);
    game = new Phaser.Game(config);
+
   const canvas = game.canvas;
   canvas.style.width = "100%";
   canvas.style.height = "100%";
@@ -63,6 +64,7 @@ onMounted(() => {
   canvas.style.padding = "2rem 0";
 });
 onUnmounted(() => {
+  game?.destroy(true);
   game = null;
   // rtcInstance?.sendMessage("out", "");
   // rtcInstance?.pc?.close();

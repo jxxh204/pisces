@@ -75,6 +75,7 @@ export default class Character extends Phaser.Scene {
       background: null,
       floor: null,
       wall:null,
+      object:null,
       trees: null,
       grass_forth: null,
       grass_back: null,
