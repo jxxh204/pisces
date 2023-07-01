@@ -15,6 +15,8 @@ type FinderType = {
 type BackgroundObjectsTypes = {
   background: null | Phaser.Tilemaps.TilemapLayer;
   floor: null | Phaser.Tilemaps.TilemapLayer;
+  wall: nul | Phaser.Tilemaps.TilemapLayer;
+  object: nul | Phaser.Tilemaps.TilemapLayer;
   trees: nul | Phaser.Tilemaps.TilemapLayer;
   grass_forth: null | Phaser.Tilemaps.TilemapLayer;
   grass_back: null | Phaser.Tilemaps.TilemapLayer;

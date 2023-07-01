@@ -15,6 +15,7 @@ const emitter: any = inject("emitter");
 const remoteVideo = ref<HTMLVideoElement>();
 const localVideo = ref<HTMLVideoElement>();
 let rtcInstance: webRTC | null = null;
+let game = null;
 
 console.log("game: ", finderStore.currentFinders["Game"]);
 const config = {
@@ -25,8 +26,8 @@ const config = {
   //   autoCenter: Phaser.Scale.CENTER_BOTH,
   // },
   parent: "phaser-wrapper", //canvas id
-  width: 1600, // -16
-  height: 1200, // -64
+  width: 1920, // -16
+  height: 1280, // -64
   autoCenter: Phaser.Scale.CENTER_BOTH, // 화면을 자동으로 센터에 맞추어줌.
   dom: {
     createContainer: true,
@@ -54,7 +55,7 @@ const config = {
 };
 onMounted(() => {
   // rtcInstance = new webRTC(remoteVideo.value, localVideo.value);
-  const game = new Phaser.Game(config);
+   game = new Phaser.Game(config);
   const canvas = game.canvas;
   canvas.style.width = "100%";
   canvas.style.height = "100%";
@@ -62,6 +63,7 @@ onMounted(() => {
   canvas.style.padding = "2rem 0";
 });
 onUnmounted(() => {
+  game = null;
   // rtcInstance?.sendMessage("out", "");
   // rtcInstance?.pc?.close();
 });

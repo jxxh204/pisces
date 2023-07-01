@@ -10,8 +10,10 @@ import { media } from "@/media/userMedia";
 import type { AnimationsType } from "@/types/Characters";
 import type { GetStreamSettings } from "@/media/media";
 
-import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
-import background from "@/phaser/TiledProject/Background/Background.png";
+// import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
+// import background from "@/phaser/TiledProject/Background/Background.png";
+import tiles from "@/phaser/TiledProject/Assets/Basic-Tilemap.png";
+import background from "@/phaser/TiledProject/Background/background-tilemap.png";
 
 type ColliderType = {
   floor: boolean;
@@ -72,6 +74,7 @@ export default class Character extends Phaser.Scene {
     this.backgroundObjects = {
       background: null,
       floor: null,
+      wall:null,
       trees: null,
       grass_forth: null,
       grass_back: null,
@@ -118,7 +121,8 @@ export default class Character extends Phaser.Scene {
       // 배경
       this.load.image("tilesImage", tiles);
       this.load.image("backgroundImage", background);
-      this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game.json"); //무조건 주소 자체를 넣어야함.
+      // this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game.json"); //무조건 주소 자체를 넣어야함.
+      this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game2.json");
     } else {
       this.map = this.make.tilemap({
         key: "Game",
@@ -137,35 +141,53 @@ export default class Character extends Phaser.Scene {
         0
       );
       this.backgroundObjects.floor = this.map.createLayer(
-        "floor2",
+        "floor",
         tileSet,
         0,
         0
       );
-      this.backgroundObjects.grass_forth = this.map.createLayer(
-        "grass_forth",
+      this.backgroundObjects.wall = this.map.createLayer(
+        "wall",
         tileSet,
         0,
         0
       );
-      this.backgroundObjects.grass_back = this.map.createLayer(
-        "grass_back",
+      this.backgroundObjects.object = this.map.createLayer(
+        "object",
         tileSet,
         0,
         0
       );
-      this.backgroundObjects.trees = this.map.createLayer(
-        "trees",
-        tileSet,
-        0,
-        0
-      );
-      this.backgroundObjects.stairs = this.map.createLayer(
-        "stairs",
-        tileSet,
-        0,
-        0
-      );
+      // this.backgroundObjects.floor = this.map.createLayer(
+      //   "floor2",
+      //   tileSet,
+      //   0,
+      //   0
+      // );
+      // this.backgroundObjects.grass_forth = this.map.createLayer(
+      //   "grass_forth",
+      //   tileSet,
+      //   0,
+      //   0
+      // );
+      // this.backgroundObjects.grass_back = this.map.createLayer(
+      //   "grass_back",
+      //   tileSet,
+      //   0,
+      //   0
+      // );
+      // this.backgroundObjects.trees = this.map.createLayer(
+      //   "trees",
+      //   tileSet,
+      //   0,
+      //   0
+      // );
+      // this.backgroundObjects.stairs = this.map.createLayer(
+      //   "stairs",
+      //   tileSet,
+      //   0,
+      //   0
+      // );
     }
   }
   createCamera() {
@@ -173,7 +195,6 @@ export default class Character extends Phaser.Scene {
     const cam = this.cameras.main;
     const canvas = this.game.canvas;
     const bottom = this.bg.height;
-
     // this.cameras.main.setBounds(0, 0, 3392, bottom);
 
     this.cameras.main.setBounds(0, 0, this.bg.width, bottom);
@@ -204,25 +225,18 @@ export default class Character extends Phaser.Scene {
     this.backgroundObjects.grass_back?.setDepth(0);
     this.backgroundObjects.floor?.setDepth(1);
     //character : 2
-    this.backgroundObjects.grass_forth?.setDepth(3);
+    this.backgroundObjects.wall?.setDepth(2);
   }
-  setCollider() {
-    if (this.backgroundObjects.floor && this.backgroundObjects.stairs) {
-      if (this.main_char) {
-        this.physics.add.collider(
-          this.main_char.character,
-          this.backgroundObjects.stairs
-        );
-        this.physics.add.collider(
-          this.main_char.character,
-          this.backgroundObjects.floor
-        );
-
-      }
-      this.backgroundObjects.floor.setCollisionByProperty({ collides: true });
-      this.backgroundObjects.stairs.setCollisionByProperty({ collides: true });
+  setCollider(objectArray:Phaser.Tilemaps.TilemapLayer[]) {
+    objectArray.map((object) => {
+    if(this.main_char){
+      this.physics.add.collider(
+        this.main_char.character,
+        object
+      );
     }
-
+    object.setCollisionByProperty({ collides: true });
+    })
   }
   async getCameraStream() {
     const mediaInstance = media.GetStream.getInstance();
@@ -446,7 +460,11 @@ export default class Character extends Phaser.Scene {
     this.setDepth();
   }
   update() {
-    this.setCollider();
+    this.setCollider([
+      this.backgroundObjects.floor,
+      this.backgroundObjects.wall,
+      this.backgroundObjects.object
+    ]);
     this.main_char?.updateAnimations();
   }
 }
