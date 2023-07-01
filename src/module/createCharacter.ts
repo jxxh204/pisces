@@ -104,23 +104,46 @@ export default class CreateCharacter {
     });
     this.character.play(`idle`, true); // idle 모션 실행.
   }
+  onSpeed = () => {
+    if(this.currentAction === "walk") {
+      if (this.direction === "left") {
+        this.character.setVelocityX(-this.motionSpeed.walk);
+      } else {
+        this.character.setVelocityX(this.motionSpeed.walk);
+      }
+
+    }
+    if (this.currentAction === "running") {
+      // 모션과 별개로 계속 움직여야 하기에 따로 적용.
+      if (this.direction === "left") {
+        this.character.setVelocityX(-this.motionSpeed.run);
+      } else {
+        this.character.setVelocityX(this.motionSpeed.run);
+      }
+    }
+  }
+  motionRun = () => {
+    // 공중이라면 return;
+    if(!this.character.body.onFloor()) return;
+    this.currentAction = `run`;
+    if (this.currentAction === `run`) {
+      this.character.anims.play(`run`, true); //처음 한번만 모션 발동.
+      this.currentAction = "running";
+    }
+
+  };
+  motionWalk = () => {
+    if(!this.character.body.onFloor()) return;
+    this.currentAction = `walk`;
+    this.character.anims.play(this.currentAction, true);
+  }
+  motionJump = () => {
+    if(this.character.body.onFloor()) return;
+    this.currentAction = 'jump';
+    this.character.anims.play('jump',true)
+  }
   updateAnimations() {
     //리팩터링하기.
-    const onRunPlayer = () => {
-      this.currentAction = `run`;
-      if (this.currentAction === `run`) {
-        this.character.anims.play(`run`, true); //처음 한번만 모션 발동.
-        this.currentAction = "running";
-      }
-      if (this.currentAction === "running") {
-        // 모션과 별개로 계속 움직여야 하기에 따로 적용.
-        if (this.direction === "left") {
-          this.character.setVelocityX(-this.motionSpeed.run);
-        } else {
-          this.character.setVelocityX(this.motionSpeed.run);
-        }
-      }
-    };
     if (this.cursors.space.isDown) { //점프
       if(this.character.body.onFloor()){// 바닥에 닿은 경우
         //스페이스바를 눌렀을 때 점프
@@ -131,36 +154,36 @@ export default class CreateCharacter {
       }
     }
     if (this.cursors.left.isDown) {
-      this.direction = "left";
-      this.character.setFlipX(false);
-      //왼쪽
-      if (this.cursors.shift.isDown) {
-        // 달리기. this.cursors.shift.isUp
-        onRunPlayer();
-      } else {
-        //쉬프트 안누를 경우 걷기.
-        this.character.setVelocityX(-this.motionSpeed.walk);
-          if (this.character.body.onFloor()) {
-            //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = `walk`;
-            this.character.anims.play(this.currentAction, true);
-          }
+      if (this.character.body.onFloor()) {
+        this.direction = "left";
+        this.character.setFlipX(false);
+        //왼쪽
+        if (this.cursors.shift.isDown) {
+          // 달리기. this.cursors.shift.isUp
+          this.motionRun();
+        } else {
+          //쉬프트 안누를 경우 걷기.
+              //점프가 아니면서 땅에 닿았을 경우에만 작동
+              this.motionWalk()
+        }
+      } else{
+        this.motionJump();
       }
     } else if (this.cursors.right.isDown) {
-      this.direction = "right";
-      // this.character.toggleFlipX();
-      this.character.setFlipX(true);
-      // 오른쪽
-      if (this.cursors.shift.isDown) {
-        // 달리기. this.cursors.shift.isUp
-        onRunPlayer();
+      if (this.character.body.onFloor()) {
+        this.direction = "right";
+        // this.character.toggleFlipX();
+        this.character.setFlipX(true);
+        // 오른쪽
+        if (this.cursors.shift.isDown) {
+          // 달리기. this.cursors.shift.isUp
+          this.motionRun();
+        } else {
+              //점프가 아니면서 땅에 닿았을 경우에만 작동
+              this.motionWalk()
+        }
       } else {
-        this.character.setVelocityX(this.motionSpeed.walk);
-          if (this.character.body.onFloor()) {
-            //점프가 아니면서 땅에 닿았을 경우에만 작동
-            this.currentAction = `walk`;
-            this.character.anims.play(this.currentAction, true);
-          }
+        this.motionJump();
       }
     } else {
       // 기본상태.
@@ -169,13 +192,11 @@ export default class CreateCharacter {
           this.currentAction = `idle`;
           this.character.anims.play(this.currentAction, true);
         } else { //바닥에 닿지 않았는데 점프가 아닐 경우 강제 변경.
-          // if(this.currentAction !== 'jump'){
-          // this.currentAction = 'jump';
-          // this.character.setVelocityY(this.motionSpeed.jump);
-          // this.character.anims.duration = 1000;
-          // this.character.anims.play('jump');
-          // }
+          if(this.currentAction !== 'jump'){
+            this.motionJump();
+          }
         }
     }
+    this.onSpeed();
   }
 }

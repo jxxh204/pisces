@@ -421,7 +421,7 @@ export default class Character extends Phaser.Scene {
         key: "jump",
         start: 63,
         end: 65,
-        frameRate: 1,
+        frameRate: 2,
         repeat: 1,
       },
     ] as AnimationsType[];
