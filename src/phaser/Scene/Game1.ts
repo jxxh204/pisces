@@ -413,37 +413,51 @@ export default class Character extends Phaser.Scene {
     const options = [
       {
         key: "idle",
-        start: 10,
-        end: 19,
+        start: 0,
+        end: 9,
         frameRate: 8,
         repeat: -1,
       },
       {
         key: "walk", // left
-        start: 30,
-        end: 37,
+        start: 10,
+        end: 17,
         frameRate: 8,
         repeat: -1,
       },
       {
         key: "run",
-        start: 50,
-        end: 57,
+        start: 20,
+        end: 27,
         frameRate: 8,
         repeat: -1,
       },
       {
         key: "jump",
-        start: 63,
-        end: 65,
+        start: 30,
+        end: 32,
         frameRate: 2,
+        repeat: 1,
+      },
+      {
+        key: "wall_land",
+        start: 50,
+        end: 55,
+        frameRate: 16,
+        repeat: 0,
+      },
+      {
+        key: "wall_slide",
+        start: 60,
+        end: 62,
+        frameRate: 8,
         repeat: 1,
       },
     ] as AnimationsType[];
     this.main_char?.setAnimations(options);
     this.main_char?.getAnimations();
 
-    this.main_char?.character.setSize(30,30) 
+    this.main_char?.character.setSize(14,30) 
     //캐릭터 이미지에 빈공간이 있어 바닥에 닿지 않아 크기 조절
   }
   preload() {

@@ -29,7 +29,9 @@ type ActionKeyType =
   | "walk"
   | "run"
   | "jump"
-  | "running";
+  | "running"
+  | "wall_land"
+  | "wall_slide";
 type AnimationsType = {
   key: ActionKeyType;
   start: number;

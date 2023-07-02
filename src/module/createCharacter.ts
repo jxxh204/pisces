@@ -112,14 +112,16 @@ export default class CreateCharacter {
         this.character.setVelocityX(this.motionSpeed.walk);
       }
 
-    }
-    if (this.currentAction === "running") {
+    }else if (this.currentAction === "running") {
       // 모션과 별개로 계속 움직여야 하기에 따로 적용.
       if (this.direction === "left") {
         this.character.setVelocityX(-this.motionSpeed.run);
       } else {
         this.character.setVelocityX(this.motionSpeed.run);
       }
+    } else if (this.currentAction === "wall_land") {
+      this.character.setVelocityX(0);
+      this.character.setVelocityY(0);
     }
   }
   motionRun = () => {
@@ -132,48 +134,72 @@ export default class CreateCharacter {
     }
 
   };
-  motionWalk = () => {
+  motionWalk() {
     if(!this.character.body.onFloor()) return;
     this.currentAction = `walk`;
     this.character.anims.play(this.currentAction, true);
   }
-  motionJump = () => {
-    if(this.character.body.onFloor()) return;
+  motionJump() {
+    if(this.character.body.onFloor() || this.currentAction === 'wall_land') return;
+
     this.currentAction = 'jump';
     this.character.anims.play('jump',true)
+  }
+  motionWallLand() {
+    // 벽에 닿았다
+    // 어느쪽 벽인지? -> 캐릭터 방향으로 확인
+    // 벽에 닿을때 계속 방향키를 누르고있으면 wall_land
+    // 점프하면 점프
+    // 손을 떼면 idle
+    if(!this.character.body.onWall()) return;
+      this.currentAction = 'wall_land'
+      this.character.anims.play(this.currentAction, true);
+  }
+  setDirection(direction:"left"|"right"){
+
+    this.direction = direction;
+    if(direction === 'left')  this.character.setFlipX(true); // 이미지 반대로.
+    else this.character.setFlipX(false);
   }
   updateAnimations() {
     //리팩터링하기.
     if (this.cursors.space.isDown) { //점프
       if(this.character.body.onFloor()){// 바닥에 닿은 경우
-        //스페이스바를 눌렀을 때 점프
+        //바닥에서 점프
         this.currentAction = `jump`;
         this.character.setVelocityY(this.motionSpeed.jump);
-        this.character.anims.duration = 1000;
+        this.character.anims.play(`jump`);
+      } else if(this.currentAction === 'wall_land' || this.currentAction === 'wall_slide'){
+        //벽에 붙었을때 점프.
+       if(this.direction === 'left') this.setDirection("right")
+       else if(this.direction === 'right') this.setDirection("left")
+        
+        this.currentAction = `jump`;
+        this.character.setVelocityY(this.motionSpeed.jump);
+        this.character.setVelocityX(this.motionSpeed.run);
         this.character.anims.play(`jump`);
       }
     }
     if (this.cursors.left.isDown) {
       if (this.character.body.onFloor()) {
-        this.direction = "left";
-        this.character.setFlipX(false);
+        this.setDirection("left")
         //왼쪽
         if (this.cursors.shift.isDown) {
           // 달리기. this.cursors.shift.isUp
           this.motionRun();
         } else {
           //쉬프트 안누를 경우 걷기.
-              //점프가 아니면서 땅에 닿았을 경우에만 작동
-              this.motionWalk()
+          //점프가 아니면서 땅에 닿았을 경우에만 작동
+          this.motionWalk()
         }
       } else{
+        //공중
         this.motionJump();
+        this.motionWallLand();
       }
     } else if (this.cursors.right.isDown) {
       if (this.character.body.onFloor()) {
-        this.direction = "right";
-        // this.character.toggleFlipX();
-        this.character.setFlipX(true);
+        this.setDirection("right")
         // 오른쪽
         if (this.cursors.shift.isDown) {
           // 달리기. this.cursors.shift.isUp
@@ -184,6 +210,7 @@ export default class CreateCharacter {
         }
       } else {
         this.motionJump();
+        this.motionWallLand();
       }
     } else {
       // 기본상태.
@@ -192,9 +219,8 @@ export default class CreateCharacter {
           this.currentAction = `idle`;
           this.character.anims.play(this.currentAction, true);
         } else { //바닥에 닿지 않았는데 점프가 아닐 경우 강제 변경.
-          if(this.currentAction !== 'jump'){
             this.motionJump();
-          }
+            this.motionWallLand();
         }
     }
     this.onSpeed();
