@@ -19,6 +19,7 @@ export default class CreateCharacter {
   currentAction: ActionKeyType;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
+  currentMotionSpeed:number;
   motionSpeed: MotionSpeedTypes;
   direction: "left" | "right";
   constructor(
@@ -40,7 +41,8 @@ export default class CreateCharacter {
 
     this.animations = [];
     this.direction = "right";
-    this.currentAction = `idle`;
+    this.currentMotionSpeed = 'idle';
+    this.currentAction = 'idle';
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
 
@@ -113,7 +115,7 @@ export default class CreateCharacter {
       } else {
         this.character.setVelocityX(this.motionSpeed.walk);
       }
-
+      this.currentMotionSpeed = this.motionSpeed.walk
     }else if (this.currentAction === "running") {
       // 모션과 별개로 계속 움직여야 하기에 따로 적용.
       if (this.direction === "left") {
@@ -121,9 +123,17 @@ export default class CreateCharacter {
       } else {
         this.character.setVelocityX(this.motionSpeed.run);
       }
+      this.currentMotionSpeed = this.motionSpeed.run
+
     } else if (this.currentAction === "wall_land") {
       this.character.setVelocityX(0);
       this.character.setVelocityY(0);
+    } else if (this.currentAction === "jump") {
+      if (this.direction === "left") {
+        this.character.setVelocityX(-this.currentMotionSpeed);
+      } else {
+        this.character.setVelocityX(this.currentMotionSpeed);
+      }
     }
   }
   motionIdle() {
@@ -145,9 +155,9 @@ export default class CreateCharacter {
     this.currentAction = `walk`;
     this.character.anims.play(this.currentAction, true);
   }
-  motionJump() {
+  motionJump(direction:"left"|"right") {
     if(this.character.body.onFloor() || this.currentAction === 'wall_land') return;
-
+    this.setDirection(direction)
     this.currentAction = 'jump';
     this.character.anims.play('jump',true)
   }
@@ -194,7 +204,7 @@ export default class CreateCharacter {
         }
       } else{
         //공중
-        this.motionJump();
+        this.motionJump("left");
         this.motionWallLand();
       }
     } else if (this.cursors.right.isDown) {
@@ -209,7 +219,8 @@ export default class CreateCharacter {
               this.motionWalk()
         }
       } else {
-        this.motionJump();
+        this.motionJump("right");
+        
         this.motionWallLand();
       }
     } else {
@@ -217,7 +228,7 @@ export default class CreateCharacter {
         if (this.character.body.onFloor()) {
           this.motionIdle();
         } else { //바닥에 닿지 않았는데 점프가 아닐 경우 강제 변경.
-            this.motionJump();
+            this.motionJump(this.direction);
             this.motionIdle();
             // this.motionWallLand();
         }
