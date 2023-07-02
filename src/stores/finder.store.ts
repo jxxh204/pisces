@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 // import type { FinderComponentType, FileNames } from "@/types/finder";
 import useAlertStore from "@/stores/alert.store";
+import deepLink from "@/module/deepLink";
 
 export default defineStore("useFinderStore", () => {
   const currentFinders = ref({} as FinderComponentType);
@@ -14,8 +15,11 @@ export default defineStore("useFinderStore", () => {
       return;
     }
     if (name === "Game" && import.meta.env.PROD) {
-      alertStore.onAlert("제작 중...");
-      return;
+        console.log(deepLink.mobile_chk())
+      if(deepLink.mobile_chk() !== 'pc'){
+        alertStore.onAlert("모바일은 지원하지 않습니다.");
+        return;
+      }
     }
 
     if (currentFinders.value) {

@@ -20,12 +20,11 @@ export default class Welcome extends Phaser.Scene {
     };
   }
   imageLoad() {
-    // this.load.image("starticon", "assets/images/icons/startup-icon.png");
   }
   progressLoad() {
     this.progressOption = {
-      width: 320,
-      height: 50,
+      width: 600,
+      height: 80,
       x: this.scale.baseSize.width / 2 - this.progressOption.width / 2,
       y: this.scale.baseSize.height / 2 - this.progressOption.height / 2,
     };
@@ -40,9 +39,11 @@ export default class Welcome extends Phaser.Scene {
     );
     this.add.text(
       this.progressOption.x,
-      this.progressOption.y - 30,
-      "Loading.."
+      this.progressOption.y - 60,
+      "Loading..",
+      {"fontSize":"60px"}
     );
+    
 
     progressBar.clear();
     let value = 0.2;
@@ -51,14 +52,14 @@ export default class Welcome extends Phaser.Scene {
       value += 0.05;
       progressBar.fillStyle(0xffffff, 1);
       progressBar.fillRect(
-        this.progressOption.x + 10,
-        this.progressOption.y + 10,
-        300 * value,
-        30
+        this.progressOption.x + 12,
+        this.progressOption.y + 12,
+        this.progressOption.width * value-24,
+        this.progressOption.height-24
       );
       if (value > 1) {
         clearInterval(progressInterval);
-        // this.scene.start("Level1");
+        this.scene.start("Game1");
         // progressBar.destroy();
         // progressBox.destroy();
       }
@@ -69,10 +70,6 @@ export default class Welcome extends Phaser.Scene {
     this.progressLoad();
   }
   create() {
-    // this.add.image(
-    //   this.progressOption.x,
-    //   this.progressOption.y - 30,
-    //   "starticon"
-    // );
+
   }
 }

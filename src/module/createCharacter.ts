@@ -41,7 +41,7 @@ export default class CreateCharacter {
 
     this.animations = [];
     this.direction = "right";
-    this.currentMotionSpeed = 'idle';
+    this.currentMotionSpeed = 0;
     this.currentAction = 'idle';
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
@@ -181,13 +181,16 @@ export default class CreateCharacter {
         this.character.anims.play(`jump`);
       } else if(this.currentAction === 'wall_land' || this.currentAction === 'wall_slide'){
         //벽에 붙었을때 점프.
-       if(this.direction === 'left') this.setDirection("right")
-       else if(this.direction === 'right') this.setDirection("left")
-        
-        this.currentAction = `jump`;
-        this.character.setVelocityY(this.motionSpeed.jump);
-        this.character.setVelocityX(this.motionSpeed.run);
-        this.character.anims.play(`jump`);
+        // if(!this.character.body.onWall()){
+          if(this.direction === 'left') this.setDirection("right")
+          else if(this.direction === 'right') this.setDirection("left")
+          // 벽점프
+          // 왼쪽 - 벽
+          this.currentAction = `jump`;
+        //   this.character.setVelocityY(this.motionSpeed.jump);
+        //   this.character.setVelocityX(this.motionSpeed.run);
+        //   this.character.anims.play(`jump`);
+        // }
       }
     }
     if (this.cursors.left.isDown) {
@@ -230,7 +233,7 @@ export default class CreateCharacter {
         } else { //바닥에 닿지 않았는데 점프가 아닐 경우 강제 변경.
             this.motionJump(this.direction);
             this.motionIdle();
-            // this.motionWallLand();
+            this.motionWallLand();
         }
     }
     this.onSpeed();

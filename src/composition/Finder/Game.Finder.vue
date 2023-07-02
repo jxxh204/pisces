@@ -35,7 +35,7 @@ const config = {
   zoom: ZOOM_LEVEL,
   backgroundColor: "#000000",
   pixelArt: true, // 픽셀로 만들경우 선명하게나옴
-  scene: [Game1], //Level1 Welcome,systemIcons,DropDownTest, Icons 만들기. //
+  scene: [Welcome,Game1], //Level1 Welcome,systemIcons,DropDownTest, Icons 만들기. //
   physics: {
     default: "arcade",
     arcade: {

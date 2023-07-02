@@ -429,7 +429,7 @@ export default class Character extends Phaser.Scene {
         key: "run",
         start: 20,
         end: 27,
-        frameRate: 8,
+        frameRate: 16,
         repeat: -1,
       },
       {
