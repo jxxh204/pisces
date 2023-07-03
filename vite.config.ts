@@ -33,7 +33,15 @@ export default defineConfig({
       },
     ],
   },
+  // vite.config.js
   build: {
     outDir: "./src/server/client",
+    // rollupOptions: {
+    //   input: {
+    //     main: 'src/main.ts',
+    //     customFile: 'src/phaser/TiledProject/game2.json'
+    //   }
+    // }
   },
+  
 });

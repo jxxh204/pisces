@@ -17,6 +17,7 @@ export default class CreateCharacter {
 
   animations: AnimationsType[];
   currentAction: ActionKeyType;
+  timer:number | null;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   currentMotionSpeed:number;
@@ -43,6 +44,7 @@ export default class CreateCharacter {
     this.direction = "right";
     this.currentMotionSpeed = 0;
     this.currentAction = 'idle';
+    this.timer = null
 
     this.cursors = this.phaser.input.keyboard.createCursorKeys();
 
@@ -107,8 +109,10 @@ export default class CreateCharacter {
     this.character.play(`idle`, true); // idle 모션 실행.
   }
   onSpeed = () => {
+
     if(this.currentAction === 'idle') {
       this.character.setVelocityX(0);
+      this.currentMotionSpeed = 0;
     } else if(this.currentAction === "walk") {
       if (this.direction === "left") {
         this.character.setVelocityX(-this.motionSpeed.walk);
@@ -130,13 +134,22 @@ export default class CreateCharacter {
       this.character.setVelocityY(0);
     } else if (this.currentAction === "jump") {
       if (this.direction === "left") {
-        this.character.setVelocityX(-this.currentMotionSpeed);
+        if(this.cursors.left.isDown && this.currentMotionSpeed === 0) {
+          this.character.setVelocityX(-this.motionSpeed.walk);
+        } else {
+          this.character.setVelocityX(-this.currentMotionSpeed);
+        }
       } else {
-        this.character.setVelocityX(this.currentMotionSpeed);
+        if(this.cursors.right.isDown && this.currentMotionSpeed === 0) {
+          this.character.setVelocityX(-this.motionSpeed.walk);
+        } else {
+          this.character.setVelocityX(this.currentMotionSpeed);
+        }
       }
     }
   }
   motionIdle() {
+    if(!this.character.body.onFloor()) return;
     this.currentAction = `idle`;
     this.character.anims.play(this.currentAction, true);
   }
@@ -166,13 +179,43 @@ export default class CreateCharacter {
       this.currentAction = 'wall_land'
       this.character.anims.play(this.currentAction, true);
   }
+  motionWallJump() {
+    this.currentAction = `wall_jump`;
+    if(this.direction === 'left'){
+       this.setDirection("right")
+       this.character.setVelocityY(this.motionSpeed.jump);
+       this.character.setVelocityX(this.motionSpeed.run);
+    }
+    else if(this.direction === 'right') {
+      this.setDirection("left")
+      this.character.setVelocityY(this.motionSpeed.jump);
+      this.character.setVelocityX(-this.motionSpeed.run);
+    }
+    if(this.currentAction === 'wall_jump') {
+      this.setTimer(100,()=>{
+        this.currentAction = 'jump'
+      })
+    }
+    this.character.anims.play(`jump`);
+  }
+  setTimer(time:number, timeEndFunc:()=>void){
+    if(this.timer) return;
+    this.timer = window.setTimeout(() => {
+      timeEndFunc();
+      this.timer = null;
+    }, time);
+  }
   setDirection(direction:"left"|"right"){
     this.direction = direction;
     if(direction === 'left')  this.character.setFlipX(true); // 이미지 반대로.
     else this.character.setFlipX(false);
   }
   updateAnimations() {
+    // console.log(this.currentAction)
     //리팩터링하기.
+    if(this.currentAction === 'wall_jump'){
+      return;
+    }
     if (this.cursors.space.isDown) { //점프
       if(this.character.body.onFloor()){// 바닥에 닿은 경우
         //바닥에서 점프
@@ -181,16 +224,8 @@ export default class CreateCharacter {
         this.character.anims.play(`jump`);
       } else if(this.currentAction === 'wall_land' || this.currentAction === 'wall_slide'){
         //벽에 붙었을때 점프.
-        // if(!this.character.body.onWall()){
-          if(this.direction === 'left') this.setDirection("right")
-          else if(this.direction === 'right') this.setDirection("left")
-          // 벽점프
-          // 왼쪽 - 벽
-          this.currentAction = `jump`;
-        //   this.character.setVelocityY(this.motionSpeed.jump);
-        //   this.character.setVelocityX(this.motionSpeed.run);
-        //   this.character.anims.play(`jump`);
-        // }
+        this.motionWallJump();
+        return;
       }
     }
     if (this.cursors.left.isDown) {
@@ -223,7 +258,6 @@ export default class CreateCharacter {
         }
       } else {
         this.motionJump("right");
-        
         this.motionWallLand();
       }
     } else {

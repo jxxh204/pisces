@@ -31,6 +31,7 @@ type ActionKeyType =
   | "jump"
   | "running"
   | "wall_land"
+  | "wall_jump"
   | "wall_slide";
 type AnimationsType = {
   key: ActionKeyType;

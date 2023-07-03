@@ -12,8 +12,9 @@ import type { GetStreamSettings } from "@/media/media";
 
 // import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
 // import background from "@/phaser/TiledProject/Background/Background.png";
-import tiles from "@/phaser/TiledProject/Assets/Basic-Tilemap.png";
-import background from "@/phaser/TiledProject/Background/background-tilemap.png";
+import tiles from "@/phaser/TiledProject/Assets/BasicTilemap.png";
+// import background from "@/phaser/TiledProject/Background/backgroundTilemap.png";
+import JSON from "@/phaser/TiledProject/game2.json"
 
 type ColliderType = {
   floor: boolean;
@@ -121,9 +122,13 @@ export default class Character extends Phaser.Scene {
     if (get === "load") {
       // 배경
       this.load.image("tilesImage", tiles);
-      this.load.image("backgroundImage", background);
-      // this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game.json"); //무조건 주소 자체를 넣어야함.
-      this.load.tilemapTiledJSON("Game", "src/phaser/TiledProject/game2.json");
+      this.load.image("backgroundImage", '/src/phaser/TiledProject/Background/backgroundTilemap.png');
+      // if(import.meta.env.PROD) {
+      //   this.load.tilemapTiledJSON("Game", "../game2.json");
+      // } else {
+        this.load.tilemapTiledJSON("Game", JSON);
+      // }
+      
     } else {
       this.map = this.make.tilemap({
         key: "Game",
@@ -445,14 +450,14 @@ export default class Character extends Phaser.Scene {
         end: 55,
         frameRate: 16,
         repeat: 0,
-      },
-      {
-        key: "wall_slide",
-        start: 60,
-        end: 62,
-        frameRate: 8,
-        repeat: 1,
-      },
+      }
+      // {
+      //   key: "wall_slide",
+      //   start: 60,
+      //   end: 62,
+      //   frameRate: 8,
+      //   repeat: 1,
+      // },
     ] as AnimationsType[];
     this.main_char?.setAnimations(options);
     this.main_char?.getAnimations();

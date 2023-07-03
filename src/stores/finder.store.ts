@@ -15,6 +15,8 @@ export default defineStore("useFinderStore", () => {
       return;
     }
     if (name === "Game" && import.meta.env.PROD) {
+      // alertStore.onAlert("제작 중...");
+      // return;
         console.log(deepLink.mobile_chk())
       if(deepLink.mobile_chk() !== 'pc'){
         alertStore.onAlert("모바일은 지원하지 않습니다.");
