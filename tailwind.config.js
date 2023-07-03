@@ -39,6 +39,9 @@ module.exports = {
           700: "#808080",
           800: "#666666",
         },
+        button:{
+          red:"#ef3552"
+        },
         Azul: "#333399",
         Lavender: "#CCCCFF",
       },

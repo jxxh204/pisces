@@ -11,7 +11,7 @@
   src: url("./fonts/Monocraft.ttf");
 }
 @font-face {
-  font-family: "Pretendard-Regular";
+  font-family: "Pretendard";
   src: url("./fonts/Pretendard-Regular.woff").format("woff");
   font-weight: 400;
   font-style: normal;

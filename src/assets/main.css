@@ -43,6 +43,16 @@
 .fade-leave-to {
   opacity: 0.5;
 }
+.deep-fade-enter-active,
+.deep-fade-leave-active {
+  transition: opacity 1s ease;
+}
+
+.deep-fade-enter-from,
+.deep-fade-leave-to {
+  opacity: 0;
+}
+
 
 .finder_shadow_in {
   box-shadow: inset -1px 0px 0px rgba(38, 38, 38, 0.4),

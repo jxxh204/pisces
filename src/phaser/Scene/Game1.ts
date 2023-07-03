@@ -123,11 +123,7 @@ export default class Character extends Phaser.Scene {
       // 배경
       this.load.image("tilesImage", tiles);
       this.load.image("backgroundImage", '/src/phaser/TiledProject/Background/backgroundTilemap.png');
-      // if(import.meta.env.PROD) {
-      //   this.load.tilemapTiledJSON("Game", "../game2.json");
-      // } else {
-        this.load.tilemapTiledJSON("Game", JSON);
-      // }
+      this.load.tilemapTiledJSON("Game", JSON);
       
     } else {
       this.map = this.make.tilemap({

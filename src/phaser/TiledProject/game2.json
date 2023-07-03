@@ -366,7 +366,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
+ "nextlayerid":7,
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -376,7 +376,7 @@
         {
          "columns":6,
          "firstgid":1,
-         "image":"Assets\/Basic-Tilemap.png",
+         "image":"Assets\/BasicTilemap.png",
          "imageheight":160,
          "imagewidth":96,
          "margin":0,
@@ -750,7 +750,7 @@
         {
          "columns":10,
          "firstgid":61,
-         "image":"Background\/background-tilemap.png",
+         "image":"Background\/backgroundTilemap.png",
          "imageheight":160,
          "imagewidth":160,
          "margin":0,
