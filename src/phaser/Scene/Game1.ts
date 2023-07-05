@@ -13,7 +13,7 @@ import type { GetStreamSettings } from "@/media/media";
 // import tiles from "@/phaser/TiledProject/Assets/Tiles.png";
 // import background from "@/phaser/TiledProject/Background/Background.png";
 import tiles from "@/phaser/TiledProject/Assets/BasicTilemap.png";
-// import background from "@/phaser/TiledProject/Background/backgroundTilemap.png";
+import background from "@/phaser/TiledProject/Background/backgroundTilemap.png";
 import JSON from "@/phaser/TiledProject/game2.json"
 
 type ColliderType = {
@@ -34,7 +34,6 @@ const motionStateArray = [
   "shift",
   "idle",
 ];
-
 export default class Character extends Phaser.Scene {
   bg: {
     width: number;
@@ -117,12 +116,14 @@ export default class Character extends Phaser.Scene {
     this.scene_finder = null;
     this.map = null;
   }
+
   setBackground(get: "load" | "create") {
     // 배경타일 생성
     if (get === "load") {
       // 배경
       this.load.image("tilesImage", tiles);
-      this.load.image("backgroundImage", '/src/phaser/TiledProject/Background/backgroundTilemap.png');
+      this.textures.addBase64('backgroundImage', background); // 빌드했을 때 이미지를 찾지 못하는 버그 개선
+
       this.load.tilemapTiledJSON("Game", JSON);
       
     } else {
