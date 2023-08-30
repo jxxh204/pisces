@@ -62,15 +62,22 @@ export default defineStore("useTabStore", () => {
       link: "https://jamkim.notion.site/BlockBot-b00ec237ee51431dafed0b08377799e8",
       reference: "https://www.wadiz.kr/web/campaign/detail/90553",
     },
-    "Developic": {
+    Developic: {
       name: "Developic",
       image: Developic,
       responsibilities:
         "프로덕트 디자이너1, 백엔드 개발자2와 프론트엔드개발자인 저를 포함한 총 4명의 인원으로 시작된 프로젝트입니다. 해당 서비스 GPT API를 사용하여 개발자들에게 언어와 난이도에 맞는 리팩토링 과제를 던져주어 리팩토링 공부를 할 수 있도록 도와주는 서비스입니다.",
-      tags: ["TypeScript", "React & Recoil", "StyledComponent", "Tailwindcss", "yarn berry(pnp)", "playwright"],
+      tags: [
+        "TypeScript",
+        "React & Recoil",
+        "StyledComponent",
+        "Tailwindcss",
+        "yarn berry(pnp)",
+        "playwright",
+      ],
       click: false,
-      link:"https://www.notion.so/jamkim/Developic-ba54e468df8948a5b767ce928dc1e64d?pvs=4",
-      code:"https://github.com/dhr05074/code-connect/tree/Front/front"
+      link: "https://jamkim.notion.site/Developic-ba54e468df8948a5b767ce928dc1e64d?pvs=4",
+      code: "https://github.com/dhr05074/code-connect/tree/Front/front",
     },
     "layer-after-layer": {
       name: "layer-after-layer",
@@ -79,7 +86,7 @@ export default defineStore("useTabStore", () => {
         "디자이너와 협업하여 2주간 만든 반응형 웹사이트로 여러 작가들이 홍대 인근에서 진행하는 플리마켓 및 전시 행사를 위한 소개  페이지입니다. VanillaJS, css, html를 사용하여 간단하게 만들었습니다.",
       tags: ["VanillaJS", "SideProject"],
       click: false,
-      link: "https://jamkim.notion.site/LAYER-After-LAYER-f28ce6c04b824aba93f766b1491d062c",
+      link: "https://jamkim.notion.site/LAYER-After-LAYER-b6bdc991d8e141bd9f573e7a54e0268a?pvs=4",
       demo: "https://jxxh204.github.io/LAYER-after-LAYER/",
     },
   });
